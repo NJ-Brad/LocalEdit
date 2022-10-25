@@ -1,0 +1,43 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+This app will utilize <br />
+<ul>
+<li>Blazorise</li>
+<li>Bootstrap 5 Framework (via Blazorise.Bootstrap5)</li>
+<li>Blazorise.TreeView</li>
+</ul>
+
+Try not to mix in anything else.  If you do, include it above<br />
+
+
+see https://blazorise.com/docs/theming for details<br />
+
+<Blazorise.Bootstrap5.Button Clicked="@(()=>OnThemeColorChanged("#00ff00"))">Change theme</Blazorise.Bootstrap5.Button>
+
+@code{
+    Task OnThemeColorChanged( string value )
+    {
+        if ( Theme?.ColorOptions != null )
+            Theme.ColorOptions.Primary = value;
+
+        if ( Theme?.BackgroundOptions != null )
+            Theme.BackgroundOptions.Primary = value;
+
+        if (Theme?.BodyOptions != null)
+            Theme.BodyOptions.BackgroundColor = "#0000FF";
+
+        Theme.ThemeHasChanged();
+
+        return Task.CompletedTask;
+    }
+
+    [CascadingParameter] Theme Theme { get; set; }
+}
