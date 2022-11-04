@@ -1,0 +1,99 @@
+﻿@page "/FlowEditor"
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using LocalEdit.C4Types
+@using Blazorise
+@using Blazorise.Extensions;
+@using LocalEdit.FlowTypes
+<h3>FlowEditor</h3>
+
+<Buttons Role="ButtonsRole.Toolbar">
+    <Buttons Margin="Margin.Is2.FromEnd">
+        <Button Color="Color.Secondary">Save</Button>
+        <Button Color="Color.Info">import</Button>
+        <Button Color="Color.Info">Export</Button>
+    </Buttons>
+</Buttons>
+
+<button class="btn btn-primary" @onclick="ShowFileModal">Popup</button>
+
+
+@*</Div>*@
+
+@*<ListView @ref="fiList" TItem="FlowItem"
+          Data="FlowItems"
+          TextField="(item) => item.Label"
+          ValueField="(item) => item.ID"
+          Mode="ListGroupMode.Selectable"
+          Color="Color.Default"
+          MaxHeight="300px"
+          SelectedItem="selectedItem"
+>
+</ListView>
+*@
+
+<DataGrid TItem="FlowItem"
+          Data="@FlowItems"
+          @bind-SelectedRow="@selectedItemRow"
+          Responsive>
+    <DataGridColumn Field="@nameof( FlowItem.Label )" Editable="false"></DataGridColumn>
+</DataGrid>
+
+@*<Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(parentNode)">Add</Button>*@
+<Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewItem">Add</Button>
+<Button Size="Size.Small" Color="Color.Info" Clicked="@ShowItemModal">Edit</Button>
+<Button Size="Size.Small" Color="Color.Info">Delete</Button>
+<br />
+
+<LocalEdit.Modals.FlowItemModal @ref="flowItemModalRef" Closed="@OnFlowItemModalClosed"></LocalEdit.Modals.FlowItemModal>
+
+<DataGrid TItem="FlowRelationship"
+          Data="@FlowRelationships"
+          @bind-SelectedRow="@selectedRelationshipRow"
+          Responsive>
+          <DataGridColumns>
+    <DataGridColumn Field="@nameof( FlowRelationship.From )" Editable="false">
+        <DisplayTemplate>
+            @{
+                string fromCode = ( context as FlowRelationship )?.From;
+                string toCode = ( context as FlowRelationship )?.To;
+
+                    if (fromCode != null)
+                    {
+                        @($"{DecodeFlowId(fromCode)}") <NBSP/> <Icon Name="IconName.ArrowRight"/> <NBSP/> @($"{DecodeFlowId(toCode)}")
+                        <br />
+                        <span style="padding-left:2em">@($"{context.Label}")</span>
+                    }
+                //if ( date != null )
+                //{
+                //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
+                //}
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    </DataGridColumns>
+    <EmptyTemplate>
+        <div class="box">
+            No relations were found!
+        </div>
+    </EmptyTemplate>
+</DataGrid>
+
+@*<Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(parentNode)">Add</Button>*@
+<Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewRelationship">Add</Button>
+<Button Size="Size.Small" Color="Color.Info" Clicked="@ShowRelationshipModal">Edit</Button>
+<Button Size="Size.Small" Color="Color.Info">Delete</Button>
+<br />
+<div>
+    <textarea @bind="MarkdownText" @bind:event="oninput" />
+</div>
+
+<StardustDL.RazorComponents.Markdown.MarkdownRenderer
+    Value="@MarkdownText"
+    Class="your class"
+    Style="your styles"
+    RenderInterval="@TimeSpan.FromSeconds(10)"/>
+
+<LocalEdit.Modals.FlowRelationshipModal @ref="flowRelationshipModalRef" Closed="@OnFlowRelationshipModalClosed"></LocalEdit.Modals.FlowRelationshipModal>
+
+<LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

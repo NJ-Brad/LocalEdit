@@ -13,7 +13,21 @@ This app will utilize <br />
 <li>Blazorise</li>
 <li>Bootstrap 5 Framework (via Blazorise.Bootstrap5)</li>
 <li>Blazorise.TreeView</li>
+<li>Blazored.LocalStorage</li>
+<li>Blazor.DownloadFileFast</li>
 </ul>
+
+@*// https://github.com/StardustDL/RazorComponents.Markdown
+builder.Services.AddModules(builder =>
+{
+    builder.UseRazorComponentClientModules().AddMarkdownModule();
+});
+
+builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+// https://github.com/StefH/Blazor.DownloadFileFast
+builder.Services.AddBlazorDownloadFile();
+*@
 
 Try not to mix in anything else.  If you do, include it above<br />
 

@@ -1,46 +1,165 @@
 ﻿@page "/C4Editor"
+@using LocalEdit.C4Types
+@using Blazorise
 <h3>C4Editor</h3>
-<TreeView Nodes="Items"
+
+@*<Div>
+<Buttons Role="ButtonsRole.Toolbar">
+    <Buttons Margin="Margin.Is2.FromEnd">
+        <Button Color="Color.Danger">New</Button>
+        <Button Color="Color.Secondary">Save</Button>
+        <Button Color="Color.Info">import</Button>
+        <Button Color="Color.Info">Export</Button>
+    </Buttons>
+</Buttons>
+</Div>
+*@
+
+@*<Div>
+<Buttons Role="ButtonsRole.Toolbar">
+    <Buttons Margin="Margin.Is2.FromEnd">
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.InternalPerson">Person (Internal)</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ExternalPerson">Person (External)</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Boundary">Ad-Hoc Boundary</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.SystemBoundary">System Boundary</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.EnterpriseBoundary">Enterprise Boundary</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ContainerBoundary">Container Boundary</Button>
+    </Buttons>
+</Buttons>
+
+<Buttons Role="ButtonsRole.Toolbar">
+    <Buttons Margin="Margin.Is2.FromEnd">
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Component">Component</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Database">Database</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Container">Container</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Node">Node</Button>
+    </Buttons>
+</Buttons>
+
+<Buttons Role="ButtonsRole.Toolbar">
+    <Buttons Margin="Margin.Is2.FromEnd">
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.InternalSystem">System (Internal)</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ExternalSystem">System (External)</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.InternalDatabaseSystem">System (Internal Database)</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ExternalDatabaseSystem">System (External Database)</Button>
+    </Buttons>
+</Buttons>
+*@
+@*<Div>
+<Buttons Role="ButtonsRole.Toolbar">
+    <Buttons Margin="Margin.Is2.FromEnd">
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.InternalPerson">Person</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.SystemBoundary">System</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.EnterpriseBoundary">Enterprise</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ContainerBoundary">Container</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Component">Component</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Database">Database</Button>
+        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Node">Node</Button>
+    </Buttons>
+</Buttons>
+*@
+
+
+<Buttons Role="ButtonsRole.Toolbar">
+    <Buttons Margin="Margin.Is2.FromEnd">
+        <Button Color="Color.Secondary">Save</Button>
+        <Button Color="Color.Info">import</Button>
+        <Button Color="Color.Info">Export</Button>
+    </Buttons>
+</Buttons>
+@*</Div>*@
+
+<h1>Model</h1>
+@*<Buttons Role="ButtonsRole.Toolbar">
+    <Buttons Margin="Margin.Is2.FromEnd">
+        <Button Size="Size.Small" Color="Color.Secondary">Add</Button>
+        <Button Size="Size.Small" Color="Color.Info">Edit</Button>
+        <Button Size="Size.Small" Color="Color.Info">Delete</Button>
+    </Buttons>
+</Buttons>*@
+
+    <Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(parentNode)">Add</Button>
+    <Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(selectedNode)">Add Child</Button>
+    <Button Size="Size.Small" Color="Color.Info"  Clicked="@ShowModal">Edit</Button>
+    <Button Size="Size.Small" Color="Color.Info">Delete</Button>
+
+<TreeView Nodes="C4Items"
           GetChildNodes="@(item => item.Children)"
           HasChildNodes="@(item => item.Children?.Any() == true)"
-          @bind-SelectedNode="selectedNode"
-          @bind-ExpandedNodes="ExpandedNodes"
+          SelectedNodeChanged="@((C4Item item) => SelChanged(item))"
         >
-    <NodeContent>@context.Text</NodeContent>
-</TreeView>
-@*    expandIcon: 'fa fa-plus',
-    collapseIcon: 'fa fa-minus'
-*@
-@code{
-    public class Item
-    {
-        public string Text { get; set; }
-        public IEnumerable<Item> Children { get; set; }
-    }
+        <NodeContent>@context.Text </NodeContent>
+@*    <NodeContent>@context.Text 
+        <Blazorise.Link Clicked="@ShowModal" hidden >Add</Blazorise.Link>  
+        <Blazorise.Link Clicked="@ShowModal" >Edit</Blazorise.Link>  
+        <Blazorise.Link Clicked="@ShowModal" >Delete</Blazorise.Link>  
+    </NodeContent>
+*@</TreeView>
 
-    IEnumerable<Item> Items = new[]
-    {
-        new Item { Text = "Item 1" },
-        new Item {
-            Text = "Item 2",
-            Children = new []
-    {
-                new Item { Text = "Item 2.1" },
-                new Item { Text = "Item 2.2", Children = new []
-        {
-                    new Item { Text = "Item 2.2.1" },
-                    new Item { Text = "Item 2.2.2" },
-                    new Item { Text = "Item 2.2.3" },
-                    new Item { Text = "Item 2.2.4" }
-                }
-            },
-            new Item { Text = "Item 2.3" },
-            new Item { Text = "Item 2.4" }
+
+<Button Color="Color.Primary" Clicked="@ShowTestModal">Test Modal</Button>
+
+<Button Color="Color.Primary" Clicked="@ShowModal">Show Modal</Button>
+
+<Span Margin="Margin.Is3.FromStart">Modal is visible: @modalVisible</Span>
+
+<Modal @ref="newItemModalRef" @bind-Visible="@newItemModalVisible" Closing="@OnNewItemModalClosing" Opened="@OnNewItemModalOpened" Closed ="OnNewItemModalClosed" Size="ModalSize.Small">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Add Item</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            @if (ShouldShow(C4TypeEnum.Person, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Person)">Person</Button><p/>
             }
-        },
-        new Item { Text = "Item 3" },
-    };
+            @if (ShouldShow(C4TypeEnum.System, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.System)">System</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.EnterpriseBoundary, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.EnterpriseBoundary)">Enterprise</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.Container, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Container)">Container</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.Component, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Component)">Component</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.Database, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Database)">Database</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.Node, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Node)">Node</Button>
+            }
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Danger" Clicked="@CloseNewItemModal">Cancel</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
 
-    IList<Item> ExpandedNodes = new List<Item>();
-    Item selectedNode;
-}
+
+<Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModelOpened">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Employee edit</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <PropertyEditor @ref="propEditor" Item=@selectedNode></PropertyEditor>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@CloseModal">Close</Button>
+            <Button Color="Color.Primary" Clicked="@TryCloseModal">Save Changes</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+<LocalEdit.Modals.TestModal @ref="testModalRef" Closed="@OnTestModalClosed"></LocalEdit.Modals.TestModal>

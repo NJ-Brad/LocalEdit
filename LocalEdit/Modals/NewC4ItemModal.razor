@@ -1,0 +1,42 @@
+﻿@using LocalEdit.C4Types
+<Modal @ref="newItemModalRef" @bind-Visible="@newItemModalVisible" Closing="@OnNewItemModalClosing" Opened="@OnNewItemModalOpened" Closed ="OnNewItemModalClosed" Size="ModalSize.Small">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Add Item</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            @if (ShouldShow(C4TypeEnum.Person, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Person)">Person</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.System, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.System)">System</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.EnterpriseBoundary, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.EnterpriseBoundary)">Enterprise</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.Container, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Container)">Container</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.Component, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Component)">Component</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.Database, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Database)">Database</Button><p/>
+            }
+            @if (ShouldShow(C4TypeEnum.Node, potentialParentNode))
+            {
+                <Button Color="Color.Dark" Block Outline @onclick="() => CreateItem(C4TypeEnum.Node)">Node</Button>
+            }
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Danger" Clicked="@CloseNewItemModal">Cancel</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>

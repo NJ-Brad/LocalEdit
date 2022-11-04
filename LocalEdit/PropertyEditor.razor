@@ -1,0 +1,106 @@
+﻿@using LocalEdit.C4Types
+@*@typeparam Tvalue*@
+@*<h3>PropertyEditor</h3>*@
+@*<h2>@item.Text</h2>*@
+
+@*https://blazorise.com/docs/components/validation*@
+@*<Validations Mode="ValidationMode.Manual">*@
+<Validations @ref="validations" Mode="ValidationMode.Manual" ValidateOnLoad=false>
+    <Blazorise.ValidationSummary Label="Following error occurs..." />
+@*    <Field>
+        <FieldLabel>Name with validation</FieldLabel>
+        <Validation Validator="ValidationRule.IsNotEmpty">
+            <Blazorise.TextEdit Placeholder="Enter name (validated)">
+                <Feedback>
+                    <ValidationNone>Please enter the name.</ValidationNone>
+                    <ValidationSuccess>Name is good.</ValidationSuccess>
+                    <ValidationError>Enter valid name!</ValidationError>
+                </Feedback>
+            </Blazorise.TextEdit>
+        </Validation>
+    </Field>
+*@
+@*    <Field>
+        <FieldLabel>Name</FieldLabel>
+        <TextEdit Class="textfield-box" Placeholder="Enter name (Boxed)..." />
+    </Field>
+    <Field>
+        <FieldLabel>Name</FieldLabel>
+        <TextEdit Placeholder="Enter name..." />
+    </Field>
+*@
+
+    @if (@showA)
+    {
+        <Field>
+            <FieldLabel>Text</FieldLabel>
+            <TextEdit @bind-Text="item.Text" />
+        </Field>
+    }
+
+    <Field>
+        <FieldLabel>Alias</FieldLabel>
+        <TextEdit @bind-Text="item.Alias" />
+        @*            <ValidationMessage For="@(() => item.Alias)" />
+        *@
+    </Field>
+
+    <Field>
+        <FieldLabel>Description</FieldLabel>
+        <TextEdit @bind-Text="item.Description" />
+    </Field>
+
+    <Field>
+        <FieldLabel>Technology</FieldLabel>
+        <TextEdit @bind-Text="item.Technology" />
+    </Field>
+
+    @*
+        <Field>
+        <FieldLabel>From</FieldLabel>
+        <TextEdit @bind-Text="item.From" />
+        </Field>
+
+        <Field>
+        <FieldLabel>To</FieldLabel>
+        <TextEdit @bind-Text="item.To" />
+        </Field>
+    *@
+    <Field>
+        <Switch TValue="bool" @bind-Checked="@item.IsDatabase">Database</Switch>
+    </Field>
+
+    <Field>
+        <Switch TValue="bool" @bind-Checked="@item.IsExternal">External</Switch>
+    </Field>
+
+    @*    <div class="form-group" align="right">
+        <button type="submit" class="btn btn-success">Register</button>
+        </div>
+    *@
+</Validations>
+
+@code {
+    bool showA = true;
+    Validations? validations;
+    //private bool isRegistrationSuccess = false;
+
+    public async Task<bool> IsValid()
+    {
+        bool rtnVal = false;
+        if (await validations.ValidateAll())
+        {
+            rtnVal = true;
+        }
+
+        return rtnVal;
+    }
+
+    public async Task ResetValidation()
+    {
+        await validations.ClearAll();
+    }
+
+    [Parameter]
+    public C4Item item { get; set; } = new();
+}

@@ -1,0 +1,19 @@
+﻿@inherits LE_ModalBase
+<Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModalOpened">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Employee edit</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+
+<FilePicker Upload="OnFileUpload" ShowMode="FilePickerShowMode.Dropdown" AutoReset=true/>
+<button class="btn btn-primary" @onclick="DownloadFile">Save</button>
+
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@CloseModal">Close</Button>
+            <Button Color="Color.Primary" Clicked="@TryCloseModal">Save Changes</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>

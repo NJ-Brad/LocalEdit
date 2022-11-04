@@ -4,6 +4,8 @@ using Blazorise.Icons.FontAwesome;
 using LocalEdit;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Modulight.Modules.Hosting;
+using StardustDL.RazorComponents.Markdown;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -19,4 +21,16 @@ builder.Services
     .AddBootstrap5Providers()
     .AddFontAwesomeIcons();
 
-await builder.Build().RunAsync();
+builder.Services.AddBlazorDownloadFile();
+
+// https://github.com/Blazored/LocalStorage
+//builder.Services.AddBlazoredLocalStorage();
+
+// https://github.com/StardustDL/RazorComponents.Markdown
+builder.Services.AddModules(builder =>
+{
+    builder.UseRazorComponentClientModules().AddMarkdownModule();
+});
+
+await builder.Build().RunAsyncWithModules();
+//await builder.Build().RunAsync();

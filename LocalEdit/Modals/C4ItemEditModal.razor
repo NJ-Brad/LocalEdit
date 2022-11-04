@@ -1,0 +1,15 @@
+﻿<Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModalOpened">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Employee edit</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <PropertyEditor @ref="propEditor" Item=@selectedNode></PropertyEditor>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@CloseModal">Close</Button>
+            <Button Color="Color.Primary" Clicked="@TryCloseModal">Save Changes</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>

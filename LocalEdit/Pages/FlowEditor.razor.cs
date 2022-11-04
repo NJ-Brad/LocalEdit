@@ -1,0 +1,202 @@
+﻿using Microsoft.AspNetCore.Components;
+using Blazorise;
+using LocalEdit.C4Types;
+using LocalEdit.Modals;
+using LocalEdit.FlowTypes;
+using Blazorise.Components;
+
+namespace LocalEdit.Pages
+{
+    public partial class FlowEditor : ComponentBase
+    {
+        // Add
+        // Click Add
+        // Create new record
+        // set modalObject to new record
+        // Open editor
+        // When editor closes
+        // If cancelled - exit
+        // else add record to tree and model
+
+        // Update
+        // click edit
+        // create new record
+        // copy selected record to new record
+        // set modalObject to new record
+        // open editor
+        // When editor closes
+        // If cancelled - exit
+        // else update model and tree
+
+        void Edit()
+        {
+
+        }
+
+        FlowItem selectedItemRow { get; set; }
+        FlowRelationship selectedRelationshipRow { get; set; }
+
+        string MarkdownText { get; set; } = string.Empty;
+
+        bool adding = false;
+
+        List<FlowItem> FlowItems = new List<FlowItem>(new[]
+        {
+//            C4TestData.InternalPerson,
+            new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
+            new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
+            new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
+            new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
+        });
+
+        List<FlowRelationship> FlowRelationships = new List<FlowRelationship>(new[]
+        {
+            new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
+            new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
+            new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
+            new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
+            new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
+        });
+
+        private FlowItemModal? flowItemModalRef;
+        private FlowRelationshipModal? flowRelationshipModalRef;
+
+        private Task ShowItemModal()
+        {
+            if (selectedItemRow == null)
+            {
+                return Task.CompletedTask;
+            }
+            flowItemModalRef.item = selectedItemRow;
+
+            flowItemModalRef?.ShowModal();
+
+            //InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        private Task AddNewItem()
+        {
+            FlowItem newItem = new FlowItem();
+            newItem.ItemType = FlowItemType.Question;
+            newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
+            newItem.Label = "New Question";
+
+            selectedItemRow = newItem;
+            FlowItems.Add(newItem);
+            adding = true;
+
+            return ShowItemModal();
+        }
+
+        private Task OnFlowItemModalClosed()
+        {
+            if(adding)
+            {
+                // remove the new item, if add was cancelled
+                if (flowItemModalRef.Result == ModalResult.Cancel)
+                {
+                    FlowItems.Remove(selectedItemRow);
+                }
+            }
+            adding = false;
+
+            return Task.CompletedTask;
+        }
+
+        private Task ShowRelationshipModal()
+        {
+            if (selectedRelationshipRow == null)
+            {
+                return Task.CompletedTask;
+            }
+            flowRelationshipModalRef.item = selectedRelationshipRow;
+
+            flowRelationshipModalRef?.ShowModal();
+
+            //InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        private Task AddNewRelationship()
+        {
+            FlowRelationship newRelationship = new FlowRelationship();
+            newRelationship.Label = "New Relationship";
+
+            selectedRelationshipRow = newRelationship;
+            FlowRelationships.Add(newRelationship);
+            adding = true;
+
+            return ShowRelationshipModal();
+        }
+
+        private string DecodeFlowId(string id)
+        {
+            string rtnVal = id;
+
+            foreach (FlowItem fi in FlowItems)
+            {
+                if(fi.ID == id)
+                {
+                    rtnVal = fi.Label;
+                    break;
+                }
+            }
+
+            return rtnVal;
+        }
+
+        private Task OnFlowRelationshipModalClosed()
+        {
+            if (adding)
+            {
+                // remove the new item, if add was cancelled
+                if (flowRelationshipModalRef.Result == ModalResult.Cancel)
+                {
+                    FlowRelationships.Remove(selectedRelationshipRow);
+                }
+            }
+            adding = false;
+
+            return Task.CompletedTask;
+        }
+
+        FileManagementModal fileManagementModalRef;
+
+        private Task ShowFileModal()
+        {
+            //if (selectedItemRow == null)
+            //{
+            //    return Task.CompletedTask;
+            //}
+            //flowItemModalRef.item = selectedItemRow;
+
+            fileManagementModalRef?.ShowModal();
+
+            //InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnFileManagementModalClosed()
+        {
+            if (fileManagementModalRef.Result == ModalResult.OK)
+            {
+                MarkdownText = fileManagementModalRef.FileText;
+            }
+            //if (adding)
+            //{
+            //    // remove the new item, if add was cancelled
+            //    if (flowRelationshipModalRef.Result == ModalResult.Cancel)
+            //    {
+            //        FlowRelationships.Remove(selectedRelationshipRow);
+            //    }
+            //}
+            //adding = false;
+
+            return Task.CompletedTask;
+        }
+    }
+}
