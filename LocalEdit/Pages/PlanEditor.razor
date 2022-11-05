@@ -1,0 +1,140 @@
+﻿@page "/PlanEditor"
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using LocalEdit.C4Types
+@using Blazorise
+@using Blazorise.Extensions;
+@using LocalEdit.PlanTypes
+
+<h1>Plan Editor</h1> 
+<hr/>
+
+@*<Span>Plan Editor  </Span>*@
+
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadFile">
+    <Icon Name="IconName.FileUpload" />
+    Load
+</Button>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveFile">
+    <Icon Name="IconName.FileDownload" />
+    Save
+</Button>
+
+@if (string.IsNullOrEmpty(MarkdownText))
+{
+    <Button Size="Size.Small" Color="Color.Primary"  Disabled>
+        <Icon Name="IconName.ArrowRight" />
+        Export
+    </Button>
+}
+
+@if (!string.IsNullOrEmpty(MarkdownText))
+{
+    <Button Size="Size.Small" Color="Color.Primary">
+        <Icon Name="IconName.ArrowRight" />
+        Export
+    </Button>
+}
+
+@*</Div>*@
+
+@*<ListView @ref="fiList" TItem="FlowItem"
+          Data="FlowItems"
+          TextField="(item) => item.Label"
+          ValueField="(item) => item.ID"
+          Mode="ListGroupMode.Selectable"
+          Color="Color.Default"
+          MaxHeight="300px"
+          SelectedItem="selectedItem"
+>
+</ListView>
+*@
+
+@*<h3>Work Items</h3>*@
+<br/>
+
+<Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">Work Items
+
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewItem">
+    <Icon Name="IconName.Add" />
+    New
+</Button>
+
+@if (selectedItemRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+@if (selectedItemRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowItemModal">
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+
+@if (selectedItemRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+@if (selectedItemRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary">
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+
+</Span>
+<br />
+
+<DataGrid TItem="PlanItem"
+          Data="@Document.Items"
+          @bind-SelectedRow="@selectedItemRow"
+          Responsive>
+    <DataGridColumns>
+    <DataGridColumn Field="@nameof( PlanItem.Label )" Editable="false">
+        <DisplayTemplate>
+            @{
+                @($"{context.Label} - {context.Duration} (")
+                <Blazorise.Link To="@CalculateLink(Document.BaseUrl, context.StoryId)" Target="Target.Blank">
+    @context.StoryId
+</Blazorise.Link>
+                @($")")
+
+                //if ( date != null )
+                //{
+                //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
+                //}
+            }
+        </DisplayTemplate>
+
+    </DataGridColumn>
+    </DataGridColumns>
+    <EmptyTemplate>
+        <div class="box">
+            No plan items were found!
+        </div>
+    </EmptyTemplate>
+</DataGrid>
+
+<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
+
+<div>
+    <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
+</div>
+
+<StardustDL.RazorComponents.Markdown.MarkdownRenderer
+    Value="@MarkdownText"
+    Class="your class"
+    Style="your styles"
+    RenderInterval="@TimeSpan.FromSeconds(10)"/>
+
+<LocalEdit.Modals.PlanItemModal @ref="planItemModalRef" Items=@Document.Items Closed="@OnPlanItemModalClosed"></LocalEdit.Modals.PlanItemModal>
+
+<LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

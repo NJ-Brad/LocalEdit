@@ -2,18 +2,32 @@
 <Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModalOpened">
     <ModalContent Centered>
         <ModalHeader>
-            <ModalTitle>Employee edit</ModalTitle>
-            <CloseButton />
+            @if (loadFileMode)
+            {
+                <ModalTitle>Load File</ModalTitle>
+            }
+            @if (!loadFileMode)
+            {
+                <ModalTitle>Save File</ModalTitle>
+            }
+@*            <CloseButton />*@
         </ModalHeader>
         <ModalBody>
 
-<FilePicker Upload="OnFileUpload" ShowMode="FilePickerShowMode.Dropdown" AutoReset=true/>
-<button class="btn btn-primary" @onclick="DownloadFile">Save</button>
+            @if(loadFileMode)
+            {
+                <FilePicker Upload="OnFileUpload" ShowMode="FilePickerShowMode.Dropdown" AutoReset=true/>
+            }
+
+            @if(!loadFileMode)
+            {
+                <button class="btn btn-primary" @onclick="DownloadFile">Save</button>
+            }
 
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Secondary" Clicked="@CloseModal">Close</Button>
-            <Button Color="Color.Primary" Clicked="@TryCloseModal">Save Changes</Button>
+@*            <Button Color="Color.Primary" Clicked="@TryCloseModal">Save Changes</Button>*@
         </ModalFooter>
     </ModalContent>
 </Modal>

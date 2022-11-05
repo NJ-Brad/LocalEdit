@@ -11,7 +11,7 @@ namespace LocalEdit.Modals
         //private bool cancelled = false;
         //private bool validationRequired = false;
 
-        public ModalResult Result { get; private set; }
+        public ModalResult Result { get; protected set; }
 
 
         [Parameter] public EventCallback Closed { get; set; }

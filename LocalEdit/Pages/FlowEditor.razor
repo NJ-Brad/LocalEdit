@@ -5,7 +5,7 @@
 @using Blazorise
 @using Blazorise.Extensions;
 @using LocalEdit.FlowTypes
-<h3>FlowEditor</h3>
+<h3>Flow Editor</h3>
 
 <Buttons Role="ButtonsRole.Toolbar">
     <Buttons Margin="Margin.Is2.FromEnd">
@@ -15,8 +15,8 @@
     </Buttons>
 </Buttons>
 
-<button class="btn btn-primary" @onclick="ShowFileModal">Popup</button>
-
+<button class="btn btn-primary" @onclick="LoadFile">Load</button>
+<button class="btn btn-primary" @onclick="SaveFile">Save</button>
 
 @*</Div>*@
 
@@ -33,7 +33,7 @@
 *@
 
 <DataGrid TItem="FlowItem"
-          Data="@FlowItems"
+          Data="@Document.Items"
           @bind-SelectedRow="@selectedItemRow"
           Responsive>
     <DataGridColumn Field="@nameof( FlowItem.Label )" Editable="false"></DataGridColumn>
@@ -45,10 +45,8 @@
 <Button Size="Size.Small" Color="Color.Info">Delete</Button>
 <br />
 
-<LocalEdit.Modals.FlowItemModal @ref="flowItemModalRef" Closed="@OnFlowItemModalClosed"></LocalEdit.Modals.FlowItemModal>
-
 <DataGrid TItem="FlowRelationship"
-          Data="@FlowRelationships"
+          Data="@Document.Relationships"
           @bind-SelectedRow="@selectedRelationshipRow"
           Responsive>
           <DataGridColumns>
@@ -84,8 +82,13 @@
 <Button Size="Size.Small" Color="Color.Info" Clicked="@ShowRelationshipModal">Edit</Button>
 <Button Size="Size.Small" Color="Color.Info">Delete</Button>
 <br />
+
+<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
+
+
+
 <div>
-    <textarea @bind="MarkdownText" @bind:event="oninput" />
+    <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
 </div>
 
 <StardustDL.RazorComponents.Markdown.MarkdownRenderer
@@ -93,6 +96,8 @@
     Class="your class"
     Style="your styles"
     RenderInterval="@TimeSpan.FromSeconds(10)"/>
+
+<LocalEdit.Modals.FlowItemModal @ref="flowItemModalRef" Closed="@OnFlowItemModalClosed"></LocalEdit.Modals.FlowItemModal>
 
 <LocalEdit.Modals.FlowRelationshipModal @ref="flowRelationshipModalRef" Closed="@OnFlowRelationshipModalClosed"></LocalEdit.Modals.FlowRelationshipModal>
 

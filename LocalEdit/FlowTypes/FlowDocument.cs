@@ -2,7 +2,7 @@
 {
     public class FlowDocument
     {
-        List<FlowItem> Items { get; set; }= new List<FlowItem>();
-        List<FlowRelationship> Relationships { get; set; }= new List<FlowRelationship>();
+        public List<FlowItem> Items { get; set; }= new List<FlowItem>();
+        public List<FlowRelationship> Relationships { get; set; }= new List<FlowRelationship>();
     }
 }

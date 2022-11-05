@@ -16,28 +16,56 @@ namespace LocalEdit.Modals
         string fileText = "";
         string name = "";
 
+        bool loadFileMode = false;
+
         //protected override async Task OnInitializedAsync()
         //{
-            //            await localStorage.SetItemAsync("name", "John Smith");
-            //var name = await localStorage.GetItemAsync<string>("name");
-            //var upl = await localStorage.GetItemAsync<string>("uploaded");
+        //            await localStorage.SetItemAsync("name", "John Smith");
+        //var name = await localStorage.GetItemAsync<string>("name");
+        //var upl = await localStorage.GetItemAsync<string>("uploaded");
 
-            //var exists = await localStorage.GetItemAsync<string>("i18nextLng");
+        //var exists = await localStorage.GetItemAsync<string>("i18nextLng");
 
-            //var keys = await localStorage.KeysAsync();
+        //var keys = await localStorage.KeysAsync();
         //}
 
+        public Task SaveFile(string fileText)
+        {
+            loadFileMode = false;
+            this.fileText = fileText;
+
+            modalVisible = true;
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        public Task LoadFile()
+        {
+            loadFileMode = true;
+            modalVisible = true;
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
 
         async Task OnFileUpload(FileUploadEventArgs e)
         {
             try
             {
-                using (MemoryStream result = new MemoryStream())
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    await e.File.OpenReadStream(long.MaxValue).CopyToAsync(result);
-                    result.Seek(0, SeekOrigin.Begin);
-                    FileText = await new StreamReader(result).ReadToEndAsync();
+                    await e.File.OpenReadStream(long.MaxValue).CopyToAsync(ms);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    FileText = await new StreamReader(ms).ReadToEndAsync();
                     //fileText = await new StreamReader(e.File.OpenReadStream()).ReadToEndAsync();
+                    name = e.File.Name;
+                    Result = ModalResult.OK;
+                    await modalRef.Hide();
+
+                    Closed.InvokeAsync();
                 }
             }
             catch (Exception exc)
@@ -47,7 +75,6 @@ namespace LocalEdit.Modals
             finally
             {
                 //this.StateHasChanged();
-                name = e.File.Name;
             }
         }
 
