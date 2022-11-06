@@ -11,6 +11,11 @@
 
 @*<Span>Plan Editor  </Span>*@
 
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewPlan">
+    <Icon Name="IconName.Star" />
+    New Plan
+</Button>
+
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadFile">
     <Icon Name="IconName.FileUpload" />
     Load
@@ -52,6 +57,70 @@
 *@
 
 @*<h3>Work Items</h3>*@
+
+            <Validations @ref="validations" Mode="ValidationMode.Manual" ValidateOnLoad=false>
+                <Blazorise.ValidationSummary Label="The following errors were found..." />
+                @*    <Field>
+                    <FieldLabel>Name with validation</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                    <Blazorise.TextEdit Placeholder="Enter name (validated)">
+                    <Feedback>
+                    <ValidationNone>Please enter the name.</ValidationNone>
+                    <ValidationSuccess>Name is good.</ValidationSuccess>
+                    <ValidationError>Enter valid name!</ValidationError>
+                    </Feedback>
+                    </Blazorise.TextEdit>
+                    </Validation>
+                    </Field>
+                *@
+                <Field>
+                    <FieldLabel>Title</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <TextEdit @bind-Text="Document.Title" Placeholder="Enter Title">
+                            <Feedback>
+                                <ValidationError>Title is required.</ValidationError>
+                            </Feedback>
+                        </TextEdit>
+                    </Validation>
+                </Field>
+
+                <Field>
+                    <FieldLabel>Project Start Date</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <TextEdit @bind-Text="Document.StartDate" Placeholder="Enter Date">
+                            <Feedback>
+                                <ValidationError>Start Date is required.</ValidationError>
+                            </Feedback>
+                        </TextEdit>
+                    </Validation>
+                </Field>
+
+                <Field>
+                    <FieldLabel>Base URL (For Stories)</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <TextEdit @bind-Text="Document.BaseUrl" Placeholder="Enter Base URL">
+                            <Feedback>
+                                <ValidationError>Base URL is required.</ValidationError>
+                            </Feedback>
+                        </TextEdit>
+                    </Validation>
+                </Field>
+
+@*                <Field Horizontal>
+                    <FieldLabel ColumnSize="ColumnSize.Is3">Duration</FieldLabel>
+                    <FieldBody ColumnSize="ColumnSize.Is5">
+                        <Validation Validator="ValidationRule.IsNotEmpty">
+                            <TextEdit @bind-Text="Item.Duration" Placeholder="Enter duration">
+                                <Feedback>
+                                    <ValidationError>Please enter the duration.</ValidationError>
+                                </Feedback>
+                            </TextEdit>
+                        </Validation>
+                    </FieldBody>
+                    Days
+                </Field>
+*@
+</Validations>
 <br/>
 
 <Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">Work Items
@@ -124,11 +193,12 @@
     </EmptyTemplate>
 </DataGrid>
 
-<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
+@*<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
 
 <div>
     <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
 </div>
+*@
 
 @*<StardustDL.RazorComponents.Markdown.MarkdownRenderer
     Value="@MarkdownText"
