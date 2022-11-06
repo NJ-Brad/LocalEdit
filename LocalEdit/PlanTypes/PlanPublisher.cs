@@ -55,6 +55,8 @@ namespace LocalEdit.PlanTypes
 
             // ");
 
+            // start date and title MUST be filled in
+
             sb.AppendLine("gantt");
             // gantt
             sb.AppendLine("    dateFormat  YYYY-MM-DD");

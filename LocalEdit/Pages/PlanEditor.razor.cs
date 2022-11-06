@@ -176,14 +176,24 @@ namespace LocalEdit.Pages
 
         private Task ExportFile()
         {
-            string fileText = JsonSerializer.Serialize(Document);
-
             GenerateMarkdown();
 
+            fileManagementModalRef.Name = "plan.md";
             fileManagementModalRef.SaveFile(MarkdownText);
 
             return Task.CompletedTask;
         }
+
+        private Task ExportHtml()
+        {
+            string htmlText = GenerateHtml().Result;
+
+            fileManagementModalRef.Name = "plan.html";
+            fileManagementModalRef.SaveFile(htmlText);
+
+            return Task.CompletedTask;
+        }
+
 
         private Task OnFileManagementModalClosed()
         {
@@ -193,15 +203,6 @@ namespace LocalEdit.Pages
                 Document = (PlanDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument));
                 InvokeAsync(() => StateHasChanged());
             }
-            //if (adding)
-            //{
-            //    // remove the new item, if add was cancelled
-            //    if (flowRelationshipModalRef.Result == ModalResult.Cancel)
-            //    {
-            //        FlowRelationships.Remove(selectedRelationshipRow);
-            //    }
-            //}
-            //adding = false;
 
             return Task.CompletedTask;
         }
@@ -211,6 +212,11 @@ namespace LocalEdit.Pages
         {
             MarkdownText = MarkdownGenerator.WrapMermaid(PlanPublisher.Publish(Document));
             return Task.CompletedTask;
+        }
+        private Task<string> GenerateHtml()
+        {
+            string htmlText = HtmlGenerator.WrapMermaid(PlanPublisher.Publish(Document));
+            return Task.FromResult(htmlText);
         }
     }
 }

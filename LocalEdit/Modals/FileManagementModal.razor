@@ -21,6 +21,7 @@
 
             @if(!loadFileMode)
             {
+                <TextEdit @bind-Text="Name" Placeholder="Enter file name" />
                 <button class="btn btn-primary" @onclick="DownloadFile">Save</button>
             }
 

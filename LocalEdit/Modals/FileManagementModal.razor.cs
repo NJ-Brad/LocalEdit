@@ -38,7 +38,7 @@ namespace LocalEdit.Modals
 
             InvokeAsync(() => StateHasChanged());
 
-            Result = ModalResult.OK;
+            Result = ModalResult.Saved;
             modalRef.Hide();
 
             Closed.InvokeAsync();
@@ -102,7 +102,18 @@ namespace LocalEdit.Modals
         {
             // https://stackoverflow.com/questions/16072709/converting-string-to-byte-array-in-c-sharp
             byte[] bytes = Encoding.ASCII.GetBytes(FileText);
-            await BlazorDownloadFileService.DownloadFileAsync("example.txt", bytes);
+
+            Result = ModalResult.Saved;
+
+            if (string.IsNullOrEmpty(name))
+            {
+                name = "example.txt";
+            }
+            await BlazorDownloadFileService.DownloadFileAsync(name, bytes);
+
+            await modalRef.Hide();
+
+            Closed.InvokeAsync();
         }
 
     }
