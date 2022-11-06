@@ -88,6 +88,16 @@ namespace LocalEdit.Modals
             return Task.CompletedTask;
         }
 
+        private Task DeleteDependency()
+        {
+            if (selectedDependencyRow != null)
+            {
+                Item.Dependencies.Remove(selectedDependencyRow);
+                selectedDependencyRow = null;
+            }
+
+            return Task.CompletedTask;
+        }
 
 
 

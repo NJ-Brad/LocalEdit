@@ -82,7 +82,7 @@
 }
 @if (selectedDependencyRow != null)
 {
-    <Button Size="Size.Small" Color="Color.Primary">
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteDependency">
     <Icon Name="IconName.Delete" />
     Delete
 </Button>
@@ -111,7 +111,7 @@
     </DataGridColumns>
     <EmptyTemplate>
         <div class="box">
-            No relations were found!
+            No dependencies declared!
         </div>
     </EmptyTemplate>
 </DataGrid>

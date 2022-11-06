@@ -106,6 +106,18 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task DeleteItem()
+        {
+            // remove the new item, if add was cancelled
+            if (selectedItemRow != null)
+            {
+                Document.Items.Remove(selectedItemRow);
+                selectedItemRow = null;
+            }
+
+            return Task.CompletedTask;
+        }
+
         public static string CalculateLink(string baseUrl, string storyId)
         {
             return baseUrl + "/" + storyId;
