@@ -174,6 +174,17 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task ExportFile()
+        {
+            string fileText = JsonSerializer.Serialize(Document);
+
+            GenerateMarkdown();
+
+            fileManagementModalRef.SaveFile(MarkdownText);
+
+            return Task.CompletedTask;
+        }
+
         private Task OnFileManagementModalClosed()
         {
             if (fileManagementModalRef.Result == ModalResult.OK)

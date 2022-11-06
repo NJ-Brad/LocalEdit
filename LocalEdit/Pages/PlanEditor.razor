@@ -30,7 +30,7 @@
 
 @if (!string.IsNullOrEmpty(MarkdownText))
 {
-    <Button Size="Size.Small" Color="Color.Primary">
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportFile">
         <Icon Name="IconName.ArrowRight" />
         Export
     </Button>

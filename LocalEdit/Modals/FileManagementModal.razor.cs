@@ -38,6 +38,10 @@ namespace LocalEdit.Modals
 
             InvokeAsync(() => StateHasChanged());
 
+            Result = ModalResult.OK;
+            modalRef.Hide();
+
+            Closed.InvokeAsync();
             return Task.CompletedTask;
         }
 
