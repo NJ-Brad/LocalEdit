@@ -97,8 +97,8 @@ namespace LocalEdit.Pages
                 // remove the new item, if add was cancelled
                 if (planItemModalRef.Result == ModalResult.Cancel)
                 {
-                    selectedItemRow = null;
                     Document.Items.Remove(selectedItemRow);
+                    selectedItemRow = null;
                 }
             }
             adding = false;

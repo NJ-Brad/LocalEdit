@@ -41,7 +41,55 @@ namespace LocalEdit.Modals
             await validations.ClearAll();
         }
 
+        PlanDependencyModal planDependencyModalRef = null;
+        bool adding = false;
+
         PlanItemDependency selectedDependencyRow = null;
+
+        private Task EditDependency()
+        {
+            if (selectedDependencyRow == null)
+            {
+                return Task.CompletedTask;
+            }
+            planDependencyModalRef.Item = selectedDependencyRow;
+
+            planDependencyModalRef?.ShowModal();
+
+            //InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        private Task AddNewDependency()
+        {
+            PlanItemDependency newItem = new PlanItemDependency();
+
+            selectedDependencyRow = newItem;
+            Item.Dependencies.Add(newItem);
+            adding = true;
+
+            return EditDependency();
+        }
+
+        private Task OnDependencyModalClosed()
+        {
+            if (adding)
+            {
+                // remove the new item, if add was cancelled
+                if (planDependencyModalRef.Result == ModalResult.Cancel)
+                {
+                    Item.Dependencies.Remove(selectedDependencyRow);
+                    selectedDependencyRow = null;
+                }
+            }
+            adding = false;
+
+            return Task.CompletedTask;
+        }
+
+
+
 
         [Parameter]
         public PlanItem Item { get; set; } = new();
