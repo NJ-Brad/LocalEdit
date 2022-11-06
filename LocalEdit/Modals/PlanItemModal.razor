@@ -38,89 +38,97 @@
 
                 <Field Horizontal>
                     <FieldLabel ColumnSize="ColumnSize.Is3">Story ID</FieldLabel>
-                    <FieldBody ColumnSize="ColumnSize.Is9" >
+                    <FieldBody ColumnSize="ColumnSize.Is9">
                         <TextEdit @bind-Text="Item.StoryId" Placeholder="Enter story ID" />
                     </FieldBody>
                 </Field>
 
                 <Field Horizontal>
                     <FieldLabel ColumnSize="ColumnSize.Is3">Duration</FieldLabel>
-                    <FieldBody ColumnSize="ColumnSize.Is9" >
-                        <TextEdit @bind-Text="Item.Duration" Placeholder="Enter duration" />
+                    <FieldBody ColumnSize="ColumnSize.Is5">
+                        <Validation Validator="ValidationRule.IsNotEmpty">
+                            <TextEdit @bind-Text="Item.Duration" Placeholder="Enter duration">
+                                <Feedback>
+                                    <ValidationError>Please enter the duration.</ValidationError>
+                                </Feedback>
+                            </TextEdit>
+                        </Validation>
                     </FieldBody>
+                    Days
                 </Field>
 
 
-<Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">Depends On
+                <Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">
+                    Depends On
 
-<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewDependency">
-    <Icon Name="IconName.Add" />
-    New
-</Button>
+                    <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewDependency">
+                        <Icon Name="IconName.Add" />
+                        New
+                    </Button>
 
-@if (selectedDependencyRow == null)
-{
-    <Button Size="Size.Small" Color="Color.Primary" Disabled>
-        <Icon Name="IconName.Edit" />
-        Edit
-    </Button>
-}
-@if (selectedDependencyRow != null)
-{
-    <Button Size="Size.Small" Color="Color.Primary" Clicked="@EditDependency">
-        <Icon Name="IconName.Edit" />
-        Edit
-    </Button>
-}
+                    @if (selectedDependencyRow == null)
+                    {
+                        <Button Size="Size.Small" Color="Color.Primary" Disabled>
+                            <Icon Name="IconName.Edit" />
+                            Edit
+                        </Button>
+                    }
+                    @if (selectedDependencyRow != null)
+                    {
+                        <Button Size="Size.Small" Color="Color.Primary" Clicked="@EditDependency">
+                            <Icon Name="IconName.Edit" />
+                            Edit
+                        </Button>
+                    }
 
-@if (selectedDependencyRow == null)
-{
-    <Button Size="Size.Small" Color="Color.Primary" Disabled>
-    <Icon Name="IconName.Delete" />
-    Delete
-</Button>
-}
-@if (selectedDependencyRow != null)
-{
-    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteDependency">
-    <Icon Name="IconName.Delete" />
-    Delete
-</Button>
-}
+                    @if (selectedDependencyRow == null)
+                    {
+                        <Button Size="Size.Small" Color="Color.Primary" Disabled>
+                            <Icon Name="IconName.Delete" />
+                            Delete
+                        </Button>
+                    }
+                    @if (selectedDependencyRow != null)
+                    {
+                        <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteDependency">
+                            <Icon Name="IconName.Delete" />
+                            Delete
+                        </Button>
+                    }
 
-</Span>
-<br />
+                </Span>
+                <br />
                 <h2></h2>
 
-<DataGrid TItem="PlanItemDependency"
-          Data="@Item.Dependencies"
-          @bind-SelectedRow="@selectedDependencyRow"
-          Responsive>
-          <DataGridColumns>
-    <DataGridColumn Field="@nameof(PlanItemDependency.ID)" Editable="false">
-        <DisplayTemplate>
-            @{
-                @($"{DecodePlanItemId(context.ID)}")
-                //if ( date != null )
-                //{
-                //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
-                //}
-            }
-        </DisplayTemplate>
-    </DataGridColumn>
-    </DataGridColumns>
-    <EmptyTemplate>
-        <div class="box">
-            No dependencies declared!
-        </div>
-    </EmptyTemplate>
-</DataGrid>
+                <DataGrid TItem="PlanItemDependency"
+                          Data="@Item.Dependencies"
+                          @bind-SelectedRow="@selectedDependencyRow"
+                          Responsive>
+                    <DataGridColumns>
+                        <DataGridColumn Field="@nameof(PlanItemDependency.ID)" Editable="false">
+                            <DisplayTemplate>
+                                @{
+                                    @($"{DecodePlanItemId(context.ID)}")
+                                    //if ( date != null )
+                                    //{
+                                    //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
+                                    //}
+                                }
+                            </DisplayTemplate>
+                        </DataGridColumn>
+                    </DataGridColumns>
+                    <EmptyTemplate>
+                        <div class="box">
+                            No dependencies declared!
+                        </div>
+                    </EmptyTemplate>
+                </DataGrid>
 
             </Validations>
 
 
 
-<LocalEdit.Modals.PlanDependencyModal @ref="planDependencyModalRef" Items=@Items Closed="@OnDependencyModalClosed"></LocalEdit.Modals.PlanDependencyModal>
+            <LocalEdit.Modals.PlanDependencyModal @ref="planDependencyModalRef" Items=@Items Closed="@OnDependencyModalClosed"></LocalEdit.Modals.PlanDependencyModal>
 
         </ModalBody>
         <ModalFooter>
