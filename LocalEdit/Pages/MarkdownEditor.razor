@@ -1,26 +1,22 @@
 ﻿@page "/MarkdownEditor"
-<h3>MarkdownEditor</h3>
+<h3>Markdown Editor</h3>
+<hr/>
+
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewMdDocument">
+    <Icon Name="IconName.Star" />
+    New Document
+</Button>
+
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadFile">
+    <Icon Name="IconName.FileUpload" />
+    Load
+</Button>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveFile">
+    <Icon Name="IconName.FileDownload" />
+    Save
+</Button>
 
 <Markdown Value="@markdownValue" ValueChanged="@OnMarkdownValueChanged" />
 
-@code {
-    string markdownValue = "# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic*, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.";
+<LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>
 
-    string markdownHtml;
-
-    protected override void OnInitialized()
-    {
-        markdownHtml = Markdig.Markdown.ToHtml( markdownValue ?? string.Empty );
-
-        base.OnInitialized();
-    }
-
-    Task OnMarkdownValueChanged( string value )
-    {
-        markdownValue = value;
-
-        markdownHtml = Markdig.Markdown.ToHtml( markdownValue ?? string.Empty );
-
-        return Task.CompletedTask;
-    }
-}
