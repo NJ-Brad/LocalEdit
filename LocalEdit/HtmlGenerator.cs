@@ -4,7 +4,7 @@
     {
         public static string WrapMermaid(string mermaidString)
         {
-            return $@"< !DOCTYPE html >
+            return $@"<!DOCTYPE html >
  <html lang = ""en"" >
     <head >
       <meta charset = ""utf-8"" />
