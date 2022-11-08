@@ -27,7 +27,7 @@ namespace LocalEdit.FlowTypes
         private static string MermaidHeader(FlowDocument flow)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("graph TB");
+            sb.AppendLine("graph TD");
             // classDef borderless stroke-width:0px
             // classDef darkBlue fill:#00008B, color:#fff
             // classDef brightBlue fill:#6082B6, color:#fff
