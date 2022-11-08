@@ -128,6 +128,8 @@ namespace LocalEdit.Pages
             }
             adding = false;
 
+            InvokeAsync(() => StateHasChanged());
+
             return Task.CompletedTask;
         }
 
@@ -185,6 +187,8 @@ namespace LocalEdit.Pages
                 }
             }
             adding = false;
+
+            InvokeAsync(() => StateHasChanged());
 
             return Task.CompletedTask;
         }
