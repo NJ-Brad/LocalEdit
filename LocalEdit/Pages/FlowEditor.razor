@@ -91,11 +91,13 @@
     <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
 </div>
 
+@*
 <StardustDL.RazorComponents.Markdown.MarkdownRenderer
     Value="@MarkdownText"
     Class="your class"
     Style="your styles"
     RenderInterval="@TimeSpan.FromSeconds(10)"/>
+*@
 
 <LocalEdit.Modals.FlowItemModal @ref="flowItemModalRef" Closed="@OnFlowItemModalClosed"></LocalEdit.Modals.FlowItemModal>
 
