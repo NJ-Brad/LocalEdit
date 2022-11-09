@@ -7,14 +7,29 @@
 @using LocalEdit.FlowTypes
 <h3>Flow Editor</h3>
 
-<Buttons Role="ButtonsRole.Toolbar">
-    <Buttons Margin="Margin.Is2.FromEnd">
-        <Button Color="Color.Secondary">Save</Button>
-        <Button Color="Color.Info">import</Button>
-        <Button Color="Color.Info">Export</Button>
-    </Buttons>
-</Buttons>
+@*<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewPlan">
+    <Icon Name="IconName.Star" />
+    New Plan
+</Button>
+*@
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadFile">
+    <Icon Name="IconName.FileUpload" />
+    Load
+</Button>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveFile">
+    <Icon Name="IconName.FileDownload" />
+    Save
+</Button>
 
+@*    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportFile">
+        <Icon Name="IconName.ArrowRight" />
+        Export Markdown Snippet
+    </Button>
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportHtml">
+        <Icon Name="IconName.ArrowRight" />
+        Export HTML
+    </Button>
+*@
 <button class="btn btn-primary" @onclick="LoadFile">Load</button>
 <button class="btn btn-primary" @onclick="SaveFile">Save</button>
 

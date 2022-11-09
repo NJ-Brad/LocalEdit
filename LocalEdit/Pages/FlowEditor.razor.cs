@@ -213,7 +213,7 @@ namespace LocalEdit.Pages
 
         private Task SaveFile()
         {
-            string fileText = JsonSerializer.Serialize(Document);
+            string fileText = JsonSerializer.Serialize(Document, new JsonSerializerOptions { WriteIndented = true }); ;
             //if (selectedItemRow == null)
             //{
             //    return Task.CompletedTask;
