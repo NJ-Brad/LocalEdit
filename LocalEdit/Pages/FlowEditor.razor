@@ -16,6 +16,11 @@
     <Icon Name="IconName.FileUpload" />
     Load
 </Button>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadLpeFile">
+    <Icon Name="IconName.FileUpload" />
+    Load LPE
+</Button>
+
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveFile">
     <Icon Name="IconName.FileDownload" />
     Save
@@ -57,7 +62,7 @@
 @*<Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(parentNode)">Add</Button>*@
 <Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewItem">Add</Button>
 <Button Size="Size.Small" Color="Color.Info" Clicked="@ShowItemModal">Edit</Button>
-<Button Size="Size.Small" Color="Color.Info">Delete</Button>
+<Button Size="Size.Small" Color="Color.Info" Clicked="@DeleteItem">Delete</Button>
 <br />
 
 <DataGrid TItem="FlowRelationship"
@@ -95,7 +100,7 @@
 @*<Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(parentNode)">Add</Button>*@
 <Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewRelationship">Add</Button>
 <Button Size="Size.Small" Color="Color.Info" Clicked="@ShowRelationshipModal">Edit</Button>
-<Button Size="Size.Small" Color="Color.Info">Delete</Button>
+<Button Size="Size.Small" Color="Color.Info" Clicked="@DeleteRelationship">Delete</Button>
 <br />
 
 <button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
@@ -116,6 +121,6 @@
 
 <LocalEdit.Modals.FlowItemModal @ref="flowItemModalRef" Closed="@OnFlowItemModalClosed"></LocalEdit.Modals.FlowItemModal>
 
-<LocalEdit.Modals.FlowRelationshipModal @ref="flowRelationshipModalRef" Closed="@OnFlowRelationshipModalClosed"></LocalEdit.Modals.FlowRelationshipModal>
+<LocalEdit.Modals.FlowRelationshipModal @ref="flowRelationshipModalRef" Items="@Document.Items" Closed="@OnFlowRelationshipModalClosed"></LocalEdit.Modals.FlowRelationshipModal>
 
 <LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

@@ -1,0 +1,34 @@
+{
+    "hasFooter": true,
+    "hasHeader": true,
+    "headerConfig": {
+        "phoneNumber": "888-241-3714",
+        "logo": "rocketMortgageLogo.svg"
+    },
+    "itemFlow": [
+        {
+            "title": "This is a text input question",
+            "itemName": "question1",
+            "itemType": "textInput"
+        },
+        {
+            "title": "Here is the Radio button question",
+            "itemName": "question2",
+            "itemType": "radioInput",
+            "entryLogic": {
+                "valueConditions": [
+                    {
+                        "itemName": "question1",
+                        "itemValue": "default",
+                        "answerType": "exact"
+                    }
+                ]
+            }
+        },
+        {
+            "title": "This is an external question injected into the engine",
+            "itemName": "question3",
+            "itemType": "external"
+        }
+    ]
+}

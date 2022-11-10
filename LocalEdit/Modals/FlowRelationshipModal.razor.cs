@@ -27,5 +27,8 @@ namespace LocalEdit.Modals
         [Parameter]
         public FlowRelationship item { get; set; } = new();
 
+        [Parameter]
+        public List<FlowItem> Items { get; set; } = new();
+
     }
 }

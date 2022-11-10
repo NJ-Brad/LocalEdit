@@ -5,6 +5,7 @@ using LocalEdit.Modals;
 using LocalEdit.FlowTypes;
 using Blazorise.Components;
 using System.Text.Json;
+using LocalEdit.LpeTypes;
 
 namespace LocalEdit.Pages
 {
@@ -133,6 +134,18 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task DeleteItem()
+        {
+            if (selectedItemRow != null)
+            {
+                Document.Items.Remove(selectedItemRow);
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
         private Task ShowRelationshipModal()
         {
             if (selectedRelationshipRow == null)
@@ -176,6 +189,18 @@ namespace LocalEdit.Pages
             return rtnVal;
         }
 
+        private Task DeleteRelationship()
+        {
+            if (selectedRelationshipRow != null)
+            {
+                Document.Relationships.Remove(selectedRelationshipRow);
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
         private Task OnFlowRelationshipModalClosed()
         {
             if (adding)
@@ -195,21 +220,26 @@ namespace LocalEdit.Pages
 
         FileManagementModal fileManagementModalRef;
 
+        bool isLpeFile = false;
+
         private Task LoadFile()
         {
-            //if (selectedItemRow == null)
-            //{
-            //    return Task.CompletedTask;
-            //}
-            //flowItemModalRef.item = selectedItemRow;
+            isLpeFile = false;
 
             fileManagementModalRef?.LoadFile();
-            //fileManagementModalRef?.ShowModal();
-
-            //InvokeAsync(() => StateHasChanged());
 
             return Task.CompletedTask;
         }
+
+        private Task LoadLpeFile()
+        {
+            isLpeFile = true;
+
+            fileManagementModalRef?.LoadFile();
+
+            return Task.CompletedTask;
+        }
+
 
         private Task SaveFile()
         {
@@ -232,8 +262,15 @@ namespace LocalEdit.Pages
         {
             if (fileManagementModalRef.Result == ModalResult.OK)
             {
-                //MarkdownText = fileManagementModalRef.FileText;
-                Document = (FlowDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(FlowDocument));
+                if (isLpeFile)
+                {
+                    string test = fileManagementModalRef.FileText;
+                    Document = LpeConverter.ToFlowDocument((Root)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(Root)));
+                }
+                else
+                {
+                    Document = (FlowDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(FlowDocument));
+                }
                 InvokeAsync(() => StateHasChanged());
             }
             //if (adding)
