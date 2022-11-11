@@ -5,6 +5,7 @@ using LocalEdit.Modals;
 using LocalEdit.PlanTypes;
 using Blazorise.Components;
 using System.Text.Json;
+using StardustDL.RazorComponents.Markdown;
 
 namespace LocalEdit.Pages
 {
@@ -33,6 +34,8 @@ namespace LocalEdit.Pages
         {
 
         }
+
+        MarkdownRenderer markdownRef = null;
 
         protected override Task OnInitializedAsync()
         {
@@ -252,6 +255,7 @@ namespace LocalEdit.Pages
         private Task GenerateMarkdown()
         {
             MarkdownText = MarkdownGenerator.WrapMermaid(PlanPublisher.Publish(Document));
+            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
         }
         private Task<string> GenerateHtml()

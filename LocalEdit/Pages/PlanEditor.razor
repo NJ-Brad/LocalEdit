@@ -193,12 +193,20 @@
     </EmptyTemplate>
 </DataGrid>
 
-@*<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
-
+<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
+@*
 <div>
     <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
 </div>
 *@
+
+<StardustDL.RazorComponents.Markdown.MarkdownRenderer
+    @ref="markdownRef"
+    Value="@MarkdownText"
+    Class="your class"
+    Style="your styles"
+    />
+
 
 @*<StardustDL.RazorComponents.Markdown.MarkdownRenderer
     Value="@MarkdownText"
