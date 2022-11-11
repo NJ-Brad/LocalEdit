@@ -18,11 +18,11 @@ namespace LocalEdit.LpeTypes
                 {
                     if (itmFlow.entryLogic == null)
                     {
-                        rtnVal.Relationships.Add(new FlowRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = "" });
+                        rtnVal.Relationships.Add(new FlowRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = " " });
                     }
                     else
                     {
-                        rtnVal.Relationships.Add(new FlowRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = itmFlow.entryLogic.ToString() });
+                        rtnVal.Relationships.Add(new FlowRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = itmFlow.entryLogic.ToString().Trim().Replace("\r\n", "<br/>") });
                     }
                 }
                 previousItem = itmFlow;

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 
+// https://json2csharp.com/
 namespace LocalEdit.LpeTypes
 {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
