@@ -305,6 +305,32 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task ExportFile()
+        {
+  //          if (Validate().Result)
+            {
+                GenerateMarkdown();
+
+                fileManagementModalRef.Name = "Flow.md";
+                fileManagementModalRef.SaveFile(MarkdownText);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task ExportHtml()
+        {
+//            if (Validate().Result)
+            {
+                string htmlText = GenerateHtml().Result;
+
+                fileManagementModalRef.Name = "flow.html";
+                fileManagementModalRef.SaveFile(htmlText);
+            }
+            return Task.CompletedTask;
+        }
+
+
         MarkdownRenderer markdownRef = null;
 
         private Task OnFileManagementModalClosed()
@@ -343,5 +369,12 @@ namespace LocalEdit.Pages
             markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
         }
+
+        private Task<string> GenerateHtml()
+        {
+            string htmlText = HtmlGenerator.WrapMermaid(FlowPublisher.Publish(Document));
+            return Task.FromResult(htmlText);
+        }
+
     }
 }
