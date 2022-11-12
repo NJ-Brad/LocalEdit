@@ -140,7 +140,7 @@ namespace LocalEdit.Modals
             return rtnVal;
         }
 
-        public async Task ResetValidation()
+        public override async Task ResetValidation()
         {
             await validations.ClearAll();
         }

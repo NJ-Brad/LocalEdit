@@ -259,8 +259,6 @@ namespace LocalEdit.Pages
         private Modal? NewItemModalRef;
         //private Modal? C4ItemModalRef;
 
-        private TestModal? testModalRef;
-
 
         private bool cancelClose;
 
@@ -452,16 +450,6 @@ namespace LocalEdit.Pages
         }
 
 
-        private Task ShowTestModal()
-        {
-            return testModalRef?.ShowModal();
-        }
-
-        private Task OnTestModalClosed()
-        {
-            return Task.CompletedTask;
-        }
-
         
             private Task OnC4ItemModalClosed()
         { 
@@ -481,7 +469,70 @@ InvokeAsync(() => StateHasChanged());
 return Task.CompletedTask;
 }
 
-private Task OnNewItemModalClosing(ModalClosingEventArgs e)
+        C4Relationship selectedRelationshipRow { get; set; }
+
+        // this will need to go deeper, to find child items
+        private string DecodeFlowId(string id)
+        {
+            string rtnVal = id;
+
+            foreach (C4Item fi in Document.Model)
+            {
+                if (fi.Alias == id)
+                {
+                    rtnVal = fi.Text;
+                    break;
+                }
+            }
+
+            return rtnVal;
+        }
+
+        private Task AddNewRelationship()
+        {
+            C4Relationship newRelationship = new C4Relationship();
+            newRelationship.Text = "New Relationship";
+
+            selectedRelationshipRow = newRelationship;
+            Document.Relationships.Add(newRelationship);
+            adding = true;
+
+            return ShowRelationshipModal();
+        }
+
+        C4RelationshipModal c4RelationshipModalRef = null;
+
+        private Task ShowRelationshipModal()
+        {
+            if (selectedRelationshipRow == null)
+            {
+                return Task.CompletedTask;
+            }
+            c4RelationshipModalRef.item = selectedRelationshipRow;
+
+            c4RelationshipModalRef?.ShowModal();
+
+            //InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+
+        private Task DeleteRelationship()
+        {
+            if (selectedRelationshipRow != null)
+            {
+                Document.Relationships.Remove(selectedRelationshipRow);
+                selectedRelationshipRow = null;
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+
+        private Task OnNewItemModalClosing(ModalClosingEventArgs e)
         {
             // just set Cancel to prevent modal from closing
 
@@ -502,7 +553,14 @@ private Task OnNewItemModalClosing(ModalClosingEventArgs e)
         {
             if (SelectedNode != null)
             {
-                Document.Model.Remove(SelectedNode);
+                if (parentNode != null)
+                {
+                    parentNode.Children.Remove(SelectedNode);
+                }
+                else
+                {
+                    Document.Model.Remove(SelectedNode);
+                }
                 SelectedNode = null;
             }
 
