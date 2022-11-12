@@ -9,11 +9,11 @@
 <h1>Flow Editor</h1> 
 <hr/>
 
-@*<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewPlan">
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewFlow">
     <Icon Name="IconName.Star" />
-    New Plan
+    New Flow
 </Button>
-*@
+
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadFile">
     <Icon Name="IconName.FileUpload" />
     Load
@@ -66,9 +66,41 @@
         <TabPanel Name="general"  Border="Border.Primary">
 </TabPanel>
         <TabPanel Name="model"  Border="Border.Primary">
-<Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewItem">Add</Button>
-<Button Size="Size.Small" Color="Color.Info" Clicked="@ShowItemModal">Edit</Button>
-<Button Size="Size.Small" Color="Color.Info" Clicked="@DeleteItem">Delete</Button>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewItem">
+    <Icon Name="IconName.Add" />
+    New
+</Button>
+@if (selectedItemRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+@if (selectedItemRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowItemModal">
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+
+@if (selectedItemRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+@if (selectedItemRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteItem">
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+
+
 <DataGrid TItem="FlowItem"
           Data="@Document.Items"
           @bind-SelectedRow="@selectedItemRow"

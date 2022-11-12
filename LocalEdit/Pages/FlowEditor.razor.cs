@@ -82,6 +82,34 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+
+        private Task NewFlow()
+        {
+            fileManagementModalRef.Name = "New_Flow.json";
+
+            this.Document.Items = new List<FlowItem>(new[]
+            {
+    //            C4TestData.InternalPerson,
+                new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
+                new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
+                new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
+                new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
+            });
+
+                this.Document.Relationships = new List<FlowRelationship>(new[]
+                {
+                new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
+                new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
+                new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
+                new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
+                new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
+            });
+
+            //ResetValidation();
+
+            return Task.CompletedTask;
+        }
+
         //        List<FlowItem> FlowItems = new List<FlowItem>(new[]
         //        {
         ////            C4TestData.InternalPerson,
@@ -140,6 +168,7 @@ namespace LocalEdit.Pages
                 if (flowItemModalRef.Result == ModalResult.Cancel)
                 {
                     Document.Items.Remove(selectedItemRow);
+                    selectedItemRow = null;
                 }
             }
             adding = false;
@@ -224,6 +253,7 @@ namespace LocalEdit.Pages
                 if (flowRelationshipModalRef.Result == ModalResult.Cancel)
                 {
                     Document.Relationships.Remove(selectedRelationshipRow);
+                    selectedRelationshipRow = null;
                 }
             }
             adding = false;
