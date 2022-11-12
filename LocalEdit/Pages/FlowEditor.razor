@@ -5,7 +5,9 @@
 @using Blazorise
 @using Blazorise.Extensions;
 @using LocalEdit.FlowTypes
-<h3>Flow Editor</h3>
+
+<h1>Flow Editor</h1> 
+<hr/>
 
 @*<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewPlan">
     <Icon Name="IconName.Star" />
@@ -35,9 +37,10 @@
         Export HTML
     </Button>
 *@
+@*
 <button class="btn btn-primary" @onclick="LoadFile">Load</button>
 <button class="btn btn-primary" @onclick="SaveFile">Save</button>
-
+*@
 @*</Div>*@
 
 @*<ListView @ref="fiList" TItem="FlowItem"
@@ -52,6 +55,20 @@
 </ListView>
 *@
 
+<Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged">
+    <Items>
+        <Tab Name="general">General</Tab>
+        <Tab Name="model">Model</Tab>
+        <Tab Name="relations">Relations</Tab>
+        <Tab Name="preview">Preview</Tab>
+    </Items>
+    <Content>
+        <TabPanel Name="general"  Border="Border.Primary">
+</TabPanel>
+        <TabPanel Name="model"  Border="Border.Primary">
+<Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewItem">Add</Button>
+<Button Size="Size.Small" Color="Color.Info" Clicked="@ShowItemModal">Edit</Button>
+<Button Size="Size.Small" Color="Color.Info" Clicked="@DeleteItem">Delete</Button>
 <DataGrid TItem="FlowItem"
           Data="@Document.Items"
           @bind-SelectedRow="@selectedItemRow"
@@ -59,13 +76,12 @@
     <DataGridColumn Field="@nameof( FlowItem.Label )" Editable="false"></DataGridColumn>
 </DataGrid>
 
-@*<Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(parentNode)">Add</Button>*@
-<Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewItem">Add</Button>
-<Button Size="Size.Small" Color="Color.Info" Clicked="@ShowItemModal">Edit</Button>
-<Button Size="Size.Small" Color="Color.Info" Clicked="@DeleteItem">Delete</Button>
-<br />
-
-<DataGrid TItem="FlowRelationship"
+</TabPanel>
+        <TabPanel Name="relations"  Border="Border.Primary">
+<Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewRelationship">Add</Button>
+<Button Size="Size.Small" Color="Color.Info" Clicked="@ShowRelationshipModal">Edit</Button>
+<Button Size="Size.Small" Color="Color.Info" Clicked="@DeleteRelationship">Delete</Button>
+            <DataGrid TItem="FlowRelationship"
           Data="@Document.Relationships"
           @bind-SelectedRow="@selectedRelationshipRow"
           Responsive>
@@ -96,20 +112,15 @@
         </div>
     </EmptyTemplate>
 </DataGrid>
+</TabPanel>
+        <TabPanel Name="preview"  Border="Border.Primary">
+@*<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>*@
 
-@*<Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(parentNode)">Add</Button>*@
-<Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewRelationship">Add</Button>
-<Button Size="Size.Small" Color="Color.Info" Clicked="@ShowRelationshipModal">Edit</Button>
-<Button Size="Size.Small" Color="Color.Info" Clicked="@DeleteRelationship">Delete</Button>
-<br />
-
-<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
-
-
-
+@*
 <div>
     <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
 </div>
+*@
 
 <StardustDL.RazorComponents.Markdown.MarkdownRenderer
     @ref="markdownRef"
@@ -117,6 +128,9 @@
     Class="your class"
     Style="your styles"
     />
+</TabPanel>
+    </Content>
+</Tabs>
 
 @*
 <StardustDL.RazorComponents.Markdown.MarkdownRenderer

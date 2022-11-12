@@ -56,8 +56,15 @@
 </ListView>
 *@
 
-@*<h3>Work Items</h3>*@
 
+<Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged">
+    <Items>
+        <Tab Name="general">General</Tab>
+        <Tab Name="workitems">Work Items</Tab>
+        <Tab Name="preview">Preview</Tab>
+    </Items>
+    <Content>
+        <TabPanel Name="general"  Border="Border.Primary">
             <Validations @ref="validations" Mode="ValidationMode.Manual" ValidateOnLoad=false>
                 <Blazorise.ValidationSummary Label="The following errors were found..." />
                 @*    <Field>
@@ -120,11 +127,8 @@
                     Days
                 </Field>
 *@
-</Validations>
-<br/>
-
-<Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">Work Items
-
+</Validations>        </TabPanel>
+        <TabPanel Name="workitems"  Border="Border.Primary">
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewItem">
     <Icon Name="IconName.Add" />
     New
@@ -159,10 +163,6 @@
     Delete
 </Button>
 }
-
-</Span>
-<br />
-
 <DataGrid TItem="PlanItem"
           Data="@Document.Items"
           @bind-SelectedRow="@selectedItemRow"
@@ -192,20 +192,27 @@
         </div>
     </EmptyTemplate>
 </DataGrid>
-
-<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>
-@*
-<div>
-    <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
-</div>
-*@
-
+        </TabPanel>
+        <TabPanel Name="preview"  Border="Border.Primary">
 <StardustDL.RazorComponents.Markdown.MarkdownRenderer
     @ref="markdownRef"
     Value="@MarkdownText"
     Class="your class"
     Style="your styles"
     />
+        </TabPanel>
+    </Content>
+</Tabs>
+
+
+
+@*<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button> *@
+@*
+<div>
+    <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
+</div>
+*@
+
 
 
 @*<StardustDL.RazorComponents.Markdown.MarkdownRenderer

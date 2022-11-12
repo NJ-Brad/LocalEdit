@@ -68,23 +68,37 @@ namespace LocalEdit.Pages
 
         bool adding = false;
 
-//        List<FlowItem> FlowItems = new List<FlowItem>(new[]
-//        {
-////            C4TestData.InternalPerson,
-//            new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
-//            new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
-//            new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
-//            new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
-//        });
+        string selectedTab = "general";
 
-//        List<FlowRelationship> FlowRelationships = new List<FlowRelationship>(new[]
-//        {
-//            new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
-//            new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
-//            new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
-//            new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
-//            new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
-//        });
+        private Task OnSelectedTabChanged(string name)
+        {
+            selectedTab = name;
+
+            if (selectedTab == "preview")
+            {
+                GenerateMarkdown();
+            }
+
+            return Task.CompletedTask;
+        }
+
+        //        List<FlowItem> FlowItems = new List<FlowItem>(new[]
+        //        {
+        ////            C4TestData.InternalPerson,
+        //            new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
+        //            new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
+        //            new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
+        //            new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
+        //        });
+
+        //        List<FlowRelationship> FlowRelationships = new List<FlowRelationship>(new[]
+        //        {
+        //            new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
+        //            new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
+        //            new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
+        //            new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
+        //            new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
+        //        });
 
         private FlowItemModal? flowItemModalRef;
         private FlowRelationshipModal? flowRelationshipModalRef;

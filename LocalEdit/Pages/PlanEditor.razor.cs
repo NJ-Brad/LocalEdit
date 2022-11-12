@@ -67,6 +67,20 @@ namespace LocalEdit.Pages
 
         private PlanItemModal? planItemModalRef;
 
+        string selectedTab = "general";
+
+        private Task OnSelectedTabChanged(string name)
+        {
+            selectedTab = name;
+
+            if (selectedTab == "preview")
+            {
+                GenerateMarkdown();
+            }
+
+            return Task.CompletedTask;
+        }
+
         private Task ShowItemModal()
         {
             if (selectedItemRow == null)
