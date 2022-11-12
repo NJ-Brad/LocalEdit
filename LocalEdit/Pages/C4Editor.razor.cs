@@ -2,6 +2,8 @@
 using Blazorise;
 using LocalEdit.C4Types;
 using LocalEdit.Modals;
+using System.Text.Json;
+using StardustDL.RazorComponents.Markdown;
 
 namespace LocalEdit.Pages
 {
@@ -45,10 +47,74 @@ namespace LocalEdit.Pages
         // If cancelled - exit
         // else update model and tree
 
-        void SelChanged(C4Item item)
+        //void SelChanged(C4Item item)
+        //{
+        //    this.SelectedNode = item;
+        //    parentNode = FindParent(this.SelectedNode, Document.Model);
+        //}
+
+        C4Workspace Document { get; set; } = new C4Workspace();
+        MarkdownRenderer markdownRef = null;
+        C4ItemEditModal? c4ItemModalRef = null;
+
+        private Task ShowItemModal()
         {
-            this.selectedNode = item;
-            parentNode = FindParent(this.selectedNode, C4Items);
+            if (SelectedNode == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            c4ItemModalRef.ParentType = parentNode == null ? C4TypeEnum.Unknown : parentNode.ItemType;
+            c4ItemModalRef.SelectedNode = SelectedNode;
+
+            c4ItemModalRef?.ShowModal();
+
+            //InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        bool adding;
+
+        // Is this a case where I need to wait to create the new item?
+        // For consistency, i should create the item, then remove it on close, if I hit cancel
+        // I could create the item, once I know the type...  Bleep.  I know that I am creating an item.
+        // I just dow't know the node type
+        // If the user cancels on the node type selection, call the cancel method
+        // This will allow the main editor to only need to call the single modal
+
+        private Task AddNewItem()
+        {
+            C4Item newItem = new C4Item();
+            //newItem.ItemType = FlowItemType.Question;
+            //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
+            //newItem.Label = "New Question";
+
+            Document.Model.Add(newItem);
+            SelectedNode = newItem;
+            adding = true;
+
+            InvokeAsync(() => StateHasChanged());
+
+            return ShowItemModal();
+        }
+
+        private Task AddNewChildItem()
+        {
+            C4Item newItem = new C4Item();
+            //newItem.ItemType = FlowItemType.Question;
+            //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
+            //newItem.Label = "New Question";
+
+            parentNode = SelectedNode;
+
+            SelectedNode.Children.Add(newItem);
+            SelectedNode = newItem;
+            adding = true;
+
+            InvokeAsync(() => StateHasChanged());
+
+            return ShowItemModal();
         }
 
         private C4Item FindParent(C4Item NodeInQuestion, IEnumerable<C4Item> collection)
@@ -124,36 +190,74 @@ namespace LocalEdit.Pages
         //    new Item { Text = "Item 3" },
         //};
 
-        IEnumerable<C4Item> C4Items = new[]
+        private Task NewC4Document()
         {
+            Document.Model = new List<C4Item>(new[]
+{
             new C4Item{ItemType=C4TypeEnum.Person, Text="Customer", Description="A customer of the bank, with personal bank accounts", IsExternal=true},
-            new C4Item{ItemType=C4TypeEnum.EnterpriseBoundary, Text="Internet Banking", 
-                Children=new[]{
+            new C4Item{ItemType=C4TypeEnum.EnterpriseBoundary, Text="Internet Banking",
+                Children=new List<C4Item>( new[]{
                     new C4Item{ItemType=C4TypeEnum.Container, Text ="Web Application", Technology="Java, Spring MVC", Description="Delivers the static content and the Internet banking SPA" }
-                }
+                })
             }
-        };
+        });
+            return Task.CompletedTask;
+        }
 
-        //        Person(customer, Customer, "A customer of the bank, with personal bank accounts")
-        //System_Boundary(c1, "Internet Banking")
-        //        {
-        //            Container(web_app, "Web Application", "Java, Spring MVC", "Delivers the static content and the Internet banking SPA")
-        //Container(spa, "Single-Page App", "JavaScript, Angular", "Provides all the Internet banking functionality to cutomers via their web browser")
-        //Container(mobile_app, "Mobile App", "C#, Xamarin", "Provides a limited subset of the Internet banking functionality to customers via their mobile device")
-        //ContainerDb(database, "Database", "SQL Database", "Stores user registraion information, hased auth credentials, access logs, etc.")
-        //Container(backend_api, "API Application", "Java, Docker Container", "Provides Internet banking functionality via API")
-        //}
-        //        System_Ext(email_system, "E-Mail System", "The internal Microsoft Exchange system", "envelope")
-        //System_Ext(banking_system, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+        private Task LoadFile()
+        {
+            fileManagementModalRef?.LoadFile();
 
+            return Task.CompletedTask;
+        }
 
-        C4Item selectedNode = new ();
+        FileManagementModal fileManagementModalRef;
+
+        private Task OnFileManagementModalClosed()
+        {
+            if (fileManagementModalRef.Result == ModalResult.OK)
+            {
+                Document = (C4Workspace)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(C4Workspace));
+                InvokeAsync(() => StateHasChanged());
+            }
+            //if (adding)
+            //{
+            //    // remove the new item, if add was cancelled
+            //    if (flowRelationshipModalRef.Result == ModalResult.Cancel)
+            //    {
+            //        FlowRelationships.Remove(selectedRelationshipRow);
+            //    }
+            //}
+            //adding = false;
+
+            return Task.CompletedTask;
+        }
+
+        private Task SaveFile()
+        {
+            string fileText = JsonSerializer.Serialize(Document, new JsonSerializerOptions { WriteIndented = true }); ;
+            //if (selectedItemRow == null)
+            //{
+            //    return Task.CompletedTask;
+            //}
+            //flowItemModalRef.item = selectedItemRow;
+
+            fileManagementModalRef.SaveFile(fileText);
+            //fileManagementModalRef?.ShowModal();
+
+            //InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        C4Item selectedNode = null;
         C4Item? parentNode = null;
         C4Item? potentialParentNode = null;
         C4Item? newItem = null;
 
-        private Modal? modalRef;
-        private Modal? newItemModalRef;
+        //private Modal? modalRef;
+        private Modal? NewItemModalRef;
+        //private Modal? C4ItemModalRef;
 
         private TestModal? testModalRef;
 
@@ -164,8 +268,6 @@ namespace LocalEdit.Pages
         private bool newItemModalVisible;
 
         private bool cancelled = false;
-
-        PropertyEditor? propEditor;
 
         private Task ShowModal()
         {
@@ -188,22 +290,22 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        private Task HideModal()
-        {
-            modalVisible = false;
+        //private Task HideModal()
+        //{
+        //    modalVisible = false;
 
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
 
-        private Task CloseModal()
-        {
-            // possibly add a chack for changed and prompt to lose changes
+        //private Task CloseModal()
+        //{
+        //    // possibly add a check for changed and prompt to lose changes
 
-            cancelClose = false;
-            cancelled = true;
+        //    cancelClose = false;
+        //    cancelled = true;
 
-            return modalRef.Hide();
-        }
+        //    return modalRef.Hide();
+        //}
 
         C4TypeEnum? newItemType;
 
@@ -211,7 +313,7 @@ namespace LocalEdit.Pages
         {
             newItemType = null;
 
-            return newItemModalRef.Close(CloseReason.EscapeClosing);
+            return NewItemModalRef.Close(CloseReason.EscapeClosing);
         }
 
         private Task CreateItem(C4TypeEnum itemType)
@@ -221,7 +323,7 @@ namespace LocalEdit.Pages
             newItem = new C4Item() { ItemType = itemType };
 //            selectedNode = newItem;
 
-            return newItemModalRef.Close(CloseReason.EscapeClosing);
+            return NewItemModalRef.Close(CloseReason.EscapeClosing);
         }
 
         private bool ShouldShow(C4TypeEnum itemType, C4Item? parentNode)
@@ -280,29 +382,29 @@ namespace LocalEdit.Pages
 
         }
 
-        private async Task TryCloseModal()
-        {
-            // add a check for validity
+        //private async Task TryCloseModal()
+        //{
+        //    // add a check for validity
 
-            cancelClose = true;
+        //    cancelClose = true;
 
-            if (await propEditor.IsValid())
-            {
-                cancelClose = false;
-            }
+        //    if (await propEditor.IsValid())
+        //    {
+        //        cancelClose = false;
+        //    }
 
-            await modalRef.Hide();
-        }
+        //    await modalRef.Hide();
+        //}
 
-        private Task OnModelOpened()
-        {
-            // reset, for the next attempt to close
-            cancelClose = false;
-//            propEditor.ResetValidation();
-            cancelled = false;
+//        private Task OnModelOpened()
+//        {
+//            // reset, for the next attempt to close
+//            cancelClose = false;
+////            propEditor.ResetValidation();
+//            cancelled = false;
 
-            return Task.CompletedTask;
-        }
+//            return Task.CompletedTask;
+//        }
 
         private Task OnNewItemModalOpened()
         {
@@ -314,22 +416,31 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        private Task OnModalClosing(ModalClosingEventArgs e)
-        {
-            // just set Cancel to prevent modal from closing
-
-            if (e.CloseReason == CloseReason.EscapeClosing)
+        string MarkdownText { get; set; } = string.Empty;
+        public C4Item SelectedNode { get => selectedNode; 
+            set
             {
-                CloseModal();
+                selectedNode = value; 
+                parentNode = FindParent(value, Document.Model);
             }
-
-            if (cancelClose || e.CloseReason != CloseReason.UserClosing)
-            {
-                e.Cancel = true;
-            }
-
-            return Task.CompletedTask;
         }
+
+        //private Task OnModalClosing(ModalClosingEventArgs e)
+        //{
+        //    // just set Cancel to prevent modal from closing
+
+        //    if (e.CloseReason == CloseReason.EscapeClosing)
+        //    {
+        //        CloseModal();
+        //    }
+
+        //    if (cancelClose || e.CloseReason != CloseReason.UserClosing)
+        //    {
+        //        e.Cancel = true;
+        //    }
+
+        //    return Task.CompletedTask;
+        //}
 
         private Task OnNewItemModalClosed()
         {
@@ -351,7 +462,26 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        private Task OnNewItemModalClosing(ModalClosingEventArgs e)
+        
+            private Task OnC4ItemModalClosed()
+        { 
+            if(adding)
+            {
+                // remove the new item, if add was cancelled
+                if (c4ItemModalRef.Result == ModalResult.Cancel)
+                {
+                    Document.Model.Remove(SelectedNode);
+                    SelectedNode = null;
+                }
+}
+adding = false;
+
+InvokeAsync(() => StateHasChanged());
+
+return Task.CompletedTask;
+}
+
+private Task OnNewItemModalClosing(ModalClosingEventArgs e)
         {
             // just set Cancel to prevent modal from closing
 
@@ -364,6 +494,73 @@ namespace LocalEdit.Pages
             //{
             //    e.Cancel = true;
             //}
+
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteItem()
+        {
+            if (SelectedNode != null)
+            {
+                Document.Model.Remove(SelectedNode);
+                SelectedNode = null;
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+
+        private Task GenerateMarkdown()
+        {
+            MarkdownText = MarkdownGenerator.WrapMermaid(C4Publisher.Publish(Document));
+
+            markdownRef.Value = MarkdownText;
+            return Task.CompletedTask;
+        }
+
+        private Task<string> GenerateHtml()
+        {
+            string htmlText = HtmlGenerator.WrapMermaid(C4Publisher.Publish(Document));
+            return Task.FromResult(htmlText);
+        }
+
+        private Task ExportFile()
+        {
+            //          if (Validate().Result)
+            {
+                GenerateMarkdown();
+
+                fileManagementModalRef.Name = "Flow.md";
+                fileManagementModalRef.SaveFile(MarkdownText);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task ExportHtml()
+        {
+            //            if (Validate().Result)
+            {
+                string htmlText = GenerateHtml().Result;
+
+                fileManagementModalRef.Name = "flow.html";
+                fileManagementModalRef.SaveFile(htmlText);
+            }
+            return Task.CompletedTask;
+        }
+
+        string selectedTab = "general";
+
+        private Task OnSelectedTabChanged(string name)
+        {
+            selectedTab = name;
+
+            if (selectedTab == "preview")
+            {
+                GenerateMarkdown();
+            }
 
             return Task.CompletedTask;
         }

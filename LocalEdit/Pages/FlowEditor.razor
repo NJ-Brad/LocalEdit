@@ -37,23 +37,6 @@
         Export HTML
     </Button>
 
-@*
-<button class="btn btn-primary" @onclick="LoadFile">Load</button>
-<button class="btn btn-primary" @onclick="SaveFile">Save</button>
-*@
-@*</Div>*@
-
-@*<ListView @ref="fiList" TItem="FlowItem"
-          Data="FlowItems"
-          TextField="(item) => item.Label"
-          ValueField="(item) => item.ID"
-          Mode="ListGroupMode.Selectable"
-          Color="Color.Default"
-          MaxHeight="300px"
-          SelectedItem="selectedItem"
->
-</ListView>
-*@
 
 <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged">
     <Items>

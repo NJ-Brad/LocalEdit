@@ -1,100 +1,183 @@
 ﻿@page "/C4Editor"
 @using LocalEdit.C4Types
 @using Blazorise
-<h3>C4Editor</h3>
+<h1>C4 Editor</h1> 
+<hr/>
 
-@*<Div>
-<Buttons Role="ButtonsRole.Toolbar">
-    <Buttons Margin="Margin.Is2.FromEnd">
-        <Button Color="Color.Danger">New</Button>
-        <Button Color="Color.Secondary">Save</Button>
-        <Button Color="Color.Info">import</Button>
-        <Button Color="Color.Info">Export</Button>
-    </Buttons>
-</Buttons>
-</Div>
-*@
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewC4Document">
+    <Icon Name="IconName.Star" />
+    New C4 Model
+</Button>
 
-@*<Div>
-<Buttons Role="ButtonsRole.Toolbar">
-    <Buttons Margin="Margin.Is2.FromEnd">
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.InternalPerson">Person (Internal)</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ExternalPerson">Person (External)</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Boundary">Ad-Hoc Boundary</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.SystemBoundary">System Boundary</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.EnterpriseBoundary">Enterprise Boundary</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ContainerBoundary">Container Boundary</Button>
-    </Buttons>
-</Buttons>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadFile">
+    <Icon Name="IconName.FileUpload" />
+    Load
+</Button>
 
-<Buttons Role="ButtonsRole.Toolbar">
-    <Buttons Margin="Margin.Is2.FromEnd">
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Component">Component</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Database">Database</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Container">Container</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Node">Node</Button>
-    </Buttons>
-</Buttons>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveFile">
+    <Icon Name="IconName.FileDownload" />
+    Save
+</Button>
 
-<Buttons Role="ButtonsRole.Toolbar">
-    <Buttons Margin="Margin.Is2.FromEnd">
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.InternalSystem">System (Internal)</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ExternalSystem">System (External)</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.InternalDatabaseSystem">System (Internal Database)</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ExternalDatabaseSystem">System (External Database)</Button>
-    </Buttons>
-</Buttons>
-*@
-@*<Div>
-<Buttons Role="ButtonsRole.Toolbar">
-    <Buttons Margin="Margin.Is2.FromEnd">
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.InternalPerson">Person</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.SystemBoundary">System</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.EnterpriseBoundary">Enterprise</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.ContainerBoundary">Container</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Component">Component</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Database">Database</Button>
-        <Button Color="Color.Danger" @onclick="() => selectedNode = C4TestData.Node">Node</Button>
-    </Buttons>
-</Buttons>
-*@
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportFile">
+        <Icon Name="IconName.ArrowRight" />
+        Export Markdown Snippet
+    </Button>
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportHtml">
+        <Icon Name="IconName.ArrowRight" />
+        Export HTML
+    </Button>
 
+<Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged">
+    <Items>
+        <Tab Name="general">General</Tab>
+        <Tab Name="model">Model</Tab>
+        <Tab Name="relations">Relations</Tab>
+        <Tab Name="preview">Preview</Tab>
+    </Items>
+    <Content>
+        <TabPanel Name="general"  Border="Border.Primary">
+</TabPanel>
+        <TabPanel Name="model"  Border="Border.Primary">
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewItem">
+    <Icon Name="IconName.Add" />
+    New
+</Button>
 
-<Buttons Role="ButtonsRole.Toolbar">
-    <Buttons Margin="Margin.Is2.FromEnd">
-        <Button Color="Color.Secondary">Save</Button>
-        <Button Color="Color.Info">import</Button>
-        <Button Color="Color.Info">Export</Button>
-    </Buttons>
-</Buttons>
-@*</Div>*@
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewChildItem">
+    <Icon Name="IconName.Add" />
+    New Child
+</Button>
 
-<h1>Model</h1>
-@*<Buttons Role="ButtonsRole.Toolbar">
-    <Buttons Margin="Margin.Is2.FromEnd">
-        <Button Size="Size.Small" Color="Color.Secondary">Add</Button>
-        <Button Size="Size.Small" Color="Color.Info">Edit</Button>
-        <Button Size="Size.Small" Color="Color.Info">Delete</Button>
-    </Buttons>
-</Buttons>*@
+@if (SelectedNode == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+@if (SelectedNode != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowItemModal">
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
 
+@if (SelectedNode == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+@if (SelectedNode != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteItem">
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
     <Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(parentNode)">Add</Button>
-    <Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(selectedNode)">Add Child</Button>
-    <Button Size="Size.Small" Color="Color.Info"  Clicked="@ShowModal">Edit</Button>
-    <Button Size="Size.Small" Color="Color.Info">Delete</Button>
+    <Button Size="Size.Small" Color="Color.Secondary" Clicked="() => ShowNewItemModal(SelectedNode)">Add Child</Button>
 
-<TreeView Nodes="C4Items"
+    <TreeView Nodes="Document.Model"
           GetChildNodes="@(item => item.Children)"
           HasChildNodes="@(item => item.Children?.Any() == true)"
-          SelectedNodeChanged="@((C4Item item) => SelChanged(item))"
+          @bind-SelectedNode="SelectedNode"
         >
-        <NodeContent>@context.Text </NodeContent>
-@*    <NodeContent>@context.Text 
-        <Blazorise.Link Clicked="@ShowModal" hidden >Add</Blazorise.Link>  
-        <Blazorise.Link Clicked="@ShowModal" >Edit</Blazorise.Link>  
-        <Blazorise.Link Clicked="@ShowModal" >Delete</Blazorise.Link>  
-    </NodeContent>
-*@</TreeView>
+        <NodeContent>@context.Text</NodeContent>
+   </TreeView>
+
+@*          SelectedNodeChanged="@((C4Item item) => SelChanged(item))" *@
+
+</TabPanel>
+        <TabPanel Name="relations"  Border="Border.Primary">
+@*<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewRelationship">
+    <Icon Name="IconName.Add" />
+    New
+</Button>
+@if (selectedRelationshipRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+@if (selectedRelationshipRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowRelationshipModal">
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+
+@if (selectedRelationshipRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+@if (selectedRelationshipRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteRelationship">
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+
+
+
+
+            <DataGrid TItem="FlowRelationship"
+          Data="@Document.Relationships"
+          @bind-SelectedRow="@selectedRelationshipRow"
+          Responsive>
+          <DataGridColumns>
+    <DataGridColumn Field="@nameof( FlowRelationship.From )" Editable="false">
+        <DisplayTemplate>
+            @{
+                string fromCode = ( context as FlowRelationship )?.From;
+                string toCode = ( context as FlowRelationship )?.To;
+
+                    if (fromCode != null)
+                    {
+                        @($"{DecodeFlowId(fromCode)}") <NBSP/> <Icon Name="IconName.ArrowRight"/> <NBSP/> @($"{DecodeFlowId(toCode)}")
+                        <br />
+                        <span style="padding-left:2em">@($"{context.Label}")</span>
+                    }
+                //if ( date != null )
+                //{
+                //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
+                //}
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    </DataGridColumns>
+    <EmptyTemplate>
+        <div class="box">
+            No relations were found!
+        </div>
+    </EmptyTemplate>
+</DataGrid>*@
+
+</TabPanel>
+        <TabPanel Name="preview"  Border="Border.Primary">
+
+<StardustDL.RazorComponents.Markdown.MarkdownRenderer
+    @ref="markdownRef"
+    Value="@MarkdownText"
+    Class="your class"
+    Style="your styles"
+    />
+</TabPanel>
+    </Content>
+</Tabs>
+
+
+
+
 
 
 <Button Color="Color.Primary" Clicked="@ShowTestModal">Test Modal</Button>
@@ -103,7 +186,7 @@
 
 <Span Margin="Margin.Is3.FromStart">Modal is visible: @modalVisible</Span>
 
-<Modal @ref="newItemModalRef" @bind-Visible="@newItemModalVisible" Closing="@OnNewItemModalClosing" Opened="@OnNewItemModalOpened" Closed ="OnNewItemModalClosed" Size="ModalSize.Small">
+<Modal @ref="NewItemModalRef" @bind-Visible="@newItemModalVisible" Closing="@OnNewItemModalClosing" Opened="@OnNewItemModalOpened" Closed ="OnNewItemModalClosed" Size="ModalSize.Small">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Add Item</ModalTitle>
@@ -146,7 +229,7 @@
 </Modal>
 
 
-<Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModelOpened">
+@*<Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModelOpened">
     <ModalContent Centered>
         <ModalHeader>
             <ModalTitle>Employee edit</ModalTitle>
@@ -161,5 +244,10 @@
         </ModalFooter>
     </ModalContent>
 </Modal>
+*@
 
 <LocalEdit.Modals.TestModal @ref="testModalRef" Closed="@OnTestModalClosed"></LocalEdit.Modals.TestModal>
+
+<LocalEdit.Modals.C4ItemEditModal @ref="c4ItemModalRef" Closed="@OnC4ItemModalClosed"></LocalEdit.Modals.C4ItemEditModal>
+
+<LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

@@ -21,7 +21,7 @@
             set => alias = value; }
         public string Description { get; set; } = "";
         public string Technology { get; set; } = string.Empty;
-        public IEnumerable<C4Item> Children { get; set; } = new List<C4Item>();
+        public List<C4Item> Children { get; set; } = new List<C4Item>();
 
         private void FixAlias()
         {

@@ -68,6 +68,12 @@ namespace LocalEdit.Modals
             cancelClose = false;
             //cancelled = false;
             await ResetValidation();
+            await Opened();
+        }
+
+        public virtual async Task Opened()
+        {
+
         }
 
         public virtual async Task<bool> Validate()
