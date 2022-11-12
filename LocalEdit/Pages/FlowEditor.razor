@@ -110,9 +110,43 @@
 
 </TabPanel>
         <TabPanel Name="relations"  Border="Border.Primary">
-<Button Size="Size.Small" Color="Color.Secondary" Clicked="@AddNewRelationship">Add</Button>
-<Button Size="Size.Small" Color="Color.Info" Clicked="@ShowRelationshipModal">Edit</Button>
-<Button Size="Size.Small" Color="Color.Info" Clicked="@DeleteRelationship">Delete</Button>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewRelationship">
+    <Icon Name="IconName.Add" />
+    New
+</Button>
+@if (selectedRelationshipRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+@if (selectedRelationshipRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowRelationshipModal">
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+
+@if (selectedRelationshipRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+@if (selectedRelationshipRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteRelationship">
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+
+
+
+
             <DataGrid TItem="FlowRelationship"
           Data="@Document.Relationships"
           @bind-SelectedRow="@selectedRelationshipRow"
