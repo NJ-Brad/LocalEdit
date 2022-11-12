@@ -517,6 +517,24 @@ return Task.CompletedTask;
             return Task.CompletedTask;
         }
 
+        private Task OnC4RelationshipModalClosed()
+        {
+            if (adding)
+            {
+                // remove the new item, if add was cancelled
+                if (c4RelationshipModalRef.Result == ModalResult.Cancel)
+                {
+                    Document.Relationships.Remove(selectedRelationshipRow);
+                    selectedRelationshipRow = null;
+                }
+            }
+            adding = false;
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
 
         private Task DeleteRelationship()
         {

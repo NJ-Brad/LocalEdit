@@ -25,27 +25,19 @@
                 *@
                 <Field>
                     <FieldLabel>From</FieldLabel>
-@*                    <TextEdit @bind-Text="item.From" Placeholder="Enter source" />
-*@
                     <Select @bind-SelectedValue="@item.From">
+                            <SelectItem Disabled></SelectItem>
                         @foreach (var item in Items)
                         {
                             <SelectItem Value="@(item.Alias)">@(item.Text)</SelectItem>
                         }
-
-@*    <SelectItem Value="1">One</SelectItem>
-    <SelectItem Value="2">Two</SelectItem>
-    <SelectItem Value="3">Three</SelectItem>
-    <SelectItem Value="4">Four</SelectItem>
-*@
                     </Select>
                 </Field>
 
                 <Field>
                     <FieldLabel>To</FieldLabel>
-                    @*<TextEdit @bind-Text="item.To" Placeholder="Enter destination" />*@
-
                     <Select @bind-SelectedValue="@item.To">
+                            <SelectItem Disabled></SelectItem>
                         @foreach (var item in Items)
                         {
                             <SelectItem Value="@(item.Alias)">@(item.Text)</SelectItem>
