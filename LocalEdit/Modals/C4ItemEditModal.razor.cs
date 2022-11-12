@@ -42,6 +42,55 @@ namespace LocalEdit.Modals
 
         Alert myAlert;
 
+        private bool ShouldShow(C4TypeEnum itemType)
+        {
+            bool rtnVal = false;
+
+            switch (ParentType)
+            {
+                case C4TypeEnum.Unknown:
+                    switch (itemType)
+                    {
+                        case C4TypeEnum.Person:
+                        case C4TypeEnum.System:
+                        case C4TypeEnum.EnterpriseBoundary:
+                            rtnVal = true;
+                            break;
+                    }
+                    break;
+                case C4TypeEnum.Person:
+                    // nothing is allowed
+                    break;
+                case C4TypeEnum.System:
+                    switch (itemType)
+                    {
+                        case C4TypeEnum.Container:
+                        case C4TypeEnum.Database:
+                            rtnVal = true;
+                            break;
+                    }
+                    break;
+                case C4TypeEnum.EnterpriseBoundary:
+                    switch (itemType)
+                    {
+                        case C4TypeEnum.Person:
+                        case C4TypeEnum.System:
+                            rtnVal = true;
+                            break;
+                    }
+                    break;
+                case C4TypeEnum.Container:
+                    switch (itemType)
+                    {
+                        case C4TypeEnum.Component:
+                            rtnVal = true;
+                            break;
+                    }
+                    break;
+                }
+            return rtnVal;
+        }
+
         public override Task Opened()
         {
             if (ParentType == C4TypeEnum.Unknown)

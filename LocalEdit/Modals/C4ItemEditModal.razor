@@ -1,4 +1,5 @@
-﻿@inherits LE_ModalBase
+﻿@using LocalEdit.C4Types
+@inherits LE_ModalBase
 <Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModalOpened">
     <ModalContent Centered>
         <ModalHeader>
@@ -40,6 +41,44 @@
         <TextEdit Placeholder="Enter name..." />
     </Field>
 *@
+
+        <Field>
+            <FieldLabel>Item Type</FieldLabel>
+            <Select @bind-SelectedValue="@SelectedNode.ItemType">
+            @if (ShouldShow(C4TypeEnum.Person))
+            {
+                <SelectItem Value=C4TypeEnum.Person>Person</SelectItem>
+            }
+            @if (ShouldShow(C4TypeEnum.System))
+            {
+                <SelectItem Value=C4TypeEnum.System>System</SelectItem>
+            }
+            @if (ShouldShow(C4TypeEnum.EnterpriseBoundary))
+            {
+                <SelectItem Value=C4TypeEnum.EnterpriseBoundary>Enterprise</SelectItem>
+            }
+            @if (ShouldShow(C4TypeEnum.Container))
+            {
+                <SelectItem Value=C4TypeEnum.Container>Container</SelectItem>
+            }
+            @if (ShouldShow(C4TypeEnum.Component))
+            {
+                <SelectItem Value=C4TypeEnum.Component>Component</SelectItem>
+            }
+            @if (ShouldShow(C4TypeEnum.Database))
+            {
+                <SelectItem Value=C4TypeEnum.Database>Database</SelectItem>
+            }
+            @if (ShouldShow(C4TypeEnum.Node))
+            {
+                <SelectItem Value=C4TypeEnum.Node>Node</SelectItem>
+            }
+
+
+            </Select>
+        </Field>
+
+
 
     @if (@showA)
     {
