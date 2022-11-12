@@ -183,6 +183,7 @@ namespace LocalEdit.Pages
             if (selectedItemRow != null)
             {
                 Document.Items.Remove(selectedItemRow);
+                selectedItemRow = null;
             }
 
             InvokeAsync(() => StateHasChanged());
@@ -238,6 +239,7 @@ namespace LocalEdit.Pages
             if (selectedRelationshipRow != null)
             {
                 Document.Relationships.Remove(selectedRelationshipRow);
+                selectedRelationshipRow = null;
             }
 
             InvokeAsync(() => StateHasChanged());
