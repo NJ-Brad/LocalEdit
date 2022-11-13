@@ -15,11 +15,11 @@ namespace LocalEdit
             StringBuilder sb = new();
 
             sb.Append(WrapHeading(headingOne));
-            sb.Append(WrapContent(mermaidStringOne));
+            sb.AppendLine(WrapContent(mermaidStringOne));
             sb.Append(WrapHeading(headingTwo));
-            sb.Append(WrapContent(mermaidStringTwo));
+            sb.AppendLine(WrapContent(mermaidStringTwo));
             sb.Append(WrapHeading(headingThree));
-            sb.Append(WrapContent(mermaidStringThree));
+            sb.AppendLine(WrapContent(mermaidStringThree));
 
             return sb.ToString();
         }
