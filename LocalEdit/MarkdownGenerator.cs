@@ -1,4 +1,6 @@
-﻿namespace LocalEdit
+﻿using System.Text;
+
+namespace LocalEdit
 {
     public class MarkdownGenerator
     {
@@ -8,5 +10,44 @@
 {mermaidString}
 ```";
         }
+        public static string WrapMermaid(string headingOne, string mermaidStringOne, string headingTwo = "", string mermaidStringTwo = "", string headingThree = "", string mermaidStringThree = "")
+        {
+            StringBuilder sb = new();
+
+            sb.Append(WrapHeading(headingOne));
+            sb.Append(WrapContent(mermaidStringOne));
+            sb.Append(WrapHeading(headingTwo));
+            sb.Append(WrapContent(mermaidStringTwo));
+            sb.Append(WrapHeading(headingThree));
+            sb.Append(WrapContent(mermaidStringThree));
+
+            return sb.ToString();
+        }
+
+        public static string WrapHeading(string headingText)
+        {
+            string rtnVal = "";
+            if (!string.IsNullOrEmpty(headingText))
+            {
+                rtnVal = @$"# {headingText}  
+";
+            }
+
+            return rtnVal;
+        }
+        public static string WrapContent(string contentText)
+        {
+            string rtnVal = "";
+            if (!string.IsNullOrEmpty(contentText))
+            {
+                rtnVal = $@"```mermaid
+{contentText}
+```";
+            }
+
+            return rtnVal;
+
+        }
     }
 }
+
