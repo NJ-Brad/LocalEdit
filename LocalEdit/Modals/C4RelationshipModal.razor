@@ -26,7 +26,8 @@
                 <Field>
                     <FieldLabel>From</FieldLabel>
                     <Select @bind-SelectedValue="@item.From">
-                            <SelectItem Disabled></SelectItem>
+@*                            <SelectItem Disabled></SelectItem>
+*@                        
                         @foreach (var item in Items)
                         {
                             <SelectItem Value="@(item.Alias)">@(item.Text)</SelectItem>
@@ -37,7 +38,8 @@
                 <Field>
                     <FieldLabel>To</FieldLabel>
                     <Select @bind-SelectedValue="@item.To">
-                            <SelectItem Disabled></SelectItem>
+@*                            <SelectItem Disabled></SelectItem>
+*@                        
                         @foreach (var item in Items)
                         {
                             <SelectItem Value="@(item.Alias)">@(item.Text)</SelectItem>
