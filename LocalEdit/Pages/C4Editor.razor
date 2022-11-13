@@ -162,7 +162,7 @@
 
 </TabPanel>
         <TabPanel Name="preview"  Border="Border.Primary">
-
+        <MemoEdit @bind-Text="@testVal" />
 <StardustDL.RazorComponents.Markdown.MarkdownRenderer
     @ref="markdownRef"
     Value="@MarkdownText"

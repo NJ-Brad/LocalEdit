@@ -587,10 +587,18 @@ return Task.CompletedTask;
             return Task.CompletedTask;
         }
 
+        protected string testVal { get; set; }
 
         private Task GenerateMarkdown()
         {
-            MarkdownText = MarkdownGenerator.WrapMermaid(C4Publisher.Publish(Document));
+            //MarkdownText = MarkdownGenerator.WrapMermaid(C4Publisher.Publish(Document));
+
+            //MarkdownText = MarkdownGenerator.WrapMermaid(C4Publisher.Publish(Document, "Context"));
+            //testVal = MarkdownText;
+
+            MarkdownText = MarkdownGenerator.WrapMermaid("Context Diagram", C4Publisher.Publish(Document, "Context"),
+                "Container Diagram", C4Publisher.Publish(Document, "Container"),
+                "Component Diagram", C4Publisher.Publish(Document, "Component"));
 
             markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
@@ -598,7 +606,12 @@ return Task.CompletedTask;
 
         private Task<string> GenerateHtml()
         {
-            string htmlText = HtmlGenerator.WrapMermaid(C4Publisher.Publish(Document));
+            //            string htmlText = HtmlGenerator.WrapMermaid(C4Publisher.Publish(Document));
+
+            string htmlText = HtmlGenerator.WrapMermaid("Context Diagram", C4Publisher.Publish(Document, "Context"),
+                "Container Diagram", C4Publisher.Publish(Document, "Container"),
+                "Component Diagram", C4Publisher.Publish(Document, "Component"));
+
             return Task.FromResult(htmlText);
         }
 

@@ -27,8 +27,14 @@ namespace LocalEdit.C4Types
 
     public string diagramType = "";
 
+        public static string Publish(C4Workspace workspace, string diagramType)
+        {
+            C4Publisher me = new C4Publisher();
+            return me.Publish_(workspace, diagramType);
+        }
+
         //    public string Publish(C4Workspace workspace, string diagramType, string format)
-        public string Publish(C4Workspace workspace, string diagramType)
+        public string Publish_(C4Workspace workspace, string diagramType)
         {
 
         diagramType = diagramType;
@@ -168,10 +174,11 @@ private string PublishPlant(C4Workspace workspace)
         sb.Append(PlantConnection(rel));
     }
 
-    return sb.ToString();
-}
+            sb = new(sb.ToString().TrimEnd());
+            return sb.ToString();
+        }
 
-private string PublishPlantContext(C4Workspace workspace)
+        private string PublishPlantContext(C4Workspace workspace)
 {
             StringBuilder sb = new StringBuilder();
 
@@ -196,8 +203,8 @@ private string PublishPlantContext(C4Workspace workspace)
             sb.Append(PlantConnection(rel));
         }
     }
-
-    return sb.ToString();
+            sb = new(sb.ToString().TrimEnd());
+            return sb.ToString();
 }
 
 private string PublishPlantContainer(C4Workspace workspace)
@@ -218,25 +225,26 @@ private string PublishPlantContainer(C4Workspace workspace)
         sb.Append(PlantConnection(rel));
     }
 
-    return sb.ToString();
-}
+            sb = new(sb.ToString().TrimEnd());
+            return sb.ToString();
+        }
 
-//private isInList(lookFor: string, lookIn: string[]): boolean
-//{
-//    var rtnVal: boolean = false;
+        //private isInList(lookFor: string, lookIn: string[]): boolean
+        //{
+        //    var rtnVal: boolean = false;
 
-//    for (var lookInItem of lookIn)
-//    {
-//        if (this.ciEquals(lookFor, lookInItem))
-//        {
-//            rtnVal = true;
-//        }
-//    }
+        //    for (var lookInItem of lookIn)
+        //    {
+        //        if (this.ciEquals(lookFor, lookInItem))
+        //        {
+        //            rtnVal = true;
+        //        }
+        //    }
 
-//    return rtnVal;
-//}
+        //    return rtnVal;
+        //}
 
-private void CreateContextRedirects(List<C4Item> items, string redirectTo = "") {
+        private void CreateContextRedirects(List<C4Item> items, string redirectTo = "") {
 
     C4Item item;
     for (var itmNum = 0; itmNum < items.Count; itmNum++)
@@ -585,6 +593,8 @@ private string PlantItem(C4Item item, int indent = 1)
                 item2 = item.Children[itmNum];
                 sb.AppendLine(PlantItem(item2, indent).TrimEnd());
             }
+            // somehow an extra blank line got added.  this is an attempt to remove it
+                sb = new (sb.ToString().TrimEnd());
             sb.AppendLine($@"{indentation}
         }}");
     }
