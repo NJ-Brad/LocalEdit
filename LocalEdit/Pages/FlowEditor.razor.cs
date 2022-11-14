@@ -331,7 +331,7 @@ namespace LocalEdit.Pages
         }
 
 
-        MarkdownRenderer markdownRef = null;
+//        MarkdownRenderer markdownRef = null;
 
         private Task OnFileManagementModalClosed()
         {
@@ -366,7 +366,7 @@ namespace LocalEdit.Pages
         {
             MarkdownText = MarkdownGenerator.WrapMermaid(FlowPublisher.Publish(Document));
 
-            markdownRef.Value = MarkdownText;
+//            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
         }
 

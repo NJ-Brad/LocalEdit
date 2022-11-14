@@ -35,7 +35,7 @@ namespace LocalEdit.Pages
 
         }
 
-        MarkdownRenderer markdownRef = null;
+//        MarkdownRenderer markdownRef = null;
 
         protected override Task OnInitializedAsync()
         {
@@ -269,7 +269,7 @@ namespace LocalEdit.Pages
         private Task GenerateMarkdown()
         {
             MarkdownText = MarkdownGenerator.WrapMermaid(PlanPublisher.Publish(Document));
-            markdownRef.Value = MarkdownText;
+            //markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
         }
         private Task<string> GenerateHtml()

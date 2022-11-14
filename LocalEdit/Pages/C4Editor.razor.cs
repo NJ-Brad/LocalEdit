@@ -54,7 +54,7 @@ namespace LocalEdit.Pages
         //}
 
         C4Workspace Document { get; set; } = new C4Workspace();
-        MarkdownRenderer markdownRef = null;
+        //MarkdownRenderer markdownRef = null;
         C4ItemEditModal? c4ItemModalRef = null;
 
         private Task ShowItemModal()
@@ -600,7 +600,10 @@ return Task.CompletedTask;
                 "Container Diagram", C4Publisher.Publish(Document, "Container"),
                 "Component Diagram", C4Publisher.Publish(Document, "Component"));
 
-            markdownRef.Value = MarkdownText;
+            //markdownRef.Value = MarkdownText;
+
+//            markdownRef.Value = @"# Preview not available:  
+//## The version of Mermaid used by this control is out of date";
             return Task.CompletedTask;
         }
 
@@ -649,6 +652,7 @@ return Task.CompletedTask;
             if (selectedTab == "preview")
             {
                 GenerateMarkdown();
+                InvokeAsync(() => StateHasChanged());
             }
 
             return Task.CompletedTask;
