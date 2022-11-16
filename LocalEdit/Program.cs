@@ -5,6 +5,8 @@ using LocalEdit;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Modulight.Modules.Hosting;
+//using StardustDL.RazorComponents.Markdown;
+using Microsoft.Extensions.DependencyInjection;
 using StardustDL.RazorComponents.Markdown;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -31,6 +33,8 @@ builder.Services.AddModules(builder =>
 {
     builder.UseRazorComponentClientModules().AddMarkdownModule();
 });
+
+//builder.Services.AddMermaidJS();
 
 await builder.Build().RunAsyncWithModules();
 //await builder.Build().RunAsync();

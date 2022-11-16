@@ -1,0 +1,37 @@
+﻿@page "/mermaid"
+@inject IJSRuntime JSRuntime
+
+<h1>MermaidPage</h1>
+
+
+Welcome to your new app.
+
+@* https://stackoverflow.com/questions/65044209/render-mermaid-diagram-with-blazor-webassembly-app-in-net-5-0 *@
+
+<div>
+    <button @onclick="TriggerClick">
+        Trigger Mermaid diagram render
+    </button>
+</div>
+
+<div>
+    Graph:
+    <div id="output"></div>
+</div>
+
+@code {
+
+    public async Task TriggerClick()
+    {
+        await JSRuntime.InvokeVoidAsync("showAlert", "Hello Brad");
+
+        string input = "C4Context \n" +
+"    Person_Ext(CUSTOMER, \"Customer\", \"A customer of the bank, with personal bank accounts\") \n" +
+"        Enterprise_Boundary(INTERNET_BANKING, \"Internet Banking\") \n" +
+                "{ \n" +
+         "                   Container(WEB_APPLICATION, \"Web Application\", \"Delivers the static content and the Internet banking SPA\", \"Java, Spring MVC\")     \n" +
+"            } \n";
+
+        await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", input);
+    }
+}

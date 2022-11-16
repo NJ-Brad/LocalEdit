@@ -4,6 +4,7 @@ using LocalEdit.C4Types;
 using LocalEdit.Modals;
 using System.Text.Json;
 using StardustDL.RazorComponents.Markdown;
+using LocalEdit.Shared;
 
 namespace LocalEdit.Pages
 {
@@ -54,7 +55,7 @@ namespace LocalEdit.Pages
         //}
 
         C4Workspace Document { get; set; } = new C4Workspace();
-        //MarkdownRenderer markdownRef = null;
+        MarkdownRenderer markdownRef = null;
         C4ItemEditModal? c4ItemModalRef = null;
 
         private Task ShowItemModal()
@@ -415,6 +416,16 @@ namespace LocalEdit.Pages
         }
 
         string MarkdownText { get; set; } = string.Empty;
+
+        Mermaid mermaidOne;
+        Mermaid mermaidTwo;
+        Mermaid mermaidThree;
+
+        void OnClickNode(string nodeId)
+        {
+            // TODO: do something with nodeId
+        }
+
         public C4Item SelectedNode { get => selectedNode; 
             set
             {
@@ -589,7 +600,7 @@ return Task.CompletedTask;
 
         protected string testVal { get; set; }
 
-        private Task GenerateMarkdown()
+        private async Task GenerateMarkdown()
         {
             //MarkdownText = MarkdownGenerator.WrapMermaid(C4Publisher.Publish(Document));
 
@@ -600,11 +611,15 @@ return Task.CompletedTask;
                 "Container Diagram", C4Publisher.Publish(Document, "Container"),
                 "Component Diagram", C4Publisher.Publish(Document, "Component"));
 
+            await mermaidOne.DisplayDiagram(C4Publisher.Publish(Document, "Context"));
+            await mermaidTwo.DisplayDiagram(C4Publisher.Publish(Document, "Container"));
+            await mermaidThree.DisplayDiagram(C4Publisher.Publish(Document, "Component"));
+
             //markdownRef.Value = MarkdownText;
 
-//            markdownRef.Value = @"# Preview not available:  
-//## The version of Mermaid used by this control is out of date";
-            return Task.CompletedTask;
+            //            markdownRef.Value = @"# Preview not available:  
+            //## The version of Mermaid used by this control is out of date";
+            //return Task.CompletedTask;
         }
 
         private Task<string> GenerateHtml()

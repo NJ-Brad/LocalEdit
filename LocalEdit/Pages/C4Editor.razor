@@ -2,6 +2,7 @@
 @using LocalEdit.C4Types
 @using Blazorise
 @using Blazorise.DataGrid
+
 <h1>C4 Editor</h1> 
 <hr/>
 
@@ -163,14 +164,15 @@
 </TabPanel>
         <TabPanel Name="preview"  Border="Border.Primary">
         <MemoEdit @bind-Text="@testVal" />
-        @*
+
 <StardustDL.RazorComponents.Markdown.MarkdownRenderer
     @ref="markdownRef"
     Value="@MarkdownText"
     Class="your class"
     Style="your styles"
     />
-    *@
+
+
 </TabPanel>
     </Content>
 </Tabs>

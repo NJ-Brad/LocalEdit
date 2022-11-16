@@ -1,0 +1,35 @@
+﻿@page "/mermaidtest"
+<h3>MermaidTest</h3>
+
+<div>
+    <button @onclick="TriggerClick">
+        Trigger Mermaid diagram render
+    </button>
+</div>
+
+<Mermaid Id="One" @ref="mermaidOne"></Mermaid>
+<Mermaid Id="Two" @ref="mermaidTwo"></Mermaid>
+
+@code {
+    Mermaid mermaidOne;
+    Mermaid mermaidTwo;
+
+    public async Task TriggerClick()
+    {
+        string mOneText = "C4Context \n" +
+    "    Person_Ext(CUSTOMER, \"Customer\", \"A customer of the bank, with personal bank accounts\") \n" +
+    "        Enterprise_Boundary(INTERNET_BANKING, \"Internet Banking\") \n" +
+                    "{ \n" +
+             "                   Container(WEB_APPLICATION, \"Web Application\", \"Delivers the static content and the Internet banking SPA\", \"Java, Spring MVC\")     \n" +
+    "            } \n";
+
+        string mTwoText = "graph LR \n" +
+            "A[Client] --- B[Load Balancer] \n" +
+            "B-->C[Server01] \n" +
+            "B-->D(Server02) \n";
+        mermaidOne.DisplayDiagram(mOneText);
+        mermaidTwo.DisplayDiagram(mTwoText);
+
+        //        await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", input);
+    }
+}

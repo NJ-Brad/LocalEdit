@@ -7,6 +7,7 @@ using Blazorise.Components;
 using System.Text.Json;
 using LocalEdit.LpeTypes;
 using StardustDL.RazorComponents.Markdown;
+using LocalEdit.Shared;
 
 namespace LocalEdit.Pages
 {
@@ -331,7 +332,12 @@ namespace LocalEdit.Pages
         }
 
 
-//        MarkdownRenderer markdownRef = null;
+        MarkdownRenderer markdownRef = null;
+
+        void OnClickNode(string nodeId)
+        {
+            // TODO: do something with nodeId
+        }
 
         private Task OnFileManagementModalClosed()
         {
@@ -364,9 +370,10 @@ namespace LocalEdit.Pages
         //        private string GenerateMermaidText(FlowDocument document)
         private Task GenerateMarkdown()
         {
+            //mermaidText = FlowPublisher.Publish(Document);
             MarkdownText = MarkdownGenerator.WrapMermaid(FlowPublisher.Publish(Document));
 
-//            markdownRef.Value = MarkdownText;
+            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
         }
 

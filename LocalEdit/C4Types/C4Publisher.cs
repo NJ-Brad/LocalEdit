@@ -607,7 +607,7 @@ public string description = "";
 public bool external = false;
 public string technology = "";
 public bool database = false;
-private string _id = "";
+//private string _id = "";
 
 
 private string FormatPlantItem(string command, C4Item item)
