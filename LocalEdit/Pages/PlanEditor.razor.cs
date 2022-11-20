@@ -5,7 +5,7 @@ using LocalEdit.Modals;
 using LocalEdit.PlanTypes;
 using Blazorise.Components;
 using System.Text.Json;
-using StardustDL.RazorComponents.Markdown;
+//using StardustDL.RazorComponents.Markdown;
 using LocalEdit.Shared;
 
 namespace LocalEdit.Pages
@@ -36,13 +36,16 @@ namespace LocalEdit.Pages
 
         }
 
-        MarkdownRenderer markdownRef = null;
+//        MarkdownRenderer markdownRef = null;
         //Mermaid mermaidOne;
 
         void OnClickNode(string nodeId)
         {
             // TODO: do something with nodeId
         }
+
+    Mermaid MermaidOne { get; set; }
+
 
         protected override Task OnInitializedAsync()
         {
@@ -82,7 +85,8 @@ namespace LocalEdit.Pages
 
             if (selectedTab == "preview")
             {
-                GenerateMarkdown();
+                //GenerateMarkdown();
+                MermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
             }
 
             return Task.CompletedTask;
@@ -278,7 +282,7 @@ namespace LocalEdit.Pages
             //mermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
             //mermaidText = PlanPublisher.Publish(Document);
             MarkdownText = MarkdownGenerator.WrapMermaid(PlanPublisher.Publish(Document));
-            markdownRef.Value = MarkdownText;
+//            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
         }
         private Task<string> GenerateHtml()

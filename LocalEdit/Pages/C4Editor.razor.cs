@@ -3,7 +3,7 @@ using Blazorise;
 using LocalEdit.C4Types;
 using LocalEdit.Modals;
 using System.Text.Json;
-using StardustDL.RazorComponents.Markdown;
+//using StardustDL.RazorComponents.Markdown;
 using LocalEdit.Shared;
 
 namespace LocalEdit.Pages
@@ -55,7 +55,7 @@ namespace LocalEdit.Pages
         //}
 
         C4Workspace Document { get; set; } = new C4Workspace();
-        MarkdownRenderer markdownRef = null;
+//        MarkdownRenderer markdownRef;
         C4ItemEditModal? c4ItemModalRef = null;
 
         private Task ShowItemModal()
@@ -421,6 +421,10 @@ namespace LocalEdit.Pages
         Mermaid mermaidTwo;
         Mermaid mermaidThree;
 
+        string diagramOneDefinition = "One";
+        string diagramTwoDefinition = "Two";
+        string diagramThreeDefinition = "Three";
+
         void OnClickNode(string nodeId)
         {
             // TODO: do something with nodeId
@@ -599,6 +603,9 @@ return Task.CompletedTask;
         }
 
         protected string testVal { get; set; }
+        public Mermaid MermaidOne { get => mermaidOne; set => mermaidOne = value; }
+        public Mermaid MermaidTwo { get => mermaidTwo; set => mermaidTwo = value; }
+        public Mermaid MermaidThree { get => mermaidThree; set => mermaidThree = value; }
 
         private async Task GenerateMarkdown()
         {
@@ -607,13 +614,26 @@ return Task.CompletedTask;
             //MarkdownText = MarkdownGenerator.WrapMermaid(C4Publisher.Publish(Document, "Context"));
             //testVal = MarkdownText;
 
+            //MarkdownText = MarkdownGenerator.WrapMermaid("Context Diagram", C4PublisherLegacy.Publish(Document, "Context"),
+            //    "Container Diagram", C4PublisherLegacy.Publish(Document, "Container"),
+            //    "Component Diagram", C4PublisherLegacy.Publish(Document, "Component"));
+
             MarkdownText = MarkdownGenerator.WrapMermaid("Context Diagram", C4Publisher.Publish(Document, "Context"),
                 "Container Diagram", C4Publisher.Publish(Document, "Container"),
                 "Component Diagram", C4Publisher.Publish(Document, "Component"));
 
-            await mermaidOne.DisplayDiagram(C4Publisher.Publish(Document, "Context"));
-            await mermaidTwo.DisplayDiagram(C4Publisher.Publish(Document, "Container"));
-            await mermaidThree.DisplayDiagram(C4Publisher.Publish(Document, "Component"));
+            //await mermaidOne.DisplayDiagram(C4Publisher.Publish(Document, "Context"));
+            //await mermaidTwo.DisplayDiagram(C4Publisher.Publish(Document, "Container"));
+            //await mermaidThree.DisplayDiagram(C4Publisher.Publish(Document, "Component"));
+
+            //await mermaidOne.DisplayDiagram(C4PublisherLegacy.Publish(Document, "Context"));
+            //await mermaidTwo.DisplayDiagram(C4PublisherLegacy.Publish(Document, "Container"));
+            //await mermaidThree.DisplayDiagram(C4PublisherLegacy.Publish(Document, "Component"));
+
+            //diagramOneDefinition = C4PublisherLegacy.Publish(Document, "Context");
+            //diagramTwoDefinition = C4PublisherLegacy.Publish(Document, "Container");
+            //diagramThreeDefinition = C4PublisherLegacy.Publish(Document, "Component");
+            //testVal = diagramOneDefinition;
 
             //markdownRef.Value = MarkdownText;
 
@@ -660,7 +680,7 @@ return Task.CompletedTask;
 
         string selectedTab = "general";
 
-        private Task OnSelectedTabChanged(string name)
+        private async Task OnSelectedTabChanged(string name)
         {
             selectedTab = name;
 
@@ -668,9 +688,14 @@ return Task.CompletedTask;
             {
                 GenerateMarkdown();
                 InvokeAsync(() => StateHasChanged());
+
+                await MermaidOne.DisplayDiagram(C4Publisher.Publish(Document, "Context"));
+                await MermaidTwo.DisplayDiagram(C4Publisher.Publish(Document, "Container"));
+                await MermaidThree.DisplayDiagram(C4Publisher.Publish(Document, "Component"));
+
             }
 
-            return Task.CompletedTask;
+            return;
         }
 
     }

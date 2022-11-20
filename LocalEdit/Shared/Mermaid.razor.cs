@@ -11,16 +11,44 @@ namespace LocalEdit.Shared
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        public async Task TriggerClick()
+        {
+            var input2 = "graph LR \n" +
+                "A[Brad] --- B[Load Balancer] \n" +
+                "B-->C[Server01] \n" +
+                "B-->D(Server02) \n";
+
+            //            await JSRuntime.InvokeVoidAsync("renderSampleMermaidDiagram");
+            await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input2);
+            //await JSRuntime.InvokeVoidAsync("renderMermaidDiagram2", "output");
+        }
+
         public async Task DisplayDiagram(string input)
         {
-            //await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input);
+            //var input2 = "graph LR \n" +
+            //    "A[Brad] --- B[Load Balancer] \n" +
+            //    "B-->C[Server01] \n" +
+            //    "B-->D(Server02) \n";
 
-            //JSRuntime.InvokeVoidAsync("remderMermaid", this.Id, input);
+            var input2 = "C4Context\n Person_Ext(CUSTOMER, \"Customer\", \"A customer of the bank, with personal bank accounts\")\n";
+
+
+//            await JSRuntime.InvokeVoidAsync("MermaidInitialize");
+                                    await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input);
+//                        await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input2);
+
+            //var input2 = "graph LR \n" +
+            //    "A[Client] --- B[Load Balancer] \n" +
+            //    "B-->C[Server01] \n" +
+            //    "B-->D(Server02) \n";
+
+
+            //JSRuntime.InvokeVoidAsync("renderMermaid", this.Id, input2);
 
             //ChildContent = $"<h1>{input}</h1>";
 
-            ChildContent = AddContent($"<h1>{input}</h1>");
-            ChildContent = AddContent2(input);
+            //ChildContent = AddContent($"<h1>{input}</h1>");
+            //ChildContent = AddContent2(input);
 
             InvokeAsync(() => StateHasChanged());
 

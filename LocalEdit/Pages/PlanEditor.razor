@@ -196,12 +196,15 @@
         </TabPanel>
         <TabPanel Name="preview"  Border="Border.Primary">
 
-<StardustDL.RazorComponents.Markdown.MarkdownRenderer
+@*<StardustDL.RazorComponents.Markdown.MarkdownRenderer
     @ref="markdownRef"
     Value="@MarkdownText"
     Class="your class"
     Style="your styles"
     />
+*@
+
+            <Mermaid Id="output1" @ref="MermaidOne"></Mermaid>
 
 </TabPanel>
     </Content>

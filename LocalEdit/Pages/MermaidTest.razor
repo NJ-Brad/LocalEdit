@@ -16,12 +16,11 @@
 
     public async Task TriggerClick()
     {
-        string mOneText = "C4Context \n" +
-    "    Person_Ext(CUSTOMER, \"Customer\", \"A customer of the bank, with personal bank accounts\") \n" +
-    "        Enterprise_Boundary(INTERNET_BANKING, \"Internet Banking\") \n" +
-                    "{ \n" +
-             "                   Container(WEB_APPLICATION, \"Web Application\", \"Delivers the static content and the Internet banking SPA\", \"Java, Spring MVC\")     \n" +
-    "            } \n";
+        string mOneText = @"C4Context 
+       Person_Ext(CUSTOMER, ""Customer"", ""A customer of the bank, with personal bank accounts"") 
+       Enterprise_Boundary(INTERNET_BANKING, ""Internet Banking"") {
+            Container(WEB_APPLICATION, ""Web Application"", ""Delivers the static content and the Internet banking SPA"", ""Java, Spring MVC"")
+            }";
 
         string mTwoText = "graph LR \n" +
             "A[Client] --- B[Load Balancer] \n" +

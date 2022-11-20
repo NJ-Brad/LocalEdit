@@ -38,8 +38,42 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-    <script src="scripts/MermaidWrapper.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs"></script>-->
+    <!--<script src="scripts/MermaidWrapper.js"></script>-->
+    <script>
+        window.renderMermaidDiagram = (Id, input) => {
+            var output = document.getElementById(Id);
+            //mermaid.mermaidAPI.render('theGraph', input, function (svgCode) {
+            mermaid.mermaidAPI.render(Id+'_Graph', input, function (svgCode) {
+                output.innerHTML = svgCode;
+            });
+        }
+    </script>
+
+
+    <script>
+        window.renderMermaidDiagram2 = (Id) => {
+            var output = document.getElementById(Id);
+            var input = "graph LR \n" +
+                "A[Client] --- B[Load Balancer] \n" +
+                "B-->C[Server01] \n" +
+                "B-->D(Server02) \n";
+            mermaidAPI.render('theGraph', input, function (svgCode) {
+                output.innerHTML = svgCode;
+            });
+        }
+    </script>
+
+    <script>
+        MermaidInitialize = () => {
+            import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.esm.min.mjs';
+            mermaid.initialize({
+                startOnLoad: true,
+                securityLevel: "loose"
+            });
+        }
+    </script>
 
 </body>
 
-</html>
+        </html >

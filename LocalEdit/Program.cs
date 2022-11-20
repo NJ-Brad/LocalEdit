@@ -4,10 +4,11 @@ using Blazorise.Icons.FontAwesome;
 using LocalEdit;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Modulight.Modules.Hosting;
+//using Modulight.Modules.Hosting;
 //using StardustDL.RazorComponents.Markdown;
 using Microsoft.Extensions.DependencyInjection;
-using StardustDL.RazorComponents.Markdown;
+//using StardustDL.RazorComponents.Markdown;
+using MermaidJS.Blazor;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -29,12 +30,17 @@ builder.Services.AddBlazorDownloadFile();
 //builder.Services.AddBlazoredLocalStorage();
 
 // https://github.com/StardustDL/RazorComponents.Markdown
-builder.Services.AddModules(builder =>
+//builder.Services.AddModules(builder =>
+//{
+//    builder.UseRazorComponentClientModules().AddMarkdownModule();
+//});
+
+builder.Services.AddMermaidJS(options =>
 {
-    builder.UseRazorComponentClientModules().AddMarkdownModule();
+    options.MaxTextSize = 100000;
+    options.SecurityLevel = MermaidSecurityLevels.Loose;
+    //options.SecurityLevel = MermaidSecurityLevels.AntiScript;
 });
 
-//builder.Services.AddMermaidJS();
-
-await builder.Build().RunAsyncWithModules();
-//await builder.Build().RunAsync();
+//await builder.Build().RunAsyncWithModules();
+await builder.Build().RunAsync();

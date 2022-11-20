@@ -2,6 +2,7 @@
 @using LocalEdit.C4Types
 @using Blazorise
 @using Blazorise.DataGrid
+@using MermaidJS.Blazor
 
 <h1>C4 Editor</h1> 
 <hr/>
@@ -163,15 +164,38 @@
 
 </TabPanel>
         <TabPanel Name="preview"  Border="Border.Primary">
-        <MemoEdit @bind-Text="@testVal" />
+@*        <MemoEdit @bind-Text="@testVal" />
+*@
+        <h1>Context</h1>
+        <Mermaid Id="output1" @ref="MermaidOne"></Mermaid>
+        <h1>Container</h1>
+        <Mermaid Id="output2" @ref="MermaidTwo"></Mermaid>
+        <h1>Component</h1>
+        <Mermaid Id="output3" @ref="MermaidThree"></Mermaid>
 
-<StardustDL.RazorComponents.Markdown.MarkdownRenderer
+@*            <StardustDL.RazorComponents.Markdown.MarkdownRenderer @ref="markdownRef"
+                                                                  Value="@MarkdownText"
+                                                                  Class="your class"
+                                                                  Style="your styles" />
+*@
+
+        @*<MermaidDiagram Definition="@diagramDefinition" OnClick="OnClickNode" />*@
+
+@*            <MermaidDiagram Definition="@diagramOneDefinition" />
+            <MermaidDiagram Definition="@diagramTwoDefinition" />
+            <MermaidDiagram Definition="@diagramThreeDefinition" />
+*@
+@*        <Mermaid @ref="mermaidOne"/>
+        <Mermaid @ref="mermaidTwo"></Mermaid>
+        <Mermaid @ref="mermaidThree"></Mermaid>
+*@
+            @*<StardustDL.RazorComponents.Markdown.MarkdownRenderer
     @ref="markdownRef"
     Value="@MarkdownText"
     Class="your class"
     Style="your styles"
     />
-
+*@
 
 </TabPanel>
     </Content>

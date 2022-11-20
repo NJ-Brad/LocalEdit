@@ -37,7 +37,7 @@ namespace LocalEdit.C4Types
         public string Publish_(C4Workspace workspace, string diagramType)
         {
 
-        diagramType = diagramType;
+        //diagramType = diagramType;
         redirections.Clear();
 
         string rtnVal = "";
