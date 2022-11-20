@@ -34,10 +34,34 @@ namespace LocalEdit.Modals
 
 
         [Parameter]
-        public C4Relationship item { get; set; } = new();
+        public C4Relationship Item { get; set; } = new();
 
         [Parameter]
-        public List<C4Item> Items { get; set; } = new();
+        public List<C4Item> Items { get => items;
+            set { 
+                items = value;
+                GetAllItems(items);
+            } 
+        }
+
+        private List<C4Item> items = new ();
+
+        public List<C4Item> AllItems { get; set; } = new();
+
+        private void GetAllItems(List<C4Item> items)
+        {
+            AllItems.Clear();
+            GetAllItems_(items);
+        }
+
+        private void GetAllItems_(List<C4Item> items)
+        {
+            foreach (C4Item item in items)
+            {
+                AllItems.Add(item);
+                GetAllItems_(item.Children);
+            }
+        }
 
     }
 }

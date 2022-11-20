@@ -25,22 +25,24 @@
                 *@
                 <Field>
                     <FieldLabel>From</FieldLabel>
-                    <Select @bind-SelectedValue="@item.From">
-@*                            <SelectItem Disabled></SelectItem>
-*@                        
-                        @foreach (var item in Items)
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                    <Select @bind-SelectedValue="@Item.From">
+                            <SelectItem >- Select an Item -</SelectItem>
+                        
+                        @foreach (var item in AllItems)
                         {
                             <SelectItem Value="@(item.Alias)">@(item.Text)</SelectItem>
                         }
                     </Select>
+                    </Validation>
                 </Field>
 
                 <Field>
                     <FieldLabel>To</FieldLabel>
-                    <Select @bind-SelectedValue="@item.To">
-@*                            <SelectItem Disabled></SelectItem>
-*@                        
-                        @foreach (var item in Items)
+                    <Select @bind-SelectedValue="@Item.To">
+                        <SelectItem Disabled>- Select an Item -</SelectItem>
+
+                        @foreach (var item in AllItems)
                         {
                             <SelectItem Value="@(item.Alias)">@(item.Text)</SelectItem>
                         }
@@ -50,7 +52,7 @@
                 <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                        <TextEdit @bind-Text="item.Text" Placeholder="Enter text">
+                        <TextEdit @bind-Text="Item.Text" Placeholder="Enter text">
                             <Feedback>
                                 <ValidationError>Please enter the text.</ValidationError>
                             </Feedback>
@@ -60,7 +62,7 @@
 
                 <Field>
                     <FieldLabel>Label</FieldLabel>
-                        <TextEdit @bind-Text="item.Technology" Placeholder="Enter technology">
+                        <TextEdit @bind-Text="Item.Technology" Placeholder="Enter technology">
                         </TextEdit>
                 </Field>
 

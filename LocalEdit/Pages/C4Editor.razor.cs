@@ -491,7 +491,8 @@ return Task.CompletedTask;
         {
             string rtnVal = id;
 
-            foreach (C4Item fi in Document.Model)
+            //foreach (C4Item fi in Document.Model)
+            foreach (C4Item fi in c4RelationshipModalRef.AllItems)
             {
                 if (fi.Alias == id)
                 {
@@ -523,7 +524,7 @@ return Task.CompletedTask;
             {
                 return Task.CompletedTask;
             }
-            c4RelationshipModalRef.item = selectedRelationshipRow;
+            c4RelationshipModalRef.Item = selectedRelationshipRow;
 
             c4RelationshipModalRef?.ShowModal();
 
