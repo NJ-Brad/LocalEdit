@@ -230,3 +230,10 @@
 <LocalEdit.Modals.PlanItemModal @ref="planItemModalRef" Items=@Document.Items Closed="@OnPlanItemModalClosed"></LocalEdit.Modals.PlanItemModal>
 
 <LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>
+
+<PageTitle>Plan Editor - @fileManagementModalRef.Name</PageTitle>
+
+<HeadContent>
+@*    <meta name="description" content="@description">*@
+    <meta name="description" content="An editor for plans">
+</HeadContent>

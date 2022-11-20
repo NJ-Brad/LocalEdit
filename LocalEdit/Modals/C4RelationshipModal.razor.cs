@@ -26,7 +26,7 @@ namespace LocalEdit.Modals
 
         public override async Task Opened()
         {
-            InvokeAsync(() => StateHasChanged());
+            await InvokeAsync(() => StateHasChanged());
 
             //            return Task.CompletedTask;
             return;

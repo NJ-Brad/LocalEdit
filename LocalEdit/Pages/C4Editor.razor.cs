@@ -603,9 +603,9 @@ return Task.CompletedTask;
         }
 
         protected string testVal { get; set; }
-        public Mermaid MermaidOne { get => mermaidOne; set => mermaidOne = value; }
-        public Mermaid MermaidTwo { get => mermaidTwo; set => mermaidTwo = value; }
-        public Mermaid MermaidThree { get => mermaidThree; set => mermaidThree = value; }
+        public Mermaid? MermaidOne { get => mermaidOne; set => mermaidOne = value; }
+        public Mermaid? MermaidTwo { get => mermaidTwo; set => mermaidTwo = value; }
+        public Mermaid? MermaidThree { get => mermaidThree; set => mermaidThree = value; }
 
         private async Task GenerateMarkdown()
         {

@@ -44,7 +44,7 @@ namespace LocalEdit.Pages
             // TODO: do something with nodeId
         }
 
-    Mermaid MermaidOne { get; set; }
+    Mermaid? MermaidOne { get; set; }
 
 
         protected override Task OnInitializedAsync()
@@ -169,7 +169,7 @@ namespace LocalEdit.Pages
             return rtnVal;
         }
 
-        FileManagementModal fileManagementModalRef;
+        FileManagementModal? fileManagementModalRef;
 
         Validations? validations;
 
