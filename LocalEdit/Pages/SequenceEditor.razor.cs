@@ -2,7 +2,7 @@
 using Blazorise;
 using LocalEdit.C4Types;
 using LocalEdit.Modals;
-using LocalEdit.FlowTypes;
+using LocalEdit.SequenceTypes;
 using Blazorise.Components;
 using System.Text.Json;
 using LocalEdit.LpeTypes;
@@ -12,7 +12,7 @@ using LocalEdit.PlanTypes;
 
 namespace LocalEdit.Pages
 {
-    public partial class FlowEditor : ComponentBase
+    public partial class SequenceEditor : ComponentBase
     {
         // Add
         // Click Add
@@ -42,31 +42,31 @@ namespace LocalEdit.Pages
 
         protected override Task OnInitializedAsync()
         {
-            this.Document.Items = new List<FlowItem>(new[]
+            this.Document.Items = new List<SequenceItem>(new[]
             {
 //            C4TestData.InternalPerson,
-            new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
-            new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
-            new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
-            new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
+            new SequenceItem{/*ID = "Q1", */ItemType=SequenceItemType.Question, Label="Question One"},
+            new SequenceItem{/*ID = "Q2", */ItemType=SequenceItemType.Question, Label="Question Two"},
+            new SequenceItem{/*ID = "Q3", */ItemType=SequenceItemType.Question, Label="Question Three"},
+            new SequenceItem{/*ID = "Q4", */ItemType=SequenceItemType.Question, Label="Question Four"}
         });
 
-            this.Document.Relationships = new List<FlowRelationship>(new[]
+            this.Document.Relationships = new List<SequenceRelationship>(new[]
             {
-            new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
-            new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
-            new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
-            new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
-            new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
+            new SequenceRelationship{ From="Question One", To ="Question Two", Label= "Step One"},
+            new SequenceRelationship{ From="Question One", To ="Question Three", Label="Alt Sequence"},
+            new SequenceRelationship{ From="Question Three", To ="Question Four", Label="Step One"},
+            new SequenceRelationship{ From="Question Two", To ="Question Four", Label="Weird Sequence"},
+            new SequenceRelationship{ From="Question Four", To ="Question One", Label="Vicious Cycle"}
         });
 
             return base.OnInitializedAsync();
         }
 
-        FlowItem selectedItemRow { get; set; }
-        FlowRelationship selectedRelationshipRow { get; set; }
+        SequenceItem selectedItemRow { get; set; }
+        SequenceRelationship selectedRelationshipRow { get; set; }
 
-        FlowDocument Document { get; set; } = new FlowDocument();
+        SequenceDocument Document { get; set; } = new SequenceDocument();
 
         string MarkdownText { get; set; } = string.Empty;
 
@@ -82,7 +82,7 @@ namespace LocalEdit.Pages
             {
                 //GenerateMarkdown();
 
-                MermaidOne.DisplayDiagram(FlowPublisher.Publish(Document));
+                MermaidOne.DisplayDiagram(SequencePublisher.Publish(Document));
 
             }
 
@@ -90,26 +90,26 @@ namespace LocalEdit.Pages
         }
 
 
-        private Task NewFlow()
+        private Task NewSequence()
         {
-            fileManagementModalRef.Name = "New_Flow.json";
+            fileManagementModalRef.Name = "New_Sequence.json";
 
-            this.Document.Items = new List<FlowItem>(new[]
+            this.Document.Items = new List<SequenceItem>(new[]
             {
     //            C4TestData.InternalPerson,
-                new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
-                new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
-                new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
-                new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
-            });
+            new SequenceItem{/*ID = "Q1", */ItemType=SequenceItemType.Question, Label="Question One"},
+            new SequenceItem{/*ID = "Q2", */ItemType=SequenceItemType.Question, Label="Question Two"},
+            new SequenceItem{/*ID = "Q3", */ItemType=SequenceItemType.Question, Label="Question Three"},
+            new SequenceItem{/*ID = "Q4", */ItemType=SequenceItemType.Question, Label="Question Four"}
+        });
 
-                this.Document.Relationships = new List<FlowRelationship>(new[]
-                {
-                new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
-                new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
-                new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
-                new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
-                new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
+            this.Document.Relationships = new List<SequenceRelationship>(new[]
+            {
+            new SequenceRelationship{ From="Question One", To ="Question Two", Label= "Step One"},
+            new SequenceRelationship{ From="Question One", To ="Question Three", Label="Alt Sequence"},
+            new SequenceRelationship{ From="Question Three", To ="Question Four", Label="Step One"},
+            new SequenceRelationship{ From="Question Two", To ="Question Four", Label="Weird Sequence"},
+            new SequenceRelationship{ From="Question Four", To ="Question One", Label="Vicious Cycle"}
             });
 
             //ResetValidation();
@@ -117,26 +117,26 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        //        List<FlowItem> FlowItems = new List<FlowItem>(new[]
+        //        List<SequenceItem> SequenceItems = new List<SequenceItem>(new[]
         //        {
         ////            C4TestData.InternalPerson,
-        //            new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
-        //            new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
-        //            new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
-        //            new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
+        //            new SequenceItem{ID = "Q1", ItemType=SequenceItemType.Question, Label="Question One"},
+        //            new SequenceItem{ID = "Q2", ItemType=SequenceItemType.Question, Label="Question Two"},
+        //            new SequenceItem{ID = "Q3", ItemType=SequenceItemType.Question, Label="Question Three"},
+        //            new SequenceItem{ID = "Q4", ItemType=SequenceItemType.Question, Label="Question Four"}
         //        });
 
-        //        List<FlowRelationship> FlowRelationships = new List<FlowRelationship>(new[]
+        //        List<SequenceRelationship> SequenceRelationships = new List<SequenceRelationship>(new[]
         //        {
-        //            new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
-        //            new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
-        //            new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
-        //            new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
-        //            new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
+        //            new SequenceRelationship{ From="Q1", To ="Q2", Label= "Step One"},
+        //            new SequenceRelationship{ From="Q1", To ="Q3", Label="Alt Sequence"},
+        //            new SequenceRelationship{ From="Q3", To ="Q4", Label="Step One"},
+        //            new SequenceRelationship{ From="Q2", To ="Q4", Label="Weird Sequence"},
+        //            new SequenceRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
         //        });
 
-        private FlowItemModal? flowItemModalRef;
-        private FlowRelationshipModal? flowRelationshipModalRef;
+        private SequenceItemModal? SequenceItemModalRef;
+        private SequenceRelationshipModal? SequenceRelationshipModalRef;
 
         private Task ShowItemModal()
         {
@@ -144,9 +144,9 @@ namespace LocalEdit.Pages
             {
                 return Task.CompletedTask;
             }
-            flowItemModalRef.item = selectedItemRow;
+            SequenceItemModalRef.item = selectedItemRow;
 
-            flowItemModalRef?.ShowModal();
+            SequenceItemModalRef?.ShowModal();
 
             //InvokeAsync(() => StateHasChanged());
 
@@ -155,9 +155,9 @@ namespace LocalEdit.Pages
 
         private Task AddNewItem()
         {
-            FlowItem newItem = new FlowItem();
-            newItem.ItemType = FlowItemType.Question;
-            newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
+            SequenceItem newItem = new SequenceItem();
+            newItem.ItemType = SequenceItemType.Question;
+            //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
             newItem.Label = "New Question";
 
             selectedItemRow = newItem;
@@ -167,12 +167,12 @@ namespace LocalEdit.Pages
             return ShowItemModal();
         }
 
-        private Task OnFlowItemModalClosed()
+        private Task OnSequenceItemModalClosed()
         {
             if(adding)
             {
                 // remove the new item, if add was cancelled
-                if (flowItemModalRef.Result == ModalResult.Cancel)
+                if (SequenceItemModalRef.Result == ModalResult.Cancel)
                 {
                     Document.Items.Remove(selectedItemRow);
                     selectedItemRow = null;
@@ -204,9 +204,9 @@ namespace LocalEdit.Pages
             {
                 return Task.CompletedTask;
             }
-            flowRelationshipModalRef.item = selectedRelationshipRow;
+            SequenceRelationshipModalRef.item = selectedRelationshipRow;
 
-            flowRelationshipModalRef?.ShowModal();
+            SequenceRelationshipModalRef?.ShowModal();
 
             //InvokeAsync(() => StateHasChanged());
 
@@ -215,7 +215,7 @@ namespace LocalEdit.Pages
 
         private Task AddNewRelationship()
         {
-            FlowRelationship newRelationship = new FlowRelationship();
+            SequenceRelationship newRelationship = new SequenceRelationship();
             newRelationship.Label = "New Relationship";
 
             selectedRelationshipRow = newRelationship;
@@ -225,21 +225,21 @@ namespace LocalEdit.Pages
             return ShowRelationshipModal();
         }
 
-        private string DecodeFlowId(string id)
-        {
-            string rtnVal = id;
+        //private string DecodeSequenceId(string id)
+        //{
+        //    string rtnVal = id;
 
-            foreach (FlowItem fi in Document.Items)
-            {
-                if(fi.ID == id)
-                {
-                    rtnVal = fi.Label;
-                    break;
-                }
-            }
+        //    foreach (SequenceItem fi in Document.Items)
+        //    {
+        //        if(fi.ID == id)
+        //        {
+        //            rtnVal = fi.Label;
+        //            break;
+        //        }
+        //    }
 
-            return rtnVal;
-        }
+        //    return rtnVal;
+        //}
 
         private Task DeleteRelationship()
         {
@@ -254,12 +254,12 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        private Task OnFlowRelationshipModalClosed()
+        private Task OnSequenceRelationshipModalClosed()
         {
             if (adding)
             {
                 // remove the new item, if add was cancelled
-                if (flowRelationshipModalRef.Result == ModalResult.Cancel)
+                if (SequenceRelationshipModalRef.Result == ModalResult.Cancel)
                 {
                     Document.Relationships.Remove(selectedRelationshipRow);
                     selectedRelationshipRow = null;
@@ -274,12 +274,26 @@ namespace LocalEdit.Pages
 
         FileManagementModal fileManagementModalRef;
 
+        bool isLpeFile = false;
+
         private Task LoadFile()
         {
+            isLpeFile = false;
+
             fileManagementModalRef?.LoadFile();
 
             return Task.CompletedTask;
         }
+
+        private Task LoadLpeFile()
+        {
+            isLpeFile = true;
+
+            fileManagementModalRef?.LoadFile();
+
+            return Task.CompletedTask;
+        }
+
 
         private Task SaveFile()
         {
@@ -288,7 +302,7 @@ namespace LocalEdit.Pages
             //{
             //    return Task.CompletedTask;
             //}
-            //flowItemModalRef.item = selectedItemRow;
+            //SequenceItemModalRef.item = selectedItemRow;
 
             fileManagementModalRef.SaveFile(fileText);
             //fileManagementModalRef?.ShowModal();
@@ -304,7 +318,7 @@ namespace LocalEdit.Pages
             {
                 GenerateMarkdown();
 
-                fileManagementModalRef.Name = "Flow.md";
+                fileManagementModalRef.Name = "Sequence.md";
                 fileManagementModalRef.SaveFile(MarkdownText);
             }
 
@@ -317,7 +331,7 @@ namespace LocalEdit.Pages
             {
                 string htmlText = GenerateHtml().Result;
 
-                fileManagementModalRef.Name = "flow.html";
+                fileManagementModalRef.Name = "Sequence.html";
                 fileManagementModalRef.SaveFile(htmlText);
             }
             return Task.CompletedTask;
@@ -335,15 +349,23 @@ namespace LocalEdit.Pages
         {
             if (fileManagementModalRef.Result == ModalResult.OK)
             {
-                Document = (FlowDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(FlowDocument));
+                if (isLpeFile)
+                {
+                    string test = fileManagementModalRef.FileText;
+                    Document = LpeConverter.ToSequenceDocument((Root)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(Root)));
+                }
+                else
+                {
+                    Document = (SequenceDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(SequenceDocument));
+                }
                 InvokeAsync(() => StateHasChanged());
             }
             //if (adding)
             //{
             //    // remove the new item, if add was cancelled
-            //    if (flowRelationshipModalRef.Result == ModalResult.Cancel)
+            //    if (SequenceRelationshipModalRef.Result == ModalResult.Cancel)
             //    {
-            //        FlowRelationships.Remove(selectedRelationshipRow);
+            //        SequenceRelationships.Remove(selectedRelationshipRow);
             //    }
             //}
             //adding = false;
@@ -351,11 +373,11 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        //        private string GenerateMermaidText(FlowDocument document)
+        //        private string GenerateMermaidText(SequenceDocument document)
         private Task GenerateMarkdown()
         {
-            //mermaidText = FlowPublisher.Publish(Document);
-            MarkdownText = MarkdownGenerator.WrapMermaid(FlowPublisher.Publish(Document));
+            //mermaidText = SequencePublisher.Publish(Document);
+            MarkdownText = MarkdownGenerator.WrapMermaid(SequencePublisher.Publish(Document));
 
 //            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
@@ -363,7 +385,7 @@ namespace LocalEdit.Pages
 
         private Task<string> GenerateHtml()
         {
-            string htmlText = HtmlGenerator.WrapMermaid(FlowPublisher.Publish(Document));
+            string htmlText = HtmlGenerator.WrapMermaid(SequencePublisher.Publish(Document));
             return Task.FromResult(htmlText);
         }
 

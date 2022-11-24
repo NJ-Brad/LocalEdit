@@ -1,28 +1,29 @@
 ﻿using LocalEdit.FlowTypes;
+using LocalEdit.SequenceTypes;
 
 namespace LocalEdit.LpeTypes
 {
     public class LpeConverter
     {
-        public static FlowDocument ToFlowDocument(Root flow)
+        public static SequenceDocument ToSequenceDocument(Root flow)
         {
-            FlowDocument rtnVal = new FlowDocument();
+            SequenceDocument rtnVal = new SequenceDocument();
 
-            ItemFlow previousItem = null;
+            ItemSequence previousItem = null;
 
-            foreach (ItemFlow itmFlow in flow.itemFlow)
+            foreach (ItemSequence itmFlow in flow.itemSequence)
             {
-                rtnVal.Items.Add(new FlowItem { ID = itmFlow.itemName, Description = "", ItemType = FlowItemType.Question, Label = itmFlow.title });
+                rtnVal.Items.Add(new SequenceItem { /*ID = itmFlow.itemName, */Description = "", ItemType = SequenceItemType.Question, Label = itmFlow.title });
 
                 if (previousItem != null)
                 {
                     if (itmFlow.entryLogic == null)
                     {
-                        rtnVal.Relationships.Add(new FlowRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = " " });
+                        rtnVal.Relationships.Add(new SequenceRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = " " });
                     }
                     else
                     {
-                        rtnVal.Relationships.Add(new FlowRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = itmFlow.entryLogic.ToString().Trim().Replace("\r\n", "<br/>") });
+                        rtnVal.Relationships.Add(new SequenceRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = itmFlow.entryLogic.ToString().Trim().Replace("\r\n", "<br/>") });
                     }
                 }
                 previousItem = itmFlow;

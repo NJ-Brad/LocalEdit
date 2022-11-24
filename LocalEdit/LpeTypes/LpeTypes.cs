@@ -31,7 +31,7 @@ namespace LocalEdit.LpeTypes
         public string logo { get; set; }
     }
 
-    public class ItemFlow
+    public class ItemSequence
     {
         public string title { get; set; }
         public string itemName { get; set; }
@@ -44,7 +44,7 @@ namespace LocalEdit.LpeTypes
         public bool hasFooter { get; set; }
         public bool hasHeader { get; set; }
         public HeaderConfig headerConfig { get; set; }
-        public List<ItemFlow> itemFlow { get; set; }
+        public List<ItemSequence> itemSequence { get; set; }
     }
 
     public class ValueCondition

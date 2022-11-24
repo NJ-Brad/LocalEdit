@@ -1,22 +1,26 @@
-﻿@page "/FlowEditor"
+﻿@page "/SequenceEditor"
 @using Blazorise.Components
 @using Blazorise.DataGrid
 @using LocalEdit.C4Types
 @using Blazorise
 @using Blazorise.Extensions;
-@using LocalEdit.FlowTypes
+@using LocalEdit.SequenceTypes
 
-<h1>Flow Editor</h1> 
+<h1>Sequence Editor</h1> 
 <hr/>
 
-<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewFlow">
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewSequence">
     <Icon Name="IconName.Star" />
-    New Flow
+    New Sequence
 </Button>
 
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadFile">
     <Icon Name="IconName.FileUpload" />
     Load
+</Button>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadLpeFile">
+    <Icon Name="IconName.FileUpload" />
+    Load LPE
 </Button>
 
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveFile">
@@ -80,11 +84,11 @@
 }
 
 
-<DataGrid TItem="FlowItem"
+<DataGrid TItem="SequenceItem"
           Data="@Document.Items"
           @bind-SelectedRow="@selectedItemRow"
           Responsive>
-    <DataGridColumn Field="@nameof( FlowItem.Label )" Editable="false"></DataGridColumn>
+    <DataGridColumn Field="@nameof( SequenceItem.Label )" Editable="false"></DataGridColumn>
 </DataGrid>
 
 </TabPanel>
@@ -126,20 +130,20 @@
 
 
 
-            <DataGrid TItem="FlowRelationship"
+            <DataGrid TItem="SequenceRelationship"
           Data="@Document.Relationships"
           @bind-SelectedRow="@selectedRelationshipRow"
           Responsive>
           <DataGridColumns>
-    <DataGridColumn Field="@nameof( FlowRelationship.From )" Editable="false">
+    <DataGridColumn Field="@nameof( SequenceRelationship.From )" Editable="false">
         <DisplayTemplate>
             @{
-                string fromCode = ( context as FlowRelationship )?.From;
-                string toCode = ( context as FlowRelationship )?.To;
+                string fromCode = ( context as SequenceRelationship )?.From;
+                string toCode = ( context as SequenceRelationship )?.To;
 
                     if (fromCode != null)
                     {
-                        @($"{DecodeFlowId(fromCode)}") <NBSP/> <Icon Name="IconName.ArrowRight"/> <NBSP/> @($"{DecodeFlowId(toCode)}")
+                        @($"{fromCode}") <NBSP/> <Icon Name="IconName.ArrowRight"/> <NBSP/> @($"{toCode}")
                         <br />
                         <span style="padding-left:2em">@($"{context.Label}")</span>
                     }
@@ -189,8 +193,8 @@
     RenderInterval="@TimeSpan.FromSeconds(10)"/>
 *@
 
-<LocalEdit.Modals.FlowItemModal @ref="flowItemModalRef" Closed="@OnFlowItemModalClosed"></LocalEdit.Modals.FlowItemModal>
+<LocalEdit.Modals.SequenceItemModal @ref="SequenceItemModalRef" Closed="@OnSequenceItemModalClosed"></LocalEdit.Modals.SequenceItemModal>
 
-<LocalEdit.Modals.FlowRelationshipModal @ref="flowRelationshipModalRef" Items="@Document.Items" Closed="@OnFlowRelationshipModalClosed"></LocalEdit.Modals.FlowRelationshipModal>
+<LocalEdit.Modals.SequenceRelationshipModal @ref="SequenceRelationshipModalRef" Items="@Document.Items" Closed="@OnSequenceRelationshipModalClosed"></LocalEdit.Modals.SequenceRelationshipModal>
 
 <LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>
