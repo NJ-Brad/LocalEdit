@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using BlazorPanzoom;
 
 <PageTitle>Index</PageTitle>
 
@@ -10,12 +11,13 @@ Welcome to your new app.
 
 This app will utilize <br />
 <ul>
-<li>Blazorise</li>
-<li>Bootstrap 5 Framework (via Blazorise.Bootstrap5)</li>
-<li>Blazorise.TreeView</li>
-<li>Blazored.LocalStorage</li>
-<li>Blazor.DownloadFileFast</li>
-<li>MermaidJS.Blazor</li>
+    <li>Blazorise</li>
+    <li>Bootstrap 5 Framework (via Blazorise.Bootstrap5)</li>
+    <li>Blazorise.TreeView</li>
+    <li>Blazored.LocalStorage</li>
+    <li>Blazor.DownloadFileFast</li>
+    <li>MermaidJS.Blazor</li>
+    <li>BlazorPanZoom</li>
 </ul>
 
 @*// https://github.com/StardustDL/RazorComponents.Markdown
@@ -55,4 +57,56 @@ See https://blazorise.com/docs/theming for details<br />
     }
 
     [CascadingParameter] Theme Theme { get; set; }
+
+
+    private double _rangeValue = 1.0;
+
+    private double RangeValue
+    {
+        get => _rangeValue;
+        set
+        {
+            _rangeValue = value;
+            _panzoom.ZoomAsync(value);
+        }
+    }
+
+    private bool _panEnabled = true;
+
+    private bool PanEnabled
+    {
+        get => _panEnabled;
+        set
+        {
+            _panEnabled = value;
+            _panzoom.SetOptionsAsync(new PanzoomOptions { DisablePan = !_panEnabled });
+        }
+    }
+
+    private Panzoom? _panzoom{ get; set; }
+
+    private async Task OnZoomInClick(MouseEventArgs args)
+    {
+        await _panzoom.ZoomInAsync();
+        await UpdateSlider();
+    }
+
+    private async Task OnZoomOutClick(MouseEventArgs args)
+    {
+        await _panzoom.ZoomOutAsync();
+        await UpdateSlider();
+    }
+
+    private async Task OnResetClick(MouseEventArgs args)
+    {
+        await _panzoom.ResetAsync();
+        await UpdateSlider();
+    }
+
+    private async Task UpdateSlider()
+    {
+        var scale = await _panzoom.GetScaleAsync();
+        _rangeValue = scale;
+    }
+
 }

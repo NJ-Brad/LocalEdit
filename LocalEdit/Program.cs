@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 //using StardustDL.RazorComponents.Markdown;
 using MermaidJS.Blazor;
+using BlazorPanzoom;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -41,6 +42,8 @@ builder.Services.AddMermaidJS(options =>
     options.SecurityLevel = MermaidSecurityLevels.Loose;
     //options.SecurityLevel = MermaidSecurityLevels.AntiScript;
 });
+
+builder.Services.AddBlazorPanzoomServices();
 
 //await builder.Build().RunAsyncWithModules();
 await builder.Build().RunAsync();

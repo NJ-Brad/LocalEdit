@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorPanzoom;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace LocalEdit.Shared
@@ -23,51 +25,79 @@ namespace LocalEdit.Shared
             //await JSRuntime.InvokeVoidAsync("renderMermaidDiagram2", "output");
         }
 
+        string SvgText { get; set; } = "";
+
         public async Task DisplayDiagram(string input)
         {
-            //var input2 = "graph LR \n" +
-            //    "A[Brad] --- B[Load Balancer] \n" +
-            //    "B-->C[Server01] \n" +
-            //    "B-->D(Server02) \n";
+            //SvgText = await JSRuntime.InvokeAsync<string>("generateMermaidSvg", input);
+            // https://stackoverflow.com/questions/60785749/using-svgs-in-blazor-page
 
-            var input2 = "C4Context\n Person_Ext(CUSTOMER, \"Customer\", \"A customer of the bank, with personal bank accounts\")\n";
-
-
-//            await JSRuntime.InvokeVoidAsync("MermaidInitialize");
-                                    await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input);
-//                        await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input2);
-
-            //var input2 = "graph LR \n" +
-            //    "A[Client] --- B[Load Balancer] \n" +
-            //    "B-->C[Server01] \n" +
-            //    "B-->D(Server02) \n";
-
-
-            //JSRuntime.InvokeVoidAsync("renderMermaid", this.Id, input2);
-
-            //ChildContent = $"<h1>{input}</h1>";
-
-            //ChildContent = AddContent($"<h1>{input}</h1>");
-            //ChildContent = AddContent2(input);
+             await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input);
 
             InvokeAsync(() => StateHasChanged());
 
         }
-        private RenderFragment AddContent(string textContent) => builder =>
-        {
-            builder.AddContent(1, textContent);
-        };
-
-        private RenderFragment AddContent2(string textContent) => builder =>
-        {
-            builder.OpenElement(0, "h1");
-            builder.AddContent(1, textContent);
-            builder.CloseElement();
-        };
-
-        //protected override void OnInitialized()
+        //private RenderFragment AddContent(string textContent) => builder =>
         //{
-        //    childContent = AddContent();
+        //    builder.AddContent(1, textContent);
+        //};
+
+        //private RenderFragment AddContent2(string textContent) => builder =>
+        //{
+        //    builder.OpenElement(0, "h1");
+        //    builder.AddContent(1, textContent);
+        //    builder.CloseElement();
+        //};
+
+        private double _rangeValue = 1.0;
+
+        private double RangeValue
+        {
+            get => _rangeValue;
+            set
+            {
+                _rangeValue = value;
+                _panzoom.ZoomAsync(value);
+            }
+        }
+
+        private bool _panEnabled = true;
+
+        //private bool PanEnabled
+        //{
+        //    get => _panEnabled;
+        //    set
+        //    {
+        //        _panEnabled = value;
+        //        _panzoom.SetOptionsAsync(new PanzoomOptions { DisablePan = !_panEnabled });
+        //    }
         //}
+
+        private Panzoom? _panzoom { get; set; }
+
+        //private async Task OnZoomInClick(MouseEventArgs args)
+        //{
+        //    await _panzoom.ZoomInAsync();
+        //    await UpdateSlider();
+        //}
+
+        //private async Task OnZoomOutClick(MouseEventArgs args)
+        //{
+        //    await _panzoom.ZoomOutAsync();
+        //    await UpdateSlider();
+        //}
+
+        //private async Task OnResetClick(MouseEventArgs args)
+        //{
+        //    await _panzoom.ResetAsync();
+        //    await UpdateSlider();
+        //}
+
+        //private async Task UpdateSlider()
+        //{
+        //    var scale = await _panzoom.GetScaleAsync();
+        //    _rangeValue = scale;
+        //}
+
     }
 }

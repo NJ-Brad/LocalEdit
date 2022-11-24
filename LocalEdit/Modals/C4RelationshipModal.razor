@@ -39,6 +39,7 @@
 
                 <Field>
                     <FieldLabel>To</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
                     <Select @bind-SelectedValue="@Item.To">
                         <SelectItem Disabled>- Select an Item -</SelectItem>
 
@@ -47,6 +48,7 @@
                             <SelectItem Value="@(item.Alias)">@(item.Text)</SelectItem>
                         }
                     </Select>
+                    </Validation>
                 </Field>
 
                 <Field>
