@@ -1,0 +1,12 @@
+﻿using LocalEdit.SequenceTypes;
+
+namespace LocalEdit.QuestionFlowTypes
+{
+    public class QuestionFlowItem
+    {
+        public string Label { get; set; } = "";
+        public string Description { get; set; } = "";
+        public List<QuestionFlowRelationship> NextQuestions { get; set; } = new List<QuestionFlowRelationship>();
+
+    }
+}

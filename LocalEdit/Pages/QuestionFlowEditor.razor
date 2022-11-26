@@ -1,0 +1,199 @@
+﻿@page "/QuestionFlowEditor"
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using LocalEdit.C4Types
+@using Blazorise
+@using Blazorise.Extensions;
+@using LocalEdit.QuestionFlowTypes
+
+<h1>Question Flow Editor</h1> 
+<hr/>
+
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@NewQuestionFlow">
+    <Icon Name="IconName.Star" />
+    New QuestionFlow
+</Button>
+
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadFile">
+    <Icon Name="IconName.FileUpload" />
+    Load
+</Button>
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadLpeFile">
+    <Icon Name="IconName.FileUpload" />
+    Load LPE
+</Button>
+
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveFile">
+    <Icon Name="IconName.FileDownload" />
+    Save
+</Button>
+
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportFile">
+        <Icon Name="IconName.ArrowRight" />
+        Export Markdown Snippet
+    </Button>
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportHtml">
+        <Icon Name="IconName.ArrowRight" />
+        Export HTML
+    </Button>
+
+
+<Tabs SelectedTab="@selectedTab" SelectedTabChanged="@OnSelectedTabChanged">
+    <Items>
+        <Tab Name="general">General</Tab>
+        <Tab Name="model">Model</Tab>
+        <Tab Name="preview">Preview</Tab>
+    </Items>
+    <Content>
+        <TabPanel Name="general"  Border="Border.Primary">
+</TabPanel>
+        <TabPanel Name="model"  Border="Border.Primary">
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewItem">
+    <Icon Name="IconName.Add" />
+    New
+</Button>
+@if (selectedItemRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+@if (selectedItemRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowItemModal">
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+
+@if (selectedItemRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+@if (selectedItemRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteItem">
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+
+
+<DataGrid TItem="QuestionFlowItem"
+          Data="@Document.Items"
+          @bind-SelectedRow="@selectedItemRow"
+          Responsive>
+    <DataGridColumn Field="@nameof( QuestionFlowItem.Label )" Editable="false"></DataGridColumn>
+</DataGrid>
+
+</TabPanel>
+@*        <TabPanel Name="relations"  Border="Border.Primary">
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewRelationship">
+    <Icon Name="IconName.Add" />
+    New
+</Button>
+@if (selectedRelationshipRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+@if (selectedRelationshipRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowRelationshipModal">
+        <Icon Name="IconName.Edit" />
+        Edit
+    </Button>
+}
+
+@if (selectedRelationshipRow == null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+@if (selectedRelationshipRow != null)
+{
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteRelationship">
+    <Icon Name="IconName.Delete" />
+    Delete
+</Button>
+}
+
+
+
+
+            <DataGrid TItem="QuestionFlowRelationship"
+          Data="@Document.Relationships"
+          @bind-SelectedRow="@selectedRelationshipRow"
+          Responsive>
+          <DataGridColumns>
+    <DataGridColumn Field="@nameof( QuestionFlowRelationship.From )" Editable="false">
+        <DisplayTemplate>
+            @{
+                string fromCode = ( context as QuestionFlowRelationship )?.From;
+                string toCode = ( context as QuestionFlowRelationship )?.To;
+
+                    if (fromCode != null)
+                    {
+                        @($"{fromCode}") <NBSP/> <Icon Name="IconName.ArrowRight"/> <NBSP/> @($"{toCode}")
+                        <br />
+                        <span style="padding-left:2em">@($"{context.Label}")</span>
+                    }
+                //if ( date != null )
+                //{
+                //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
+                //}
+            }
+        </DisplayTemplate>
+    </DataGridColumn>
+    </DataGridColumns>
+    <EmptyTemplate>
+        <div class="box">
+            No relations were found!
+        </div>
+    </EmptyTemplate>
+</DataGrid>
+</TabPanel>*@
+        <TabPanel Name="preview"  Border="Border.Primary">
+@*<button class="btn btn-primary" @onclick="GenerateMarkdown">Generate</button>*@
+
+@*
+<div>
+    <textarea @bind="MarkdownText" @bind:event="oninput" style="width:100%;"/>
+</div>
+*@
+
+@*<StardustDL.RazorComponents.Markdown.MarkdownRenderer
+    @ref="markdownRef"
+    Value="@MarkdownText"
+    Class="your class"
+    Style="your styles"
+    />
+*@
+
+            <Mermaid Id="output1" @ref="MermaidOne"></Mermaid>
+
+</TabPanel>
+    </Content>
+</Tabs>
+
+@*
+<StardustDL.RazorComponents.Markdown.MarkdownRenderer
+    Value="@MarkdownText"
+    Class="your class"
+    Style="your styles"
+    RenderInterval="@TimeSpan.FromSeconds(10)"/>
+*@
+
+<LocalEdit.Modals.QuestionFlowItemModal @ref="QuestionFlowItemModalRef" Closed="@OnQuestionFlowItemModalClosed"></LocalEdit.Modals.QuestionFlowItemModal>
+
+@*<LocalEdit.Modals.QuestionFlowRelationshipModal @ref="QuestionFlowRelationshipModalRef" Items="@Document.Items" Closed="@OnQuestionFlowRelationshipModalClosed"></LocalEdit.Modals.QuestionFlowRelationshipModal>*@
+
+<LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

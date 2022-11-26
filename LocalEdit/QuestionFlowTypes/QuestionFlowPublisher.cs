@@ -1,37 +1,37 @@
 ﻿using Blazorise;
 using System.Text;
 
-namespace LocalEdit.SequenceTypes
+namespace LocalEdit.QuestionFlowTypes
 {
-    public class SequencePublisher
+    public class QuestionFlowPublisher
     {
-        public static string Publish(SequenceDocument Sequence)
+        public static string Publish(QuestionFlowDocument QuestionFlow)
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(MermaidHeader(Sequence));
+            sb.Append(MermaidHeader(QuestionFlow));
 
-            foreach (var item in Sequence.Items)
+            foreach (var item in QuestionFlow.Items)
             {
                 //item = workspace.items[itmNum];
                 sb.Append(MermaidItem(item));
             }
 
-            foreach (var rel in Sequence.Relationships)
-            {
-                sb.Append(MermaidConnection(rel));
-            }
+            //foreach (var rel in QuestionFlow.Relationships)
+            //{
+            //    sb.Append(MermaidConnection(rel));
+            //}
 
             return sb.ToString();
         }
 
-        private static string MermaidHeader(SequenceDocument Sequence)
+        private static string MermaidHeader(QuestionFlowDocument QuestionFlow)
         {
             StringBuilder sb = new StringBuilder();
             //sb.AppendLine("graph TD");
 
             sb.AppendLine("%% Created by LocalEdit");
-            sb.AppendLine("sequenceDiagram");
+            sb.AppendLine("QuestionFlowDiagram");
 
             // classDef borderless stroke-width:0px
             // classDef darkBlue fill:#00008B, color:#fff
@@ -55,7 +55,7 @@ namespace LocalEdit.SequenceTypes
             return rtnVal;
         }
 
-        private static string MermaidItem(SequenceItem item, int indent = 1)
+        private static string MermaidItem(QuestionFlowItem item, int indent = 1)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -66,7 +66,7 @@ namespace LocalEdit.SequenceTypes
             return sb.ToString();
         }
 
-        private static string MermaidConnection(SequenceRelationship rel, int indent = 1)
+        private static string MermaidConnection(QuestionFlowRelationship rel, int indent = 1)
         {
             StringBuilder sb = new StringBuilder();
 

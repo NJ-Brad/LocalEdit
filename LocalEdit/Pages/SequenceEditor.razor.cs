@@ -45,10 +45,10 @@ namespace LocalEdit.Pages
             this.Document.Items = new List<SequenceItem>(new[]
             {
 //            C4TestData.InternalPerson,
-            new SequenceItem{/*ID = "Q1", */ItemType=SequenceItemType.Question, Label="Question One"},
-            new SequenceItem{/*ID = "Q2", */ItemType=SequenceItemType.Question, Label="Question Two"},
-            new SequenceItem{/*ID = "Q3", */ItemType=SequenceItemType.Question, Label="Question Three"},
-            new SequenceItem{/*ID = "Q4", */ItemType=SequenceItemType.Question, Label="Question Four"}
+            new SequenceItem{/*ID = "Q1", */Label="Question One"},
+            new SequenceItem{/*ID = "Q2", */Label="Question Two"},
+            new SequenceItem{/*ID = "Q3", */Label="Question Three"},
+            new SequenceItem{/*ID = "Q4", */Label="Question Four"}
         });
 
             this.Document.Relationships = new List<SequenceRelationship>(new[]
@@ -97,10 +97,10 @@ namespace LocalEdit.Pages
             this.Document.Items = new List<SequenceItem>(new[]
             {
     //            C4TestData.InternalPerson,
-            new SequenceItem{/*ID = "Q1", */ItemType=SequenceItemType.Question, Label="Question One"},
-            new SequenceItem{/*ID = "Q2", */ItemType=SequenceItemType.Question, Label="Question Two"},
-            new SequenceItem{/*ID = "Q3", */ItemType=SequenceItemType.Question, Label="Question Three"},
-            new SequenceItem{/*ID = "Q4", */ItemType=SequenceItemType.Question, Label="Question Four"}
+            new SequenceItem{/*ID = "Q1", */Label="Question One"},
+            new SequenceItem{/*ID = "Q2", */Label="Question Two"},
+            new SequenceItem{/*ID = "Q3", */Label="Question Three"},
+            new SequenceItem{/*ID = "Q4", */Label="Question Four"}
         });
 
             this.Document.Relationships = new List<SequenceRelationship>(new[]
@@ -156,7 +156,6 @@ namespace LocalEdit.Pages
         private Task AddNewItem()
         {
             SequenceItem newItem = new SequenceItem();
-            newItem.ItemType = SequenceItemType.Question;
             //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
             newItem.Label = "New Question";
 

@@ -14,7 +14,7 @@ namespace LocalEdit.LpeTypes
 
             foreach (ItemSequence itmFlow in flow.itemFlow)
             {
-                rtnVal.Items.Add(new SequenceItem { /*ID = itmFlow.itemName, */Description = "", ItemType = SequenceItemType.Question, Label = itmFlow.title });
+                rtnVal.Items.Add(new SequenceItem { /*ID = itmFlow.itemName, */Description = "", Label = itmFlow.title });
 
                 if (previousItem != null)
                 {

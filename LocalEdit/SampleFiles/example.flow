@@ -1,54 +1,46 @@
 {
   "Items": [
     {
-      "ItemType": 0,
-      "Label": "Question One A",
-      "Description": "",
-      "ID": "Q1"
+      "Label": "Question One",
+      "Description": ""
     },
     {
-      "ItemType": 0,
       "Label": "Question Two",
-      "Description": "",
-      "ID": "Q2"
+      "Description": ""
     },
     {
-      "ItemType": 0,
       "Label": "Question Three",
-      "Description": "",
-      "ID": "Q3"
+      "Description": ""
     },
     {
-      "ItemType": 0,
       "Label": "Question Four",
-      "Description": "",
-      "ID": "Q4"
+      "Description": ""
     }
   ],
   "Relationships": [
     {
-      "From": "Q1",
-      "To": "Q2",
+      "From": "Question One",
+      "To": "Question Two",
       "Label": "Step One"
     },
     {
-      "From": "Q1",
-      "To": "Q3",
+      "From": "Question One",
+      "To": "Question Three",
       "Label": "Alt Flow"
     },
     {
-      "From": "Q3",
-      "To": "Q4",
+      "From": "Question Three",
+      "To": "Question Four",
       "Label": "Step One"
     },
     {
-      "From": "Q2",
-      "To": "Q4",
+      "From": "Question Two",
+      "To": "Question Four",
       "Label": "Weird Flow"
     },
     {
-      "From": "Q4",
-      "To": "Q1",
+      "From": "Question Four",
+      "To": "Question One",
       "Label": "Vicious Cycle"
     }
   ]
