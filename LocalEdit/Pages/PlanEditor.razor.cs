@@ -311,6 +311,5 @@ namespace LocalEdit.Pages
 
             return (year.ToString() + '-' + monthString + '-' + dtString);
         }
-
     }
 }

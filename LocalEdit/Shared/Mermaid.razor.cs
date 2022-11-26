@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
+//using SkiaSharp;
+//using Svg.Skia;
+using System.Text;
 
 namespace LocalEdit.Shared
 {
@@ -29,14 +32,76 @@ namespace LocalEdit.Shared
 
         public async Task DisplayDiagram(string input)
         {
-            //SvgText = await JSRuntime.InvokeAsync<string>("generateMermaidSvg", input);
+            SvgText = await JSRuntime.InvokeAsync<string>("generateMermaidSvg", input);
             // https://stackoverflow.com/questions/60785749/using-svgs-in-blazor-page
+            ToPng(SvgText);
 
              await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input);
 
             InvokeAsync(() => StateHasChanged());
 
         }
+
+        // https://stackoverflow.com/questions/1879395/how-do-i-generate-a-stream-from-a-string
+        //public static Stream ToStream(this string value, Encoding encoding)
+        //              => new MemoryStream(encoding.GetBytes(value ?? string.Empty));
+        //public static Stream ToStream(this string value) => ToStream(value, Encoding.UTF8);
+        public Stream ToStream(string value, Encoding encoding)
+                      => new MemoryStream(encoding.GetBytes(value ?? string.Empty));
+        public Stream ToStream(string value) => ToStream(value, Encoding.UTF8);
+
+
+        public static Stream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+
+        void ToPng(string svgText)
+        {
+
+            //            // https://stackoverflow.com/questions/53854432/how-to-produce-a-system-drawing-image-from-svg-on-net-core
+
+            //            var svgSrc = Path.Combine(Directory.GetCurrentDirectory(), "img.svg");
+            //            string svgSaveAs = "xyz.png";
+            //            var quality = 100;
+
+            //            var svg = new SkiaSharp.Extended.Svg.SKSvg();
+            //            //var pict = svg.Load(svgSrc);
+
+            //            SKPicture pict = null;
+
+            //            using (var stream = GenerateStreamFromString(svgText))
+            //            {
+            //                // ... Do stuff to stream
+            //                pict = svg.Load(stream);
+            //            }
+
+            ////            var pict = svg.Load(ToStream(svgText));
+
+            //            var dimen = new SkiaSharp.SKSizeI(
+            //                (int)Math.Ceiling(pict.CullRect.Width),
+            //                (int)Math.Ceiling(pict.CullRect.Height)
+            //            );
+            //            var matrix = SKMatrix.MakeScale(1, 1);
+            //            var img = SKImage.FromPicture(pict, dimen, matrix);
+
+            //            // convert to PNG
+            //            var skdata = img.Encode(SkiaSharp.SKEncodedImageFormat.Png, quality);
+            //            using (var stream = File.OpenWrite(svgSaveAs))
+            //            {
+            //                skdata.SaveTo(stream);
+            //            }
+
+            return;
+        }
+
+
         //private RenderFragment AddContent(string textContent) => builder =>
         //{
         //    builder.AddContent(1, textContent);

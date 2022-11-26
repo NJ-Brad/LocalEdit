@@ -351,7 +351,9 @@ namespace LocalEdit.Pages
             {
                 if (isLpeFile)
                 {
-                    string test = fileManagementModalRef.FileText;
+                    //string test = fileManagementModalRef.FileText;
+                    //Root rt = (Root)JsonSerializer.Deserialize(test, typeof(Root));
+                    //Document = LpeConverter.ToSequenceDocument(rt);
                     Document = LpeConverter.ToSequenceDocument((Root)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(Root)));
                 }
                 else

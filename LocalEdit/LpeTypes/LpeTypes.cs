@@ -44,7 +44,7 @@ namespace LocalEdit.LpeTypes
         public bool hasFooter { get; set; }
         public bool hasHeader { get; set; }
         public HeaderConfig headerConfig { get; set; }
-        public List<ItemSequence> itemSequence { get; set; }
+        public List<ItemSequence> itemFlow { get; set; }
     }
 
     public class ValueCondition

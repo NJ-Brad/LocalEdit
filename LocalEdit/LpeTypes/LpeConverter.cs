@@ -10,8 +10,9 @@ namespace LocalEdit.LpeTypes
             SequenceDocument rtnVal = new SequenceDocument();
 
             ItemSequence previousItem = null;
+            ItemSequence previousUnconditional = null;
 
-            foreach (ItemSequence itmFlow in flow.itemSequence)
+            foreach (ItemSequence itmFlow in flow.itemFlow)
             {
                 rtnVal.Items.Add(new SequenceItem { /*ID = itmFlow.itemName, */Description = "", ItemType = SequenceItemType.Question, Label = itmFlow.title });
 
@@ -19,13 +20,24 @@ namespace LocalEdit.LpeTypes
                 {
                     if (itmFlow.entryLogic == null)
                     {
-                        rtnVal.Relationships.Add(new SequenceRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = " " });
+                        rtnVal.Relationships.Add(new SequenceRelationship { From = previousItem.title, To = itmFlow.title, Label = " " });
                     }
                     else
                     {
-                        rtnVal.Relationships.Add(new SequenceRelationship { From = previousItem.itemName, To = itmFlow.itemName, Label = itmFlow.entryLogic.ToString().Trim().Replace("\r\n", "<br/>") });
+                        rtnVal.Relationships.Add(new SequenceRelationship { From = previousItem.title, To = itmFlow.title, Label = itmFlow.entryLogic.ToString().Trim().Replace("\r\n", "<br/>") });
                     }
                 }
+
+                if ((previousUnconditional != null) && (previousUnconditional != previousItem))
+                {
+                    rtnVal.Relationships.Add(new SequenceRelationship { From = previousUnconditional.title, To = itmFlow.title, Label = "Otherwise" });
+                }
+
+                if (itmFlow.entryLogic == null)
+                {
+                    previousUnconditional = itmFlow;
+                }
+
                 previousItem = itmFlow;
             }
 
