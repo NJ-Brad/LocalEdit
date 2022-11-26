@@ -1,0 +1,33 @@
+{
+  "hasFooter": false,
+  "hasHeader": false,
+  "headerConfig": null,
+  "Items": [
+    {
+      "Label": "Question One",
+      "Description": "",
+      "NextQuestions": [
+        {
+          "From": "Question One",
+          "To": "Question Two",
+          "Label": "Flow One"
+        }
+      ]
+    },
+    {
+      "Label": "Question Two",
+      "Description": "",
+      "NextQuestions": []
+    },
+    {
+      "Label": "Question Three",
+      "Description": "",
+      "NextQuestions": []
+    },
+    {
+      "Label": "Question Four",
+      "Description": "",
+      "NextQuestions": []
+    }
+  ]
+}

@@ -192,7 +192,7 @@
     RenderInterval="@TimeSpan.FromSeconds(10)"/>
 *@
 
-<LocalEdit.Modals.QuestionFlowItemModal @ref="QuestionFlowItemModalRef" Closed="@OnQuestionFlowItemModalClosed"></LocalEdit.Modals.QuestionFlowItemModal>
+<LocalEdit.Modals.QuestionFlowItemModal @ref="QuestionFlowItemModalRef" Items="@Document.Items" Closed="@OnQuestionFlowItemModalClosed"></LocalEdit.Modals.QuestionFlowItemModal>
 
 @*<LocalEdit.Modals.QuestionFlowRelationshipModal @ref="QuestionFlowRelationshipModalRef" Items="@Document.Items" Closed="@OnQuestionFlowRelationshipModalClosed"></LocalEdit.Modals.QuestionFlowRelationshipModal>*@
 

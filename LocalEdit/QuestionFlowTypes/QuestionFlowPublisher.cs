@@ -11,16 +11,22 @@ namespace LocalEdit.QuestionFlowTypes
 
             sb.Append(MermaidHeader(QuestionFlow));
 
+            // go through and get all of the questions created
             foreach (var item in QuestionFlow.Items)
             {
                 //item = workspace.items[itmNum];
                 sb.Append(MermaidItem(item));
             }
 
-            //foreach (var rel in QuestionFlow.Relationships)
-            //{
-            //    sb.Append(MermaidConnection(rel));
-            //}
+            // go through again and add all of the connections
+            foreach (var item in QuestionFlow.Items)
+            {
+                foreach (var rel in item.NextQuestions)
+                {
+                    rel.From = item.Label;
+                    sb.Append(MermaidConnection(rel));
+                }
+            }
 
             return sb.ToString();
         }
@@ -31,7 +37,7 @@ namespace LocalEdit.QuestionFlowTypes
             //sb.AppendLine("graph TD");
 
             sb.AppendLine("%% Created by LocalEdit");
-            sb.AppendLine("QuestionFlowDiagram");
+            sb.AppendLine("sequenceDiagram");
 
             // classDef borderless stroke-width:0px
             // classDef darkBlue fill:#00008B, color:#fff

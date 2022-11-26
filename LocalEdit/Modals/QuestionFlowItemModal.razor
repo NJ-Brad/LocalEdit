@@ -42,37 +42,55 @@
                     <TextEdit @bind-Text="item.Description" Placeholder="Enter description" />
                 </Field>
 *@
-            <DataGrid TItem="QuestionFlowRelationship"
-                      Data="@item.NextQuestions"
-                      @bind-SelectedRow="@selectedRelationshipRow"
-                      Responsive>
-                      <DataGridColumns>
-                <DataGridColumn Field="@nameof( QuestionFlowRelationship.From )" Editable="false">
-                    <DisplayTemplate>
-                        @{
-                            string fromCode = ( context as QuestionFlowRelationship )?.From;
-                            string toCode = ( context as QuestionFlowRelationship )?.To;
+<hr />
+                <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewRelationship">
+                    <Icon Name="IconName.Add" />
+                    New
+                </Button>
+                @if (selectedRelationshipRow == null)
+                {
+                    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+                        <Icon Name="IconName.Edit" />
+                        Edit
+                    </Button>
+                }
+                @if (selectedRelationshipRow != null)
+                {
+                    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowRelationshipModal">
+                        <Icon Name="IconName.Edit" />
+                        Edit
+                    </Button>
+                }
 
-                                if (fromCode != null)
-                                {
-                                    @($"{fromCode}") <NBSP/> <Icon Name="IconName.ArrowRight"/> <NBSP/> @($"{toCode}")
-                                    <br />
-                                    <span style="padding-left:2em">@($"{context.Label}")</span>
-                                }
-                            //if ( date != null )
-                            //{
-                            //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
-                            //}
-                        }
-                    </DisplayTemplate>
-                </DataGridColumn>
-                </DataGridColumns>
-                <EmptyTemplate>
-                    <div class="box">
-                        No relations were found!
-                    </div>
-                </EmptyTemplate>
-            </DataGrid>
+                @if (selectedRelationshipRow == null)
+                {
+                    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+                        <Icon Name="IconName.Delete" />
+                        Delete
+                    </Button>
+                }
+                @if (selectedRelationshipRow != null)
+                {
+                    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteRelationship">
+                        <Icon Name="IconName.Delete" />
+                        Delete
+                    </Button>
+                }
+
+                <DataGrid TItem="QuestionFlowRelationship"
+                          Data="@item.NextQuestions"
+                          @bind-SelectedRow="@selectedRelationshipRow"
+                          Responsive>
+                    <DataGridColumns>
+                        <DataGridColumn Field="@nameof( QuestionFlowRelationship.Label )" Editable="false" />
+                        <DataGridColumn Field="@nameof( QuestionFlowRelationship.To )" Editable="false" />
+                    </DataGridColumns>
+                    <EmptyTemplate>
+                        <div class="box">
+                            No relations were found!
+                        </div>
+                    </EmptyTemplate>
+                </DataGrid>
             </Validations>
         </ModalBody>
         <ModalFooter>
@@ -81,3 +99,5 @@
         </ModalFooter>
     </ModalContent>
 </Modal>
+
+<LocalEdit.Modals.QuestionFlowRelationshipModal @ref="QuestionFlowRelationshipModalRef" Items="@Items" Closed="@OnQuestionFlowRelationshipModalClosed"></LocalEdit.Modals.QuestionFlowRelationshipModal>

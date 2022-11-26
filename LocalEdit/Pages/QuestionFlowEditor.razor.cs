@@ -38,7 +38,7 @@ namespace LocalEdit.Pages
 
         }
 
-            Mermaid  MermaidOne { get; set; }
+            Mermaid?  MermaidOne { get; set; }
 
         protected override Task OnInitializedAsync()
         {
