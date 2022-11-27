@@ -88,8 +88,9 @@ namespace LocalEdit.PlanTypes
             bool goDeeper = true;
 
             StringBuilder deps = new StringBuilder();
+            bool isAfter = true;
 
-//            if (item.Dependencies.Count == 0)
+            //            if (item.Dependencies.Count == 0)
             {
                 deps.Append("start");
             }
@@ -103,6 +104,7 @@ namespace LocalEdit.PlanTypes
                         if (deps.ToString().StartsWith("start"))
                         {
                             deps = new StringBuilder(deps.ToString().Substring(6));
+                            isAfter= false;
                         }
                     }
                     else
@@ -123,7 +125,14 @@ namespace LocalEdit.PlanTypes
 
             if (deps.Length > 0)
             {
-                sb.Append($", after {deps.ToString()}");
+                if (isAfter)
+                {
+                    sb.Append($", after {deps.ToString()}");
+                }
+                else
+                {
+                    sb.Append($", {deps.ToString()}");
+                }
             }
 
             if (!string.IsNullOrEmpty(item.Duration))

@@ -108,7 +108,8 @@
                         <DataGridColumn Field="@nameof(PlanItemDependency.ID)" Editable="false">
                             <DisplayTemplate>
                                 @{
-                                    @($"{DecodePlanItemId(context.ID)}")
+                                    @($"{context.ToString()}")
+                                    //@($"{DecodePlanItemId(context.ID)}")
                                     //if ( date != null )
                                     //{
                                     //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
