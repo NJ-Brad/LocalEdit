@@ -26,26 +26,45 @@
                 <Field>
 
                     <FieldLabel>Dependency Type</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
                     <Select TValue="string" @bind-SelectedValue="@Item.DependencyType">
-                        <SelectItem Value=@("DATE")>Date</SelectItem>
+                            <SelectItem Value="@string.Empty" Disabled>- Select an Item -</SelectItem>
+                            <SelectItem Value=@("DATE")>Date</SelectItem>
                         <SelectItem Value=@("OTHER")>Other Item</SelectItem>
                     </Select>
+                    </Validation>
                 </Field>
 
                 <Field>
                     <FieldLabel>Other Item ID</FieldLabel>
-                    <Select TValue="string" @bind-SelectedValue="@Item.ID">
+@*                    <Validation Validator="ValidationRule.IsNotEmpty">*@
+                        <Select TValue="string" @bind-SelectedValue="@Item.ID">
+                        <SelectItem Value="@string.Empty" Disabled>- Select an Item -</SelectItem>
                         @foreach (var item in Items)
                         {
                             <SelectItem Value="@(item.ID)">@(item.Label)</SelectItem>
                         }
                     </Select>
+@*                    </Validation>*@
                 </Field>
 
                 <Field>
                     <FieldLabel>Start Date</FieldLabel>
-                    <TextEdit @bind-Text="Item.StartDate" Placeholder="Enter Start Date" />
+@*                    <TextEdit @bind-Text="Item.StartDate" Placeholder="Enter Start Date" />*@
+
+                    <Addons>
+                        <Addon AddonType="AddonType.Body">
+@*                            <DatePicker @ref="@datePicker" TValue="DateTime?" InputMode="DateInputMode.Date" />*@
+                            <DatePicker @ref="@datePicker" DateChanged="@OnDateChanged" TValue="DateTime?" InputMode="DateInputMode.Date" />
+                        </Addon>
+                        <Addon AddonType="AddonType.End">
+                            <Button Color="Color.Light" Clicked="@(()=>datePicker.ToggleAsync())">
+                                <Icon Name="IconName.CalendarDay" />
+                            </Button>
+                        </Addon>
+                    </Addons>
                 </Field>
+
 
             </Validations>
         </ModalBody>

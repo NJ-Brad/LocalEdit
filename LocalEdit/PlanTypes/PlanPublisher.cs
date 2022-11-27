@@ -83,25 +83,34 @@ namespace LocalEdit.PlanTypes
         {
             StringBuilder sb = new StringBuilder();
 
-        string indentation = BuildIndentation(indent);
-        //var displayType: string = item.itemType;
-        bool goDeeper = true;
+            string indentation = BuildIndentation(indent);
+            //var displayType: string = item.itemType;
+            bool goDeeper = true;
 
             StringBuilder deps = new StringBuilder();
 
-        deps.Append("start");
-
-            foreach (PlanItemDependency dependency in item.Dependencies)
+//            if (item.Dependencies.Count == 0)
             {
-                if (dependency.DependencyType == "DATE")
+                deps.Append("start");
+            }
+  //          else
+            {
+                foreach (PlanItemDependency dependency in item.Dependencies)
                 {
-                    deps.Append($" {dependency.StartDate}");
-        }
+                    if (dependency.DependencyType == "DATE")
+                    {
+                        deps.Append($" {dependency.StartDate}");
+                        if (deps.ToString().StartsWith("start"))
+                        {
+                            deps = new StringBuilder(deps.ToString().Substring(6));
+                        }
+                    }
                     else
-{
-    deps.Append($" {dependency.ID}");
-}
+                    {
+                        deps.Append($" {dependency.ID}");
+                    }
                 }
+            }
             // start item was created so that this is not required
             // if(firstItem)
             // {
@@ -254,5 +263,5 @@ namespace LocalEdit.PlanTypes
         //}
         //}
     }
-    }
+}
 
