@@ -37,7 +37,7 @@
 
                 <Field>
                     <FieldLabel>Other Item ID</FieldLabel>
-@*                    <Validation Validator="ValidationRule.IsNotEmpty">*@
+                    <Validation Validator="ValidateId">
                         <Select TValue="string" @bind-SelectedValue="@Item.ID">
                         <SelectItem Value="@string.Empty" Disabled>- Select an Item -</SelectItem>
                         @foreach (var item in Items)
@@ -45,11 +45,13 @@
                             <SelectItem Value="@(item.ID)">@(item.Label)</SelectItem>
                         }
                     </Select>
-@*                    </Validation>*@
+                    </Validation>
                 </Field>
 
                 <Field>
                     <FieldLabel>Start Date</FieldLabel>
+
+                    <Validation Validator="ValidateStartDate">
 @*                    <TextEdit @bind-Text="Item.StartDate" Placeholder="Enter Start Date" />*@
 
                     <Addons>
@@ -63,6 +65,7 @@
                             </Button>
                         </Addon>
                     </Addons>
+                    </Validation>
                 </Field>
 
 

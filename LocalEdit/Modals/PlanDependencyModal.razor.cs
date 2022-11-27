@@ -28,6 +28,7 @@ namespace LocalEdit.Modals
 
         DateTime? selectedDate;
 
+
         void OnDateChanged(DateTime? date)
         {
             selectedDate = date;
@@ -39,6 +40,48 @@ namespace LocalEdit.Modals
             {
                 Item.StartDate = string.Empty;
             }
+        }
+
+        void ValidateId(ValidatorEventArgs e)
+        {
+            e.Status = ValidationStatus.Success;
+            if (Item.DependencyType == "OTHER")
+            {
+                string value = Convert.ToString(e.Value);
+
+                //e.Status = string.IsNullOrEmpty(startDate) ? ValidationStatus.None :
+                //    email.Contains("@") ? ValidationStatus.Success : ValidationStatus.Error;
+                e.Status = string.IsNullOrEmpty(value) ? ValidationStatus.Error : ValidationStatus.Success;
+            }
+            else
+            {
+                e.Status = ValidationStatus.None;
+            }
+
+        }
+
+        void ValidateStartDate(ValidatorEventArgs e)
+        {
+            e.Status = ValidationStatus.Success;
+            if (Item.DependencyType == "DATE")
+            {
+                DateTime? testVal = (e.Value as dynamic)[0] as DateTime?;
+
+                //dynamic v2 = e.Value;
+                //DateTime? v3 = v2[0] as DateTime?;
+
+                if (testVal == DateTime.MinValue)
+                {
+                    e.Status = ValidationStatus.Error;
+                }
+            }
+            else
+            {
+                e.Status = ValidationStatus.None;
+            }
+
+            //e.Status = string.IsNullOrEmpty(startDate) ? ValidationStatus.None :
+            //    email.Contains("@") ? ValidationStatus.Success : ValidationStatus.Error;
         }
 
         PlanItemDependency item = new();
