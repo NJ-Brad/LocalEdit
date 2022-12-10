@@ -16,12 +16,17 @@
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.1.2" />
     <PackageReference Include="Blazorise.Markdown" Version="1.1.2" />
     <PackageReference Include="Blazorise.TreeView" Version="1.1.2" />
-    <PackageReference Include="BlazorPanzoom" Version="0.2.1" />
     <PackageReference Include="Markdig" Version="0.30.4" />
     <PackageReference Include="MermaidJS.Blazor" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.10" PrivateAssets="all" />
     <PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BlazorPanzoom">
+      <HintPath>..\..\..\..\..\..\source\GitHub\BlazorPanzoom\src\BlazorPanzoom\bin\Debug\net6.0\BlazorPanzoom.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
