@@ -24,9 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="BlazorPanzoom">
-      <HintPath>..\..\..\..\..\..\source\GitHub\BlazorPanzoom\src\BlazorPanzoom\bin\Debug\net6.0\BlazorPanzoom.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\BlazorPanzoom\BlazorPanzoom.csproj" />
   </ItemGroup>
 
   <ItemGroup>
