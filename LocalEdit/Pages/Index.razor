@@ -9,6 +9,11 @@ Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
+<LocalEdit.Shared.BlazorTimer @ref="timerRef" Ticked="@OnTimerTicked" Interval="1000"></LocalEdit.Shared.BlazorTimer>
+
+<h1>@currentTime</h1>
+
+<br />
 This app will utilize <br />
 <ul>
     <li>Blazorise</li>
@@ -40,6 +45,25 @@ See https://blazorise.com/docs/theming for details<br />
 <Blazorise.Bootstrap5.Button Clicked="@(()=>OnThemeColorChanged("#00ff00"))">Change theme</Blazorise.Bootstrap5.Button>
 
 @code{
+    string currentTime = "Now";
+
+    BlazorTimer? timerRef = null;
+
+
+    Task OnTimerTicked()
+    {
+        //if (fileManagementModalRef.Result == ModalResult.OK)
+        //{
+        //    Document = (C4Workspace)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(C4Workspace));
+        //    InvokeAsync(() => StateHasChanged());
+        //}
+
+        currentTime = DateTime.Now.ToString();
+        InvokeAsync(() => StateHasChanged());
+
+        return Task.CompletedTask;
+    }
+
     Task OnThemeColorChanged( string value )
     {
         if ( Theme?.ColorOptions != null )
