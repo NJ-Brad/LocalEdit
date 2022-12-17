@@ -12,19 +12,20 @@
 
     // inspired by https://large-type.com/#*Hello*
 
-    private void RenderText(string inputText)
+    public void RenderText(string inputText, string color="black")
     {
         var text = inputText;
         var fontSize = Math.Min(150 / text.Length, 30);
 
         StringBuilder sb = new StringBuilder();
+
         string spanText = "";
 
         foreach(char chr in inputText.ToArray())
         {
             if (chr != ' ')
             {
-                spanText = @$"<span style=""font-size: {fontSize}vw"">{chr}</span>";
+                spanText = @$"<span style=""font-size: {fontSize}vw; color: {color}"">{chr}</span>";
                 sb.Append(spanText);
                 
             }
@@ -36,5 +37,6 @@
         }
 
         myhtml = sb.ToString();
+        InvokeAsync(() => StateHasChanged());
     }
 }

@@ -1,0 +1,82 @@
+﻿@page "/CountDown"
+
+<h3>CountDown</h3>
+
+<Field>
+    <FieldLabel>Start Time</FieldLabel>
+    <TimePicker TValue="TimeSpan?" Inline @bind-Time="startTime"/>
+</Field>
+
+<Field>
+    <FieldLabel>Description</FieldLabel>
+    <TimePicker TValue="TimeSpan?" Inline @bind-Time="endTime"/>
+</Field>
+
+<Field>
+    <FieldLabel>Warning Minutes</FieldLabel>
+    <NumericEdit @bind-Value="warningMinutes" />
+</Field>
+
+<button @onclick="ButtonClicked">Apply</button>
+
+
+<LocalEdit.Shared.BlazorTimer @ref="timerRef" Ticked="@OnTimerTicked" Interval="1000"></LocalEdit.Shared.BlazorTimer>
+
+<h1>@currentTime</h1>
+
+<br />
+<LocalEdit.Shared.BigText @ref="bigTextRef"/>
+
+
+@code {
+    string currentTime = "Now";
+
+    BlazorTimer? timerRef = null;
+    BigText? bigTextRef = null;
+    bool started = false;
+
+    TimeSpan? startTime = null;
+    TimeSpan? endTime = null;
+    TimeSpan? remainingTime = null;
+    int warningMinutes = 5;
+
+    private void ButtonClicked()
+    {
+        started = true;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+
+    Task OnTimerTicked()
+    {
+        if (!started)
+            bigTextRef?.RenderText("Meeting has not started yet.");
+        else if (DateTime.Now.TimeOfDay < startTime)
+            bigTextRef?.RenderText("Meeting has not started yet.");
+        else if (DateTime.Now.TimeOfDay > endTime)
+            bigTextRef?.RenderText("Meeting should have ended by now.");
+        else if ((DateTime.Now.TimeOfDay > startTime) && (DateTime.Now.TimeOfDay < endTime))
+        {
+            remainingTime = endTime - DateTime.Now.TimeOfDay;
+            bigTextRef?.RenderText(remainingTime?.ToString(@"hh\:mm\:ss"), (remainingTime?.TotalMinutes < warningMinutes)? "red" : "black");
+        }
+
+
+
+        //if (fileManagementModalRef.Result == ModalResult.OK)
+        //{
+        //    Document = (C4Workspace)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(C4Workspace));
+        //    InvokeAsync(() => StateHasChanged());
+        //}
+
+        currentTime = DateTime.Now.ToString();
+        InvokeAsync(() => StateHasChanged());
+
+        return Task.CompletedTask;
+    }
+
+}
