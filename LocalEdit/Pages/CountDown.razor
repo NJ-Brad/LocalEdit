@@ -3,6 +3,12 @@
 
 <PageTitle>@title</PageTitle>
 
+    <Layout>
+        <LayoutHeader Fixed>
+        <h1>@currentTime</h1>
+    </LayoutHeader>
+        <LayoutContent>
+
 <LocalEdit.Shared.BigText @ref="bigTextRef" />
 <br />
 <h1>@currentTime</h1>
@@ -11,6 +17,9 @@
     <Icon Name="IconName.Play" />
     Configure
 </Button>
+    </LayoutContent>
+</Layout>
+
 
 <LocalEdit.Shared.BlazorTimer @ref="timerRef" Ticked="@OnTimerTicked" Interval="1000"></LocalEdit.Shared.BlazorTimer>
 
