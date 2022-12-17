@@ -1,32 +1,18 @@
 ﻿@page "/CountDown"
+@using LocalEdit.Modals;
 
-<h3>CountDown</h3>
+<LocalEdit.Shared.BigText @ref="bigTextRef" />
+<br />
+<h1>@currentTime</h1>
 
-<Field>
-    <FieldLabel>Start Time</FieldLabel>
-    <TimePicker TValue="TimeSpan?" Inline @bind-Time="startTime"/>
-</Field>
-
-<Field>
-    <FieldLabel>Description</FieldLabel>
-    <TimePicker TValue="TimeSpan?" Inline @bind-Time="endTime"/>
-</Field>
-
-<Field>
-    <FieldLabel>Warning Minutes</FieldLabel>
-    <NumericEdit @bind-Value="warningMinutes" />
-</Field>
-
-<button @onclick="ButtonClicked">Apply</button>
-
+<Button Size="Size.Small" Color="Color.Primary" Clicked="@Configure">
+    <Icon Name="IconName.Play" />
+    Configure
+</Button>
 
 <LocalEdit.Shared.BlazorTimer @ref="timerRef" Ticked="@OnTimerTicked" Interval="1000"></LocalEdit.Shared.BlazorTimer>
 
-<h1>@currentTime</h1>
-
-<br />
-<LocalEdit.Shared.BigText @ref="bigTextRef"/>
-
+<LocalEdit.Modals.CountDownModal @ref="countDownModalRef" Closed="@OnCountDownModalClosed"></LocalEdit.Modals.CountDownModal>
 
 @code {
     string currentTime = "Now";
@@ -37,8 +23,41 @@
 
     TimeSpan? startTime = null;
     TimeSpan? endTime = null;
-    TimeSpan? remainingTime = null;
     int warningMinutes = 5;
+    TimeSpan? remainingTime = null;
+
+    CountDownModal? countDownModalRef = null;
+
+    private Task Configure()
+    {
+        countDownModalRef?.ShowModal();
+
+        return Task.CompletedTask;
+    }
+
+
+    private Task OnCountDownModalClosed()
+    {
+        // remove the new item, if add was cancelled
+        if (countDownModalRef.Result == ModalResult.Cancel)
+        {
+            //Document.Items.Remove(selectedItemRow);
+            //selectedItemRow = null;
+        }
+        else
+        {
+            startTime = countDownModalRef.Configuration.StartTime;
+            endTime = countDownModalRef.Configuration.EndTime;
+            warningMinutes = countDownModalRef.Configuration.WarningMinutes;
+            started = true;
+        }
+//        adding = false;
+
+        InvokeAsync(() => StateHasChanged());
+
+        return Task.CompletedTask;
+    }
+
 
     private void ButtonClicked()
     {
