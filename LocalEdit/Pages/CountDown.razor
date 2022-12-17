@@ -1,6 +1,8 @@
 ﻿@page "/CountDown"
 @using LocalEdit.Modals;
 
+<PageTitle>@title</PageTitle>
+
 <LocalEdit.Shared.BigText @ref="bigTextRef" />
 <br />
 <h1>@currentTime</h1>
@@ -15,6 +17,8 @@
 <LocalEdit.Modals.CountDownModal @ref="countDownModalRef" Closed="@OnCountDownModalClosed"></LocalEdit.Modals.CountDownModal>
 
 @code {
+    string title = "Meeting Countdown";
+
     string currentTime = "Now";
 
     BlazorTimer? timerRef = null;
@@ -73,15 +77,25 @@
     Task OnTimerTicked()
     {
         if (!started)
+        {
             bigTextRef?.RenderText("Meeting has not started yet.");
+            title = "Meeting Countdown";
+        }
         else if (DateTime.Now.TimeOfDay < startTime)
+        {
             bigTextRef?.RenderText("Meeting has not started yet.");
+            title = "Meeting has not started yet.";
+        }
         else if (DateTime.Now.TimeOfDay > endTime)
+        {
             bigTextRef?.RenderText("Meeting should have ended by now.");
+            title = "Overtime";
+        }
         else if ((DateTime.Now.TimeOfDay > startTime) && (DateTime.Now.TimeOfDay < endTime))
         {
             remainingTime = endTime - DateTime.Now.TimeOfDay;
             bigTextRef?.RenderText(remainingTime?.ToString(@"hh\:mm\:ss"), (remainingTime?.TotalMinutes < warningMinutes)? "red" : "black");
+            title = remainingTime?.ToString(@"hh\:mm\:ss");
         }
 
 
