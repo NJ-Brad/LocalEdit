@@ -51,6 +51,29 @@ See https://blazorise.com/docs/theming for details<br />
 
 <Blazorise.Bootstrap5.Button Clicked="@(()=>OnThemeColorChanged("#00ff00"))">Change theme</Blazorise.Bootstrap5.Button>
 
+<Bar Mode="BarMode.VerticalInline"
+     CollapseMode="BarCollapseMode.Small"
+     ThemeContrast="ThemeContrast.Dark">
+    <BarToggler />
+    <BarBrand>
+        <BarItem>
+            <BarLink To="#">
+                <BarIcon IconName="IconName.Dashboard" />
+                Local Edit
+            </BarLink>
+        </BarItem>
+    </BarBrand>
+    <BarMenu>
+        <BarItem Style="margin-left: 0;">
+            <BarLink To="">
+                <BarIcon IconName="IconName.Dashboard" />
+                Home
+            </BarLink>
+        </BarItem>
+    </BarMenu>
+</Bar>
+
+
 @code{
     string currentTime = "Now";
 
