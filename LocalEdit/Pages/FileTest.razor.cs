@@ -9,8 +9,8 @@ namespace LocalEdit.Pages
     {
         string fileText = "";
 
-        protected override async Task OnInitializedAsync()
-        {
+//        protected override async Task OnInitializedAsync()
+//        {
 //            await localStorage.SetItemAsync("name", "John Smith");
             //var name = await localStorage.GetItemAsync<string>("name");
             //var upl = await localStorage.GetItemAsync<string>("uploaded");
@@ -18,20 +18,18 @@ namespace LocalEdit.Pages
             //var exists = await localStorage.GetItemAsync<string>("i18nextLng");
 
             //var keys = await localStorage.KeysAsync();
-        }
+//        }
 
 
         async Task OnFileUpload(FileUploadEventArgs e)
         {
             try
             {
-                using (MemoryStream result = new MemoryStream())
-                {
-                    await e.File.OpenReadStream(long.MaxValue).CopyToAsync(result);
-                    result.Seek(0, SeekOrigin.Begin);
-                    fileText = await new StreamReader(result).ReadToEndAsync();
-                    //fileText = await new StreamReader(e.File.OpenReadStream()).ReadToEndAsync();
-                }
+                using MemoryStream result = new();
+                await e.File.OpenReadStream(long.MaxValue).CopyToAsync(result);
+                result.Seek(0, SeekOrigin.Begin);
+                fileText = await new StreamReader(result).ReadToEndAsync();
+                //fileText = await new StreamReader(e.File.OpenReadStream()).ReadToEndAsync();
             }
             catch (Exception exc)
             {
@@ -63,6 +61,7 @@ namespace LocalEdit.Pages
         {
             // https://stackoverflow.com/questions/16072709/converting-string-to-byte-array-in-c-sharp
             byte[] bytes = Encoding.ASCII.GetBytes(fileText);
+
             //            await BlazorDownloadFileService.DownloadFileAsync("example.txt", bytes);
 
             //        currentCount++;

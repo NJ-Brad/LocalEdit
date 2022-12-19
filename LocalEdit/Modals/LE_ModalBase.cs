@@ -57,7 +57,8 @@ namespace LocalEdit.Modals
             //cancelled = true;
             Result = ModalResult.Cancel;
 
-            modalRef.Hide();
+            if(modalRef != null)
+                modalRef.Hide();
 
             return Closed.InvokeAsync();
         }
@@ -100,9 +101,10 @@ namespace LocalEdit.Modals
                 cancelClose = false;
             }
 
-            modalRef.Hide();
+            if(modalRef != null)
+                await modalRef.Hide();
 
-            Closed.InvokeAsync();
+            await Closed.InvokeAsync();
         }
     }
 }

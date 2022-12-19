@@ -27,7 +27,14 @@ namespace LocalEdit.Modals
         public async Task<bool> IsValid()
         {
             bool rtnVal = false;
-            if (await validations.ValidateAll())
+            if (validations != null)
+            {
+                if (await validations.ValidateAll())
+                {
+                    rtnVal = true;
+                }
+            }
+            else
             {
                 rtnVal = true;
             }
@@ -37,7 +44,8 @@ namespace LocalEdit.Modals
 
         public override async Task ResetValidation()
         {
-            await validations.ClearAll();
+            if(validations != null)
+                await validations.ClearAll();
         }
     }
 }

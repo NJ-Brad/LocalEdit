@@ -9,7 +9,7 @@ namespace LocalEdit.Modals
     {
 
         [Inject]
-        public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+        public IBlazorDownloadFileService? BlazorDownloadFileService { get; set; }
         public string FileText { get => fileText; set => fileText = value; }
         public string Name { get => name; set => name = value; }
 
@@ -39,7 +39,7 @@ namespace LocalEdit.Modals
             InvokeAsync(() => StateHasChanged());
 
             Result = ModalResult.Saved;
-            modalRef.Hide();
+            modalRef?.Hide();
 
             Closed.InvokeAsync();
             return Task.CompletedTask;
@@ -59,18 +59,17 @@ namespace LocalEdit.Modals
         {
             try
             {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    await e.File.OpenReadStream(long.MaxValue).CopyToAsync(ms);
-                    ms.Seek(0, SeekOrigin.Begin);
-                    FileText = await new StreamReader(ms).ReadToEndAsync();
-                    //fileText = await new StreamReader(e.File.OpenReadStream()).ReadToEndAsync();
-                    name = e.File.Name;
-                    Result = ModalResult.OK;
+                using MemoryStream ms = new();
+                await e.File.OpenReadStream(long.MaxValue).CopyToAsync(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                FileText = await new StreamReader(ms).ReadToEndAsync();
+                //fileText = await new StreamReader(e.File.OpenReadStream()).ReadToEndAsync();
+                name = e.File.Name;
+                Result = ModalResult.OK;
+                if (modalRef != null)
                     await modalRef.Hide();
 
-                    Closed.InvokeAsync();
-                }
+                await Closed.InvokeAsync();
             }
             catch (Exception exc)
             {
@@ -109,11 +108,14 @@ namespace LocalEdit.Modals
             {
                 name = "example.txt";
             }
-            await BlazorDownloadFileService.DownloadFileAsync(name, bytes);
 
-            await modalRef.Hide();
+            if(BlazorDownloadFileService != null)
+                await BlazorDownloadFileService.DownloadFileAsync(name, bytes);
 
-            Closed.InvokeAsync();
+            if(modalRef != null)
+                await modalRef.Hide();
+
+            await Closed.InvokeAsync();
         }
 
     }

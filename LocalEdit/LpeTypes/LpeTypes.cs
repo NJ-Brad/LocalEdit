@@ -6,7 +6,7 @@ namespace LocalEdit.LpeTypes
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class EntryLogic
     {
-        public List<ValueCondition> valueConditions { get; set; }
+        public List<ValueCondition>? valueConditions { get; set; }
 
         public override string ToString()
         {

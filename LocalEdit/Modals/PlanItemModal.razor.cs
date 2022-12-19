@@ -11,10 +11,15 @@ namespace LocalEdit.Modals
         public override async Task<bool> Validate()
         {
             bool rtnVal = false;
-            if (await validations.ValidateAll())
+            if (validations != null)
             {
-                rtnVal = true;
+                if (await validations.ValidateAll())
+                {
+                    rtnVal = true;
+                }
             }
+            else
+                rtnVal = true;
 
             return rtnVal;
         }
@@ -38,13 +43,13 @@ namespace LocalEdit.Modals
 
         public override async Task ResetValidation()
         {
-            await validations.ClearAll();
+            await validations?.ClearAll();
         }
 
-        PlanDependencyModal planDependencyModalRef = null;
+        PlanDependencyModal? planDependencyModalRef = null;
         bool adding = false;
 
-        PlanItemDependency selectedDependencyRow = null;
+        PlanItemDependency? selectedDependencyRow = null;
 
         private Task EditDependency()
         {
@@ -52,10 +57,13 @@ namespace LocalEdit.Modals
             {
                 return Task.CompletedTask;
             }
-            planDependencyModalRef.Item = selectedDependencyRow;
 
-            planDependencyModalRef?.ShowModal();
+            if (planDependencyModalRef != null)
+            {
+                planDependencyModalRef.Item = selectedDependencyRow;
 
+                planDependencyModalRef?.ShowModal();
+            }
             //InvokeAsync(() => StateHasChanged());
 
             return Task.CompletedTask;

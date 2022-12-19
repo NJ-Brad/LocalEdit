@@ -54,7 +54,7 @@ namespace LocalEdit.Pages
         //    parentNode = FindParent(this.SelectedNode, Document.Model);
         //}
 
-        C4Workspace Document { get; set; } = new C4Workspace();
+        C4Workspace? Document { get; set; } = new C4Workspace();
 //        MarkdownRenderer markdownRef;
         C4ItemEditModal? c4ItemModalRef = null;
 
@@ -65,10 +65,13 @@ namespace LocalEdit.Pages
                 return Task.CompletedTask;
             }
 
-            c4ItemModalRef.ParentType = parentNode == null ? C4TypeEnum.Unknown : parentNode.ItemType;
-            c4ItemModalRef.SelectedNode = SelectedNode;
+            if (c4ItemModalRef != null)
+            {
+                c4ItemModalRef.ParentType = parentNode == null ? C4TypeEnum.Unknown : parentNode.ItemType;
+                c4ItemModalRef.SelectedNode = SelectedNode;
 
-            c4ItemModalRef?.ShowModal();
+                c4ItemModalRef?.ShowModal();
+            }
 
             //InvokeAsync(() => StateHasChanged());
 
@@ -120,7 +123,7 @@ namespace LocalEdit.Pages
 
         private C4Item FindParent(C4Item NodeInQuestion, IEnumerable<C4Item> collection)
         {
-            C4Item parentNode = null;
+            C4Item? parentNode = null;
 
             foreach (C4Item potential in collection)
             {
@@ -251,7 +254,7 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        C4Item selectedNode = null;
+        C4Item? selectedNode = null;
         C4Item? parentNode = null;
         C4Item? potentialParentNode = null;
         C4Item? newItem = null;
@@ -261,16 +264,16 @@ namespace LocalEdit.Pages
         //private Modal? C4ItemModalRef;
 
 
-        private bool cancelClose;
+        //private bool cancelClose;
 
-        private bool modalVisible;
-        private bool newItemModalVisible;
+        //private bool modalVisible;
+        //private bool newItemModalVisible;
 
-        private bool cancelled = false;
+        //private bool cancelled = false;
 
         private Task ShowModal()
         {
-            modalVisible = true;
+//            modalVisible = true;
 
             InvokeAsync(() => StateHasChanged());
 
@@ -282,7 +285,7 @@ namespace LocalEdit.Pages
         {
             potentialParentNode = parentNode;
             
-            newItemModalVisible = true;
+            //newItemModalVisible = true;
 
             InvokeAsync(() => StateHasChanged());
 

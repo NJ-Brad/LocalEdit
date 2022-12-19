@@ -40,7 +40,7 @@ namespace LocalEdit.Modals
         //    return modalRef.Hide();
         //}
 
-        Alert myAlert;
+        Alert? myAlert { get; set; }
 
         private bool ShouldShow(C4TypeEnum itemType)
         {
@@ -132,7 +132,14 @@ namespace LocalEdit.Modals
         public async Task<bool> IsValid()
         {
             bool rtnVal = false;
-            if (await validations.ValidateAll())
+            if (validations != null)
+            {
+                if (await validations.ValidateAll())
+                {
+                    rtnVal = true;
+                }
+            }
+            else
             {
                 rtnVal = true;
             }

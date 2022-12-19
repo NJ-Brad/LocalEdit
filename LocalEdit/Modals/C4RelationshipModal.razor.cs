@@ -11,17 +11,19 @@ namespace LocalEdit.Modals
         public override async Task<bool> Validate()
         {
             bool rtnVal = false;
-            if (await validations.ValidateAll())
-            {
-                rtnVal = true;
-            }
+            if (validations != null) 
+                if (await validations.ValidateAll())
+                {
+                    rtnVal = true;
+                }
 
             return rtnVal;
         }
 
         public override async Task ResetValidation()
         {
-            await validations.ClearAll();
+            if(validations != null)
+                await validations.ClearAll();
         }
 
         public override async Task Opened()

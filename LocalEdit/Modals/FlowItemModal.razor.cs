@@ -11,21 +11,26 @@ namespace LocalEdit.Modals
         public override async Task<bool> Validate()
         {
             bool rtnVal = false;
-            if (await validations.ValidateAll())
+            if (validations != null)
             {
-                rtnVal = true;
+                if (await validations.ValidateAll())
+                {
+                    rtnVal = true;
+                }
             }
+            else
+                rtnVal = true;
 
             return rtnVal;
         }
 
         public override async Task ResetValidation()
         {
-            await validations.ClearAll();
+            await validations?.ClearAll();
         }
 
         [Parameter]
-        public FlowItem item { get; set; } = new();
+        public FlowItem Item { get; set; } = new();
 
     }
 }

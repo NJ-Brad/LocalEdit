@@ -9,8 +9,8 @@ namespace LocalEdit.LpeTypes
         {
             SequenceDocument rtnVal = new SequenceDocument();
 
-            ItemSequence previousItem = null;
-            ItemSequence previousUnconditional = null;
+            ItemSequence? previousItem = null;
+            ItemSequence? previousUnconditional = null;
 
             foreach (ItemSequence itmFlow in flow.itemFlow)
             {

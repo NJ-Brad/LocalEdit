@@ -26,7 +26,7 @@
                 <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                        <TextEdit @bind-Text="item.Label" Placeholder="Enter label">
+                        <TextEdit @bind-Text="Item.Label" Placeholder="Enter label">
                             <Feedback>
                                 <ValidationError>Please enter the label.</ValidationError>
                             </Feedback>
@@ -36,7 +36,7 @@
 
                 <Field>
                     <FieldLabel>Description</FieldLabel>
-                    <TextEdit @bind-Text="item.Description" Placeholder="Enter description" />
+                    <TextEdit @bind-Text="Item.Description" Placeholder="Enter description" />
                 </Field>
             </Validations>
         </ModalBody>

@@ -144,7 +144,7 @@ namespace LocalEdit.Pages
             {
                 return Task.CompletedTask;
             }
-            flowItemModalRef.item = selectedItemRow;
+            flowItemModalRef.Item = selectedItemRow;
 
             flowItemModalRef?.ShowModal();
 

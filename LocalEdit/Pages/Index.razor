@@ -51,29 +51,6 @@ See https://blazorise.com/docs/theming for details<br />
 
 <Blazorise.Bootstrap5.Button Clicked="@(()=>OnThemeColorChanged("#00ff00"))">Change theme</Blazorise.Bootstrap5.Button>
 
-<Bar Mode="BarMode.VerticalInline"
-     CollapseMode="BarCollapseMode.Small"
-     ThemeContrast="ThemeContrast.Dark">
-    <BarToggler />
-    <BarBrand>
-        <BarItem>
-            <BarLink To="#">
-                <BarIcon IconName="IconName.Dashboard" />
-                Local Edit
-            </BarLink>
-        </BarItem>
-    </BarBrand>
-    <BarMenu>
-        <BarItem Style="margin-left: 0;">
-            <BarLink To="">
-                <BarIcon IconName="IconName.Dashboard" />
-                Home
-            </BarLink>
-        </BarItem>
-    </BarMenu>
-</Bar>
-
-
 @code{
     string currentTime = "Now";
 
@@ -121,7 +98,8 @@ See https://blazorise.com/docs/theming for details<br />
         set
         {
             _rangeValue = value;
-            _panzoom.ZoomAsync(value);
+            if (_panzoom != null)
+                _panzoom.ZoomAsync(value);
         }
     }
 
@@ -133,7 +111,8 @@ See https://blazorise.com/docs/theming for details<br />
         set
         {
             _panEnabled = value;
-            _panzoom.SetOptionsAsync(new PanzoomOptions { DisablePan = !_panEnabled });
+            if (_panzoom != null)
+                _panzoom.SetOptionsAsync(new PanzoomOptions { DisablePan = !_panEnabled });
         }
     }
 
@@ -141,26 +120,32 @@ See https://blazorise.com/docs/theming for details<br />
 
     private async Task OnZoomInClick(MouseEventArgs args)
     {
-        await _panzoom.ZoomInAsync();
+        if (_panzoom != null)
+            await _panzoom.ZoomInAsync();
         await UpdateSlider();
     }
 
     private async Task OnZoomOutClick(MouseEventArgs args)
     {
-        await _panzoom.ZoomOutAsync();
+        if (_panzoom != null)
+            await _panzoom.ZoomOutAsync();
         await UpdateSlider();
     }
 
     private async Task OnResetClick(MouseEventArgs args)
     {
-        await _panzoom.ResetAsync();
+        if (_panzoom != null)
+            await _panzoom.ResetAsync();
         await UpdateSlider();
     }
 
     private async Task UpdateSlider()
     {
-        var scale = await _panzoom.GetScaleAsync();
-        _rangeValue = scale;
+        if (_panzoom != null)
+        {
+            var scale = await _panzoom.GetScaleAsync();
+            _rangeValue = scale;
+        }
     }
 
 }
