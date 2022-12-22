@@ -72,7 +72,7 @@ namespace LocalEdit.Pages
 
         PlanItem? SelectedItemRow { get; set; } = new();
 
-        PlanDocument? Document { get; set; } = new();
+        PlanDocument Document { get; set; } = new();
 
         string MarkdownText { get; set; } = string.Empty;
 
@@ -297,8 +297,10 @@ namespace LocalEdit.Pages
             if (fileManagementModalRef?.Result == ModalResult.OK)
             {
                 //MarkdownText = fileManagementModalRef.FileText;
-                if(fileManagementModalRef.FileText != null)
-                    Document = JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument)) as PlanDocument;
+                if (fileManagementModalRef.FileText != null)
+                {
+                    Document = (JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
+                }
                 InvokeAsync(() => StateHasChanged());
             }
 
