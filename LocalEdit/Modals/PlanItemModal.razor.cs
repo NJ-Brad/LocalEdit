@@ -6,24 +6,6 @@ namespace LocalEdit.Modals
 {
     public partial class PlanItemModal : LE_ModalBase
     {
-        Validations? validations;
-
-        public override async Task<bool> Validate()
-        {
-            bool rtnVal = false;
-            if (validations != null)
-            {
-                if (await validations.ValidateAll())
-                {
-                    rtnVal = true;
-                }
-            }
-            else
-                rtnVal = true;
-
-            return rtnVal;
-        }
-
         private string DecodePlanItemId(string id)
         {
             string rtnVal = id;
@@ -32,7 +14,7 @@ namespace LocalEdit.Modals
             {
                 if (fi.ID == id)
                 {
-                    rtnVal = fi.Label;
+                    rtnVal = fi.Label == null ? "" : fi.Label;
                     break;
                 }
             }
@@ -41,26 +23,21 @@ namespace LocalEdit.Modals
         }
 
 
-        public override async Task ResetValidation()
-        {
-            await validations?.ClearAll();
-        }
-
         PlanDependencyModal? planDependencyModalRef = null;
         bool adding = false;
 
-        PlanItemDependency? selectedDependencyRow = null;
+        PlanItemDependency? SelectedDependencyRow { get; set; } = new();
 
         private Task EditDependency()
         {
-            if (selectedDependencyRow == null)
+            if (SelectedDependencyRow == null)
             {
                 return Task.CompletedTask;
             }
 
             if (planDependencyModalRef != null)
             {
-                planDependencyModalRef.Item = selectedDependencyRow;
+                //planDependencyModalRef.Item = selectedDependencyRow;
 
                 planDependencyModalRef?.ShowModal();
             }
@@ -73,7 +50,7 @@ namespace LocalEdit.Modals
         {
             PlanItemDependency newItem = new PlanItemDependency();
 
-            selectedDependencyRow = newItem;
+            SelectedDependencyRow = newItem;
             Item.Dependencies.Add(newItem);
             adding = true;
 
@@ -85,10 +62,13 @@ namespace LocalEdit.Modals
             if (adding)
             {
                 // remove the new item, if add was cancelled
-                if (planDependencyModalRef.Result == ModalResult.Cancel)
+                if (planDependencyModalRef?.Result == ModalResult.Cancel)
                 {
-                    Item.Dependencies.Remove(selectedDependencyRow);
-                    selectedDependencyRow = null;
+                    if (SelectedDependencyRow != null)
+                    {
+                        Item.Dependencies.Remove(SelectedDependencyRow);
+                        SelectedDependencyRow = null;
+                    }
                 }
             }
             adding = false;
@@ -98,10 +78,10 @@ namespace LocalEdit.Modals
 
         private Task DeleteDependency()
         {
-            if (selectedDependencyRow != null)
+            if (SelectedDependencyRow != null)
             {
-                Item.Dependencies.Remove(selectedDependencyRow);
-                selectedDependencyRow = null;
+                Item.Dependencies.Remove(SelectedDependencyRow);
+                SelectedDependencyRow = null;
             }
 
             return Task.CompletedTask;

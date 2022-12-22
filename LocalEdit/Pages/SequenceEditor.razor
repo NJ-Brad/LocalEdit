@@ -85,7 +85,7 @@
 
 
 <DataGrid TItem="SequenceItem"
-          Data="@Document.Items"
+          Data="@Document?.Items"
           @bind-SelectedRow="@selectedItemRow"
           Responsive>
     <DataGridColumn Field="@nameof( SequenceItem.Label )" Editable="false"></DataGridColumn>
@@ -131,21 +131,22 @@
 
 
             <DataGrid TItem="SequenceRelationship"
-          Data="@Document.Relationships"
+          Data="@Document?.Relationships"
           @bind-SelectedRow="@selectedRelationshipRow"
           Responsive>
           <DataGridColumns>
     <DataGridColumn Field="@nameof( SequenceRelationship.From )" Editable="false">
         <DisplayTemplate>
-            @{
-                string fromCode = ( context as SequenceRelationship )?.From;
-                string toCode = ( context as SequenceRelationship )?.To;
+                            @{
+                                SequenceRelationship? rel = context as SequenceRelationship;
+                                string fromCode = (rel!=null && rel.From != null) ? rel.From: "";
+                                string toCode = (rel != null && rel.To != null) ? rel.To : "";
 
-                    if (fromCode != null)
+                    if (!string.IsNullOrEmpty(fromCode))
                     {
                         @($"{fromCode}") <NBSP/> <Icon Name="IconName.ArrowRight"/> <NBSP/> @($"{toCode}")
                         <br />
-                        <span style="padding-left:2em">@($"{context.Label}")</span>
+                        <span style="padding-left:2em">@($"{context?.Label}")</span>
                     }
                 //if ( date != null )
                 //{
@@ -193,8 +194,8 @@
     RenderInterval="@TimeSpan.FromSeconds(10)"/>
 *@
 
-<LocalEdit.Modals.SequenceItemModal @ref="SequenceItemModalRef" Closed="@OnSequenceItemModalClosed"></LocalEdit.Modals.SequenceItemModal>
+<LocalEdit.Modals.SequenceItemModal @ref="SequenceItemModalRef" Closed="@OnSequenceItemModalClosed" Item="@selectedItemRow"></LocalEdit.Modals.SequenceItemModal>
 
-<LocalEdit.Modals.SequenceRelationshipModal @ref="SequenceRelationshipModalRef" Items="@Document.Items" Closed="@OnSequenceRelationshipModalClosed"></LocalEdit.Modals.SequenceRelationshipModal>
+<LocalEdit.Modals.SequenceRelationshipModal @ref="SequenceRelationshipModalRef" Items="@Document?.Items" Closed="@OnSequenceRelationshipModalClosed" Item="@selectedRelationshipRow"></LocalEdit.Modals.SequenceRelationshipModal>
 
-<LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>
+<LocalEdit.Modals.FileManagementModal  @ref="FileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

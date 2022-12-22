@@ -60,7 +60,7 @@
                             <DatePicker @ref="@datePicker" DateChanged="@OnDateChanged" TValue="DateTime?" InputMode="DateInputMode.Date" />
                         </Addon>
                         <Addon AddonType="AddonType.End">
-                            <Button Color="Color.Light" Clicked="@(()=>datePicker.ToggleAsync())">
+                            <Button Color="Color.Light" Clicked="@(()=>datePicker?.ToggleAsync())">
                                 <Icon Name="IconName.CalendarDay" />
                             </Button>
                         </Addon>

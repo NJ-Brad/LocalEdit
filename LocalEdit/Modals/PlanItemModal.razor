@@ -66,14 +66,14 @@
                         New
                     </Button>
 
-                    @if (selectedDependencyRow == null)
+                    @if (SelectedDependencyRow == null)
                     {
                         <Button Size="Size.Small" Color="Color.Primary" Disabled>
                             <Icon Name="IconName.Edit" />
                             Edit
                         </Button>
                     }
-                    @if (selectedDependencyRow != null)
+                    @if (SelectedDependencyRow != null)
                     {
                         <Button Size="Size.Small" Color="Color.Primary" Clicked="@EditDependency">
                             <Icon Name="IconName.Edit" />
@@ -81,14 +81,14 @@
                         </Button>
                     }
 
-                    @if (selectedDependencyRow == null)
+                    @if (SelectedDependencyRow == null)
                     {
                         <Button Size="Size.Small" Color="Color.Primary" Disabled>
                             <Icon Name="IconName.Delete" />
                             Delete
                         </Button>
                     }
-                    @if (selectedDependencyRow != null)
+                    @if (SelectedDependencyRow != null)
                     {
                         <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteDependency">
                             <Icon Name="IconName.Delete" />
@@ -102,13 +102,13 @@
 
                 <DataGrid TItem="PlanItemDependency"
                           Data="@Item.Dependencies"
-                          @bind-SelectedRow="@selectedDependencyRow"
+                          @bind-SelectedRow="@SelectedDependencyRow"
                           Responsive>
                     <DataGridColumns>
                         <DataGridColumn Field="@nameof(PlanItemDependency.ID)" Editable="false">
                             <DisplayTemplate>
                                 @{
-                                    @($"{context.ToString()}")
+                                    @($"{context?.ToString()}")
                                     //@($"{DecodePlanItemId(context.ID)}")
                                     //if ( date != null )
                                     //{
@@ -129,7 +129,7 @@
 
 
 
-            <LocalEdit.Modals.PlanDependencyModal @ref="planDependencyModalRef" Items=@Items Closed="@OnDependencyModalClosed"></LocalEdit.Modals.PlanDependencyModal>
+            <LocalEdit.Modals.PlanDependencyModal @ref="planDependencyModalRef" Items=@Items Closed="@OnDependencyModalClosed" Item="@SelectedDependencyRow"></LocalEdit.Modals.PlanDependencyModal>
 
         </ModalBody>
         <ModalFooter>

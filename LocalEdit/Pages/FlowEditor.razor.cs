@@ -33,40 +33,43 @@ namespace LocalEdit.Pages
         // If cancelled - exit
         // else update model and tree
 
-        void Edit()
-        {
+        //void Edit()
+        //{
 
-        }
+        //}
 
-            Mermaid  MermaidOne { get; set; }
+            Mermaid?  MermaidOne { get; set; }
 
         protected override Task OnInitializedAsync()
         {
-            this.Document.Items = new List<FlowItem>(new[]
+            Document = new FlowDocument
+            {
+                Items = new List<FlowItem>(new[]
             {
 //            C4TestData.InternalPerson,
             new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
             new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
             new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
             new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
-        });
+        }),
 
-            this.Document.Relationships = new List<FlowRelationship>(new[]
+                Relationships = new List<FlowRelationship>(new[]
             {
             new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
             new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
             new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
             new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
             new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
-        });
+        })
+            };
 
             return base.OnInitializedAsync();
         }
 
-        FlowItem selectedItemRow { get; set; }
-        FlowRelationship selectedRelationshipRow { get; set; }
+        FlowItem? SelectedItemRow { get; set; } = new();
+        FlowRelationship? SelectedRelationshipRow { get; set; } = new();
 
-        FlowDocument Document { get; set; } = new FlowDocument();
+        FlowDocument? Document { get; set; } = new FlowDocument();
 
         string MarkdownText { get; set; } = string.Empty;
 
@@ -82,7 +85,8 @@ namespace LocalEdit.Pages
             {
                 //GenerateMarkdown();
 
-                MermaidOne.DisplayDiagram(FlowPublisher.Publish(Document));
+                if(Document != null)
+                    MermaidOne?.DisplayDiagram(FlowPublisher.Publish(Document));
 
             }
 
@@ -92,25 +96,31 @@ namespace LocalEdit.Pages
 
         private Task NewFlow()
         {
-            fileManagementModalRef.Name = "New_Flow.json";
+            if (FileManagementModalRef != null)
+            {
+                FileManagementModalRef.Name = "New_Flow.json";
+            }
 
-            this.Document.Items = new List<FlowItem>(new[]
+            Document = new()
+            {
+                Items = new List<FlowItem>(new[]
             {
     //            C4TestData.InternalPerson,
                 new FlowItem{ID = "Q1", ItemType=FlowItemType.Question, Label="Question One"},
                 new FlowItem{ID = "Q2", ItemType=FlowItemType.Question, Label="Question Two"},
                 new FlowItem{ID = "Q3", ItemType=FlowItemType.Question, Label="Question Three"},
                 new FlowItem{ID = "Q4", ItemType=FlowItemType.Question, Label="Question Four"}
-            });
+            }),
 
-                this.Document.Relationships = new List<FlowRelationship>(new[]
-                {
+                Relationships = new List<FlowRelationship>(new[]
+            {
                 new FlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
                 new FlowRelationship{ From="Q1", To ="Q3", Label="Alt Flow"},
                 new FlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
                 new FlowRelationship{ From="Q2", To ="Q4", Label="Weird Flow"},
                 new FlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
-            });
+            })
+            };
 
             //ResetValidation();
 
@@ -140,11 +150,12 @@ namespace LocalEdit.Pages
 
         private Task ShowItemModal()
         {
-            if (selectedItemRow == null)
+            if (SelectedItemRow == null)
             {
                 return Task.CompletedTask;
             }
-            flowItemModalRef.Item = selectedItemRow;
+
+            //flowItemModalRef.Item = SelectedItemRow;
 
             flowItemModalRef?.ShowModal();
 
@@ -155,13 +166,15 @@ namespace LocalEdit.Pages
 
         private Task AddNewItem()
         {
-            FlowItem newItem = new FlowItem();
-            newItem.ItemType = FlowItemType.Question;
-            newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
-            newItem.Label = "New Question";
+            FlowItem newItem = new()
+            {
+                ItemType = FlowItemType.Question,
+                ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper(),
+                Label = "New Question"
+            };
 
-            selectedItemRow = newItem;
-            Document.Items.Add(newItem);
+            SelectedItemRow = newItem;
+            Document?.Items.Add(newItem);
             adding = true;
 
             return ShowItemModal();
@@ -172,10 +185,11 @@ namespace LocalEdit.Pages
             if(adding)
             {
                 // remove the new item, if add was cancelled
-                if (flowItemModalRef.Result == ModalResult.Cancel)
+                if (flowItemModalRef?.Result == ModalResult.Cancel)
                 {
-                    Document.Items.Remove(selectedItemRow);
-                    selectedItemRow = null;
+                    if(SelectedItemRow != null)
+                        Document?.Items.Remove(SelectedItemRow);
+                    SelectedItemRow = null;
                 }
             }
             adding = false;
@@ -187,10 +201,10 @@ namespace LocalEdit.Pages
 
         private Task DeleteItem()
         {
-            if (selectedItemRow != null)
+            if (SelectedItemRow != null)
             {
-                Document.Items.Remove(selectedItemRow);
-                selectedItemRow = null;
+                Document?.Items.Remove(SelectedItemRow);
+                SelectedItemRow = null;
             }
 
             InvokeAsync(() => StateHasChanged());
@@ -200,11 +214,12 @@ namespace LocalEdit.Pages
 
         private Task ShowRelationshipModal()
         {
-            if (selectedRelationshipRow == null)
+            if (SelectedRelationshipRow == null)
             {
                 return Task.CompletedTask;
             }
-            flowRelationshipModalRef.item = selectedRelationshipRow;
+
+            //flowRelationshipModalRef.Item = selectedRelationshipRow;
 
             flowRelationshipModalRef?.ShowModal();
 
@@ -215,11 +230,13 @@ namespace LocalEdit.Pages
 
         private Task AddNewRelationship()
         {
-            FlowRelationship newRelationship = new FlowRelationship();
-            newRelationship.Label = "New Relationship";
+            FlowRelationship newRelationship = new()
+            {
+                Label = "New Relationship"
+            };
 
-            selectedRelationshipRow = newRelationship;
-            Document.Relationships.Add(newRelationship);
+            SelectedRelationshipRow = newRelationship;
+            Document?.Relationships.Add(newRelationship);
             adding = true;
 
             return ShowRelationshipModal();
@@ -229,24 +246,26 @@ namespace LocalEdit.Pages
         {
             string rtnVal = id;
 
-            foreach (FlowItem fi in Document.Items)
+            if((Document != null) && (Document.Items != null))
             {
-                if(fi.ID == id)
+                foreach (FlowItem fi in Document.Items)
                 {
-                    rtnVal = fi.Label;
-                    break;
+                    if (fi.ID == id)
+                    {
+                        rtnVal = fi.Label;
+                        break;
+                    }
                 }
             }
-
             return rtnVal;
         }
 
         private Task DeleteRelationship()
         {
-            if (selectedRelationshipRow != null)
+            if (SelectedRelationshipRow != null)
             {
-                Document.Relationships.Remove(selectedRelationshipRow);
-                selectedRelationshipRow = null;
+                Document?.Relationships.Remove(SelectedRelationshipRow);
+                SelectedRelationshipRow = null;
             }
 
             InvokeAsync(() => StateHasChanged());
@@ -259,10 +278,11 @@ namespace LocalEdit.Pages
             if (adding)
             {
                 // remove the new item, if add was cancelled
-                if (flowRelationshipModalRef.Result == ModalResult.Cancel)
+                if (flowRelationshipModalRef?.Result == ModalResult.Cancel)
                 {
-                    Document.Relationships.Remove(selectedRelationshipRow);
-                    selectedRelationshipRow = null;
+                    if(SelectedRelationshipRow != null)
+                        Document?.Relationships.Remove(SelectedRelationshipRow);
+                    SelectedRelationshipRow = null;
                 }
             }
             adding = false;
@@ -272,11 +292,11 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        FileManagementModal fileManagementModalRef;
+        FileManagementModal? FileManagementModalRef { get; set; } = new();
 
         private Task LoadFile()
         {
-            fileManagementModalRef?.LoadFile();
+            FileManagementModalRef?.LoadFile();
 
             return Task.CompletedTask;
         }
@@ -290,7 +310,10 @@ namespace LocalEdit.Pages
             //}
             //flowItemModalRef.item = selectedItemRow;
 
-            fileManagementModalRef.SaveFile(fileText);
+            if (FileManagementModalRef != null)
+            {
+                FileManagementModalRef.SaveFile(fileText);
+            }
             //fileManagementModalRef?.ShowModal();
 
             //InvokeAsync(() => StateHasChanged());
@@ -304,8 +327,11 @@ namespace LocalEdit.Pages
             {
                 GenerateMarkdown();
 
-                fileManagementModalRef.Name = "Flow.md";
-                fileManagementModalRef.SaveFile(MarkdownText);
+                if (FileManagementModalRef != null)
+                {
+                    FileManagementModalRef.Name = "Flow.md";
+                    FileManagementModalRef.SaveFile(MarkdownText);
+                }
             }
 
             return Task.CompletedTask;
@@ -317,8 +343,11 @@ namespace LocalEdit.Pages
             {
                 string htmlText = GenerateHtml().Result;
 
-                fileManagementModalRef.Name = "flow.html";
-                fileManagementModalRef.SaveFile(htmlText);
+                if (FileManagementModalRef != null)
+                {
+                    FileManagementModalRef.Name = "flow.html";
+                    FileManagementModalRef.SaveFile(htmlText);
+                }
             }
             return Task.CompletedTask;
         }
@@ -326,17 +355,20 @@ namespace LocalEdit.Pages
 
 //        MarkdownRenderer markdownRef = null;
 
-        void OnClickNode(string nodeId)
-        {
-            // TODO: do something with nodeId
-        }
+        //void OnClickNode(string nodeId)
+        //{
+        //    // TODO: do something with nodeId
+        //}
 
         private Task OnFileManagementModalClosed()
         {
-            if (fileManagementModalRef.Result == ModalResult.OK)
+                if (FileManagementModalRef?.Result == ModalResult.OK)
             {
-                Document = (FlowDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(FlowDocument));
-                InvokeAsync(() => StateHasChanged());
+                if ((FileManagementModalRef != null) && (!string.IsNullOrEmpty(FileManagementModalRef.FileText)))
+                {
+                    Document = JsonSerializer.Deserialize(FileManagementModalRef.FileText, typeof(FlowDocument)) as FlowDocument;
+                    InvokeAsync(() => StateHasChanged());
+                }
             }
             //if (adding)
             //{
@@ -355,7 +387,8 @@ namespace LocalEdit.Pages
         private Task GenerateMarkdown()
         {
             //mermaidText = FlowPublisher.Publish(Document);
-            MarkdownText = MarkdownGenerator.WrapMermaid(FlowPublisher.Publish(Document));
+            if(Document != null)
+                MarkdownText = MarkdownGenerator.WrapMermaid(FlowPublisher.Publish(Document));
 
 //            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
@@ -363,8 +396,10 @@ namespace LocalEdit.Pages
 
         private Task<string> GenerateHtml()
         {
-            string htmlText = HtmlGenerator.WrapMermaid(FlowPublisher.Publish(Document));
-            return Task.FromResult(htmlText);
+            string rtnVal = string.Empty;
+            if (Document != null)
+                rtnVal = HtmlGenerator.WrapMermaid(FlowPublisher.Publish(Document));
+            return Task.FromResult(rtnVal);
         }
 
     }

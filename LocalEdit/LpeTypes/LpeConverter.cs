@@ -1,5 +1,6 @@
 ﻿using LocalEdit.FlowTypes;
 using LocalEdit.SequenceTypes;
+using LocalEdit.Shared;
 
 namespace LocalEdit.LpeTypes
 {
@@ -12,35 +13,40 @@ namespace LocalEdit.LpeTypes
             ItemSequence? previousItem = null;
             ItemSequence? previousUnconditional = null;
 
-            foreach (ItemSequence itmFlow in flow.itemFlow)
+            if (flow == null)
+                return rtnVal;
+
+            if (flow.ItemFlow != null)
             {
-                rtnVal.Items.Add(new SequenceItem { /*ID = itmFlow.itemName, */Description = "", Label = itmFlow.title });
-
-                if (previousItem != null)
+                foreach (ItemSequence itmFlow in flow.ItemFlow)
                 {
-                    if (itmFlow.entryLogic == null)
+                    rtnVal.Items.Add(new SequenceItem { /*ID = itmFlow.itemName, */Description = "", Label = Utils.VOD(itmFlow.Title) });
+
+                    if (previousItem != null)
                     {
-                        rtnVal.Relationships.Add(new SequenceRelationship { From = previousItem.title, To = itmFlow.title, Label = " " });
+                        if (itmFlow.EntryLogic == null)
+                        {
+                            rtnVal.Relationships.Add(new SequenceRelationship { From = Utils.VOD(previousItem.Title), To = Utils.VOD(itmFlow.Title), Label = " " });
+                        }
+                        else
+                        {
+                            rtnVal.Relationships.Add(new SequenceRelationship { From = Utils.VOD(previousItem.Title), To = Utils.VOD(itmFlow.Title), Label = itmFlow.EntryLogic.ToString().Trim().Replace("\r\n", "<br/>") });
+                        }
                     }
-                    else
+
+                    if ((previousUnconditional != null) && (previousUnconditional != previousItem))
                     {
-                        rtnVal.Relationships.Add(new SequenceRelationship { From = previousItem.title, To = itmFlow.title, Label = itmFlow.entryLogic.ToString().Trim().Replace("\r\n", "<br/>") });
+                        rtnVal.Relationships.Add(new SequenceRelationship { From = Utils.VOD(previousUnconditional.Title), To = Utils.VOD(itmFlow.Title), Label = "Otherwise" });
                     }
-                }
 
-                if ((previousUnconditional != null) && (previousUnconditional != previousItem))
-                {
-                    rtnVal.Relationships.Add(new SequenceRelationship { From = previousUnconditional.title, To = itmFlow.title, Label = "Otherwise" });
-                }
+                    if (itmFlow.EntryLogic == null)
+                    {
+                        previousUnconditional = itmFlow;
+                    }
 
-                if (itmFlow.entryLogic == null)
-                {
-                    previousUnconditional = itmFlow;
+                    previousItem = itmFlow;
                 }
-
-                previousItem = itmFlow;
             }
-
             return rtnVal;
         }
     }

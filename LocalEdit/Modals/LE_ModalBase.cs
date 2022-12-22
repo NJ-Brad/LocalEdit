@@ -74,18 +74,32 @@ namespace LocalEdit.Modals
 
         public virtual async Task Opened()
         {
-
+            await InvokeAsync(() => StateHasChanged());
         }
 
+        public Validations? validations { get; set; }
         public virtual async Task<bool> Validate()
         {
-            return true;
+            bool rtnVal = false;
+            if (validations != null)
+            {
+                if (await validations.ValidateAll())
+                {
+                    rtnVal = true;
+                }
+            }
+            else
+                rtnVal = true;
+
+            return rtnVal;
         }
 
         public virtual async Task ResetValidation()
         {
-//            return Task.CompletedTask;
+            if (validations != null)
+                await validations.ClearAll();
         }
+
 
         protected async Task TryCloseModal()
         {

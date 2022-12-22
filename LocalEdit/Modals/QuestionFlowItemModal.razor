@@ -29,7 +29,7 @@
                 <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                        <TextEdit @bind-Text="item.Label" Placeholder="Enter label">
+                        <TextEdit @bind-Text="Item.Label" Placeholder="Enter label">
                             <Feedback>
                                 <ValidationError>Please enter the label.</ValidationError>
                             </Feedback>
@@ -47,14 +47,14 @@
                     <Icon Name="IconName.Add" />
                     New
                 </Button>
-                @if (selectedRelationshipRow == null)
+                @if (SelectedRelationshipRow == null)
                 {
                     <Button Size="Size.Small" Color="Color.Primary" Disabled>
                         <Icon Name="IconName.Edit" />
                         Edit
                     </Button>
                 }
-                @if (selectedRelationshipRow != null)
+                @if (SelectedRelationshipRow != null)
                 {
                     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowRelationshipModal">
                         <Icon Name="IconName.Edit" />
@@ -62,14 +62,14 @@
                     </Button>
                 }
 
-                @if (selectedRelationshipRow == null)
+                @if (SelectedRelationshipRow == null)
                 {
                     <Button Size="Size.Small" Color="Color.Primary" Disabled>
                         <Icon Name="IconName.Delete" />
                         Delete
                     </Button>
                 }
-                @if (selectedRelationshipRow != null)
+                @if (SelectedRelationshipRow != null)
                 {
                     <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteRelationship">
                         <Icon Name="IconName.Delete" />
@@ -78,8 +78,8 @@
                 }
 
                 <DataGrid TItem="QuestionFlowRelationship"
-                          Data="@item.NextQuestions"
-                          @bind-SelectedRow="@selectedRelationshipRow"
+                          Data="@Item?.NextQuestions"
+                          @bind-SelectedRow="@SelectedRelationshipRow"
                           Responsive>
                     <DataGridColumns>
                         <DataGridColumn Field="@nameof( QuestionFlowRelationship.Label )" Editable="false" />
@@ -100,4 +100,4 @@
     </ModalContent>
 </Modal>
 
-<LocalEdit.Modals.QuestionFlowRelationshipModal @ref="QuestionFlowRelationshipModalRef" Items="@Items" Closed="@OnQuestionFlowRelationshipModalClosed"></LocalEdit.Modals.QuestionFlowRelationshipModal>
+<LocalEdit.Modals.QuestionFlowRelationshipModal @ref="QuestionFlowRelationshipModalRef" Items="@Items" Closed="@OnQuestionFlowRelationshipModalClosed" Item="@SelectedRelationshipRow"></LocalEdit.Modals.QuestionFlowRelationshipModal>

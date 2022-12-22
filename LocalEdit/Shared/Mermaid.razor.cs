@@ -14,7 +14,7 @@ namespace LocalEdit.Shared
         [Parameter] public string Id { get; set; } = Guid.NewGuid().ToString("N");
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment? ChildContent { get; set; }
 
         public async Task TriggerClick()
         {
@@ -38,8 +38,7 @@ namespace LocalEdit.Shared
 
              await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input);
 
-            InvokeAsync(() => StateHasChanged());
-
+            await InvokeAsync(() => StateHasChanged());
         }
 
         // https://stackoverflow.com/questions/1879395/how-do-i-generate-a-stream-from-a-string
@@ -122,11 +121,11 @@ namespace LocalEdit.Shared
             set
             {
                 _rangeValue = value;
-                _panzoom.ZoomAsync(value);
+                _ = _panzoom?.ZoomAsync(value);
             }
         }
 
-        private bool _panEnabled = true;
+        //private bool _panEnabled = true;
 
         //private bool PanEnabled
         //{

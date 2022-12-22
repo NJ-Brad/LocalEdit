@@ -20,32 +20,5 @@ namespace LocalEdit.Modals
 
         //    return Task.CompletedTask;
         //}
-
-
-        Validations? validations;
-
-        public async Task<bool> IsValid()
-        {
-            bool rtnVal = false;
-            if (validations != null)
-            {
-                if (await validations.ValidateAll())
-                {
-                    rtnVal = true;
-                }
-            }
-            else
-            {
-                rtnVal = true;
-            }
-
-            return rtnVal;
-        }
-
-        public override async Task ResetValidation()
-        {
-            if(validations != null)
-                await validations.ClearAll();
-        }
     }
 }

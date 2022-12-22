@@ -31,28 +31,30 @@ namespace LocalEdit.Pages
         // If cancelled - exit
         // else update model and tree
 
-        void Edit()
-        {
+        //void Edit()
+        //{
 
-        }
+        //}
 
 //        MarkdownRenderer markdownRef = null;
         //Mermaid mermaidOne;
 
-        void OnClickNode(string nodeId)
-        {
-            // TODO: do something with nodeId
-        }
+        //void OnClickNode(string nodeId)
+        //{
+        //    // TODO: do something with nodeId
+        //}
 
     Mermaid? MermaidOne { get; set; }
 
 
         protected override Task OnInitializedAsync()
         {
-            Document.Title = "Hello Brad";
-            Document.StartDate = "2022-11-06";
-            Document.BaseUrl = "https://gimme";
-            Document.Items = new List<PlanItem>(new[]
+            Document = new()
+            {
+                Title = "Hello Brad",
+                StartDate = "2022-11-06",
+                BaseUrl = "https://gimme",
+                Items = new List<PlanItem>(new[]
             {
                 new PlanItem{ID = "Q1", Label="Question One", StoryId="1", Duration="1"},
                 new PlanItem{ID = "Q2", Label="Question Two", StoryId="2", Duration="2", Dependencies = new List<PlanItemDependency>(new[]
@@ -61,15 +63,16 @@ namespace LocalEdit.Pages
                 }) },
                 new PlanItem{ID = "Q3", Label="Question Three", StoryId="3", Duration="3"},
                 new PlanItem{ID = "Q4", Label="Question Four", StoryId="4", Duration="4"}
-            });
+            })
+            };
 
 
             return base.OnInitializedAsync();
         }
 
-        PlanItem selectedItemRow { get; set; }
+        PlanItem? SelectedItemRow { get; set; } = new();
 
-        PlanDocument Document { get; set; } = new PlanDocument();
+        PlanDocument? Document { get; set; } = new();
 
         string MarkdownText { get; set; } = string.Empty;
 
@@ -79,26 +82,27 @@ namespace LocalEdit.Pages
 
         string selectedTab = "general";
 
-        private Task OnSelectedTabChanged(string name)
+        private async Task OnSelectedTabChanged(string name)
         {
             selectedTab = name;
 
             if (selectedTab == "preview")
             {
                 //GenerateMarkdown();
-                MermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
+                if((MermaidOne != null) &&(Document != null))
+                    await MermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
             }
 
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
 
         private Task ShowItemModal()
         {
-            if (selectedItemRow == null)
+            if (SelectedItemRow == null)
             {
                 return Task.CompletedTask;
             }
-            planItemModalRef.Item = selectedItemRow;
+            //planItemModalRef.Item = SelectedItemRow;
 
             planItemModalRef?.ShowModal();
 
@@ -109,12 +113,14 @@ namespace LocalEdit.Pages
 
         private Task AddNewItem()
         {
-            PlanItem newItem = new PlanItem();
-            newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
-            newItem.Label = "New Plan Item";
+            PlanItem newItem = new()
+            {
+                ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper(),
+                Label = "New Plan Item"
+            };
 
-            selectedItemRow = newItem;
-            Document.Items.Add(newItem);
+            SelectedItemRow = newItem;
+            Document?.Items?.Add(newItem);
             adding = true;
 
             return ShowItemModal();
@@ -125,10 +131,11 @@ namespace LocalEdit.Pages
             if (adding)
             {
                 // remove the new item, if add was cancelled
-                if (planItemModalRef.Result == ModalResult.Cancel)
+                if (planItemModalRef?.Result == ModalResult.Cancel)
                 {
-                    Document.Items.Remove(selectedItemRow);
-                    selectedItemRow = null;
+                    if(SelectedItemRow != null)
+                        Document?.Items?.Remove(SelectedItemRow);
+                    SelectedItemRow = null;
                 }
             }
             adding = false;
@@ -139,67 +146,82 @@ namespace LocalEdit.Pages
         private Task DeleteItem()
         {
             // remove the new item, if add was cancelled
-            if (selectedItemRow != null)
+            if (SelectedItemRow != null)
             {
-                Document.Items.Remove(selectedItemRow);
-                selectedItemRow = null;
+                Document?.Items?.Remove(SelectedItemRow);
+                SelectedItemRow = null;
             }
 
             return Task.CompletedTask;
         }
 
-        public static string CalculateLink(string baseUrl, string storyId)
+        public static string CalculateLink(string? baseUrl, string storyId)
         {
             return baseUrl + "/" + storyId;
         }
 
-        private string DecodePlanId(string id)
-        {
-            string rtnVal = id;
+        //private string DecodePlanId(string id)
+        //{
+        //    string rtnVal = id;
 
-            foreach (PlanItem fi in Document.Items)
-            {
-                if (fi.ID == id)
-                {
-                    rtnVal = fi.Label;
-                    break;
-                }
-            }
+        //    if (Document != null)
+        //    {
+        //        foreach (PlanItem fi in Document.Items)
+        //        {
+        //            if (fi.ID == id)
+        //            {
+        //                rtnVal = (fi.Label == null) ? "" : fi.Label;
+        //                break;
+        //            }
+        //        }
+        //    }
 
-            return rtnVal;
-        }
+        //    return rtnVal;
+        //}
 
         FileManagementModal? fileManagementModalRef;
 
         Validations? validations;
-
         public async Task<bool> Validate()
         {
             bool rtnVal = false;
-            if (await validations.ValidateAll())
+            if (validations != null)
+            {
+                if (await validations.ValidateAll())
+                {
+                    rtnVal = true;
+                }
+            }
+            else
             {
                 rtnVal = true;
             }
-
             return rtnVal;
         }
 
         public async Task ResetValidation()
         {
-            await validations.ClearAll();
+            if (validations != null)
+            {
+                await validations.ClearAll();
+            }
         }
 
 
         private Task NewPlan()
         {
-            fileManagementModalRef.Name = "New_Plan.json";
+            if(fileManagementModalRef != null)
+                fileManagementModalRef.Name = "New_Plan.json";
 
-            Document.Title = "Hello Brad";
-            Document.StartDate = ToIsoString(DateTime.Today);
-            Document.BaseUrl = "https://gimme";
-            Document.Items = new List<PlanItem>();
+            Document = new()
+            {
+                Title = "Hello Brad",
+                StartDate = ToIsoString(DateTime.Today),
+                BaseUrl = "https://gimme",
+                Items = new List<PlanItem>()
+            };
 
-            ResetValidation();
+            _ = ResetValidation();
 
             return Task.CompletedTask;
         }
@@ -229,7 +251,7 @@ namespace LocalEdit.Pages
             //}
             //flowItemModalRef.item = selectedItemRow;
 
-            fileManagementModalRef.SaveFile(fileText);
+            fileManagementModalRef?.SaveFile(fileText);
 
             //fileManagementModalRef?.ShowModal();
 
@@ -244,8 +266,11 @@ namespace LocalEdit.Pages
             {
                 GenerateMarkdown();
 
-                fileManagementModalRef.Name = "plan.md";
-                fileManagementModalRef.SaveFile(MarkdownText);
+                if (fileManagementModalRef != null)
+                {
+                    fileManagementModalRef.Name = "plan.md";
+                    fileManagementModalRef.SaveFile(MarkdownText);
+                }
             }
 
             return Task.CompletedTask;
@@ -257,8 +282,11 @@ namespace LocalEdit.Pages
             {
                 string htmlText = GenerateHtml().Result;
 
-                fileManagementModalRef.Name = "plan.html";
-                fileManagementModalRef.SaveFile(htmlText);
+                if (fileManagementModalRef != null)
+                {
+                    fileManagementModalRef.Name = "plan.html";
+                    fileManagementModalRef.SaveFile(htmlText);
+                }
             }
             return Task.CompletedTask;
         }
@@ -266,10 +294,11 @@ namespace LocalEdit.Pages
 
         private Task OnFileManagementModalClosed()
         {
-            if (fileManagementModalRef.Result == ModalResult.OK)
+            if (fileManagementModalRef?.Result == ModalResult.OK)
             {
                 //MarkdownText = fileManagementModalRef.FileText;
-                Document = (PlanDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument));
+                if(fileManagementModalRef.FileText != null)
+                    Document = JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument)) as PlanDocument;
                 InvokeAsync(() => StateHasChanged());
             }
 
@@ -281,17 +310,20 @@ namespace LocalEdit.Pages
         {
             //mermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
             //mermaidText = PlanPublisher.Publish(Document);
-            MarkdownText = MarkdownGenerator.WrapMermaid(PlanPublisher.Publish(Document));
+            if (Document != null)
+                MarkdownText = MarkdownGenerator.WrapMermaid(PlanPublisher.Publish(Document));
 //            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
         }
         private Task<string> GenerateHtml()
         {
-            string htmlText = HtmlGenerator.WrapMermaid(PlanPublisher.Publish(Document));
-            return Task.FromResult(htmlText);
+            string rtnVal = string.Empty;
+            if (Document != null)
+                rtnVal = HtmlGenerator.WrapMermaid(PlanPublisher.Publish(Document));
+            return Task.FromResult(rtnVal);
         }
 
-        public string ToIsoString(DateTime date)
+        public static string ToIsoString(DateTime date)
         {
             int year = date.Year;
             int month = date.Month;

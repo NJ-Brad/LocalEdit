@@ -38,11 +38,12 @@ namespace LocalEdit.Pages
 
         }
 
-            Mermaid  MermaidOne { get; set; }
+            Mermaid?  MermaidOne { get; set; }
 
         protected override Task OnInitializedAsync()
         {
-            this.Document.Items = new List<SequenceItem>(new[]
+            Document = new();
+            Document.Items = new List<SequenceItem>(new[]
             {
 //            C4TestData.InternalPerson,
             new SequenceItem{/*ID = "Q1", */Label="Question One"},
@@ -51,7 +52,7 @@ namespace LocalEdit.Pages
             new SequenceItem{/*ID = "Q4", */Label="Question Four"}
         });
 
-            this.Document.Relationships = new List<SequenceRelationship>(new[]
+            Document.Relationships = new List<SequenceRelationship>(new[]
             {
             new SequenceRelationship{ From="Question One", To ="Question Two", Label= "Step One"},
             new SequenceRelationship{ From="Question One", To ="Question Three", Label="Alt Sequence"},
@@ -63,10 +64,10 @@ namespace LocalEdit.Pages
             return base.OnInitializedAsync();
         }
 
-        SequenceItem selectedItemRow { get; set; }
-        SequenceRelationship selectedRelationshipRow { get; set; }
+        SequenceItem? selectedItemRow { get; set; } = new();
+        SequenceRelationship? selectedRelationshipRow { get; set; } = new();
 
-        SequenceDocument Document { get; set; } = new SequenceDocument();
+        SequenceDocument? Document { get; set; } = new SequenceDocument();
 
         string MarkdownText { get; set; } = string.Empty;
 
@@ -82,7 +83,8 @@ namespace LocalEdit.Pages
             {
                 //GenerateMarkdown();
 
-                MermaidOne.DisplayDiagram(SequencePublisher.Publish(Document));
+                if(Document != null)
+                    MermaidOne?.DisplayDiagram(SequencePublisher.Publish(Document));
 
             }
 
@@ -92,9 +94,11 @@ namespace LocalEdit.Pages
 
         private Task NewSequence()
         {
-            fileManagementModalRef.Name = "New_Sequence.json";
+            if(FileManagementModalRef != null)
+                FileManagementModalRef.Name = "New_Sequence.json";
 
-            this.Document.Items = new List<SequenceItem>(new[]
+            Document = new();
+            Document.Items = new List<SequenceItem>(new[]
             {
     //            C4TestData.InternalPerson,
             new SequenceItem{/*ID = "Q1", */Label="Question One"},
@@ -103,7 +107,7 @@ namespace LocalEdit.Pages
             new SequenceItem{/*ID = "Q4", */Label="Question Four"}
         });
 
-            this.Document.Relationships = new List<SequenceRelationship>(new[]
+            Document.Relationships = new List<SequenceRelationship>(new[]
             {
             new SequenceRelationship{ From="Question One", To ="Question Two", Label= "Step One"},
             new SequenceRelationship{ From="Question One", To ="Question Three", Label="Alt Sequence"},
@@ -144,10 +148,12 @@ namespace LocalEdit.Pages
             {
                 return Task.CompletedTask;
             }
-            SequenceItemModalRef.item = selectedItemRow;
+            if (SequenceItemModalRef != null)
+            {
+                //SequenceItemModalRef.item = selectedItemRow;
 
-            SequenceItemModalRef?.ShowModal();
-
+                SequenceItemModalRef?.ShowModal();
+            }
             //InvokeAsync(() => StateHasChanged());
 
             return Task.CompletedTask;
@@ -160,7 +166,7 @@ namespace LocalEdit.Pages
             newItem.Label = "New Question";
 
             selectedItemRow = newItem;
-            Document.Items.Add(newItem);
+            Document?.Items.Add(newItem);
             adding = true;
 
             return ShowItemModal();
@@ -171,9 +177,10 @@ namespace LocalEdit.Pages
             if(adding)
             {
                 // remove the new item, if add was cancelled
-                if (SequenceItemModalRef.Result == ModalResult.Cancel)
+                if (SequenceItemModalRef?.Result == ModalResult.Cancel)
                 {
-                    Document.Items.Remove(selectedItemRow);
+                    if(selectedItemRow != null)
+                        Document?.Items.Remove(selectedItemRow);
                     selectedItemRow = null;
                 }
             }
@@ -188,7 +195,7 @@ namespace LocalEdit.Pages
         {
             if (selectedItemRow != null)
             {
-                Document.Items.Remove(selectedItemRow);
+                Document?.Items.Remove(selectedItemRow);
                 selectedItemRow = null;
             }
 
@@ -203,7 +210,8 @@ namespace LocalEdit.Pages
             {
                 return Task.CompletedTask;
             }
-            SequenceRelationshipModalRef.item = selectedRelationshipRow;
+
+            //SequenceRelationshipModalRef.Item = selectedRelationshipRow;
 
             SequenceRelationshipModalRef?.ShowModal();
 
@@ -218,7 +226,7 @@ namespace LocalEdit.Pages
             newRelationship.Label = "New Relationship";
 
             selectedRelationshipRow = newRelationship;
-            Document.Relationships.Add(newRelationship);
+            Document?.Relationships.Add(newRelationship);
             adding = true;
 
             return ShowRelationshipModal();
@@ -244,7 +252,7 @@ namespace LocalEdit.Pages
         {
             if (selectedRelationshipRow != null)
             {
-                Document.Relationships.Remove(selectedRelationshipRow);
+                Document?.Relationships.Remove(selectedRelationshipRow);
                 selectedRelationshipRow = null;
             }
 
@@ -258,9 +266,10 @@ namespace LocalEdit.Pages
             if (adding)
             {
                 // remove the new item, if add was cancelled
-                if (SequenceRelationshipModalRef.Result == ModalResult.Cancel)
+                if (SequenceRelationshipModalRef?.Result == ModalResult.Cancel)
                 {
-                    Document.Relationships.Remove(selectedRelationshipRow);
+                    if(selectedRelationshipRow != null)
+                        Document?.Relationships.Remove(selectedRelationshipRow);
                     selectedRelationshipRow = null;
                 }
             }
@@ -271,7 +280,7 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        FileManagementModal fileManagementModalRef;
+        FileManagementModal? FileManagementModalRef { get; set; }
 
         bool isLpeFile = false;
 
@@ -279,7 +288,7 @@ namespace LocalEdit.Pages
         {
             isLpeFile = false;
 
-            fileManagementModalRef?.LoadFile();
+            FileManagementModalRef?.LoadFile();
 
             return Task.CompletedTask;
         }
@@ -288,7 +297,7 @@ namespace LocalEdit.Pages
         {
             isLpeFile = true;
 
-            fileManagementModalRef?.LoadFile();
+            FileManagementModalRef?.LoadFile();
 
             return Task.CompletedTask;
         }
@@ -303,7 +312,7 @@ namespace LocalEdit.Pages
             //}
             //SequenceItemModalRef.item = selectedItemRow;
 
-            fileManagementModalRef.SaveFile(fileText);
+            FileManagementModalRef?.SaveFile(fileText);
             //fileManagementModalRef?.ShowModal();
 
             //InvokeAsync(() => StateHasChanged());
@@ -317,8 +326,11 @@ namespace LocalEdit.Pages
             {
                 GenerateMarkdown();
 
-                fileManagementModalRef.Name = "Sequence.md";
-                fileManagementModalRef.SaveFile(MarkdownText);
+                if (FileManagementModalRef != null)
+                {
+                    FileManagementModalRef.Name = "Sequence.md";
+                    FileManagementModalRef.SaveFile(MarkdownText);
+                }
             }
 
             return Task.CompletedTask;
@@ -330,8 +342,11 @@ namespace LocalEdit.Pages
             {
                 string htmlText = GenerateHtml().Result;
 
-                fileManagementModalRef.Name = "Sequence.html";
-                fileManagementModalRef.SaveFile(htmlText);
+                if (FileManagementModalRef != null)
+                {
+                    FileManagementModalRef.Name = "Sequence.html";
+                    FileManagementModalRef.SaveFile(htmlText);
+                }
             }
             return Task.CompletedTask;
         }
@@ -346,18 +361,33 @@ namespace LocalEdit.Pages
 
         private Task OnFileManagementModalClosed()
         {
-            if (fileManagementModalRef.Result == ModalResult.OK)
+            if (FileManagementModalRef?.Result == ModalResult.OK)
             {
                 if (isLpeFile)
                 {
                     //string test = fileManagementModalRef.FileText;
                     //Root rt = (Root)JsonSerializer.Deserialize(test, typeof(Root));
                     //Document = LpeConverter.ToSequenceDocument(rt);
-                    Document = LpeConverter.ToSequenceDocument((Root)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(Root)));
+
+                    if (!string.IsNullOrEmpty(FileManagementModalRef.FileText))
+                    {
+                        Root? root = JsonSerializer.Deserialize(FileManagementModalRef.FileText, typeof(Root)) as Root;
+                        if (root != null)
+                            Document = LpeConverter.ToSequenceDocument(root);
+                    }
+                    else
+                    {
+                        Document = null;
+                    }
                 }
                 else
                 {
-                    Document = (SequenceDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(SequenceDocument));
+                    if (!string.IsNullOrEmpty(FileManagementModalRef.FileText))
+                    {
+                        Document = JsonSerializer.Deserialize(FileManagementModalRef.FileText, typeof(SequenceDocument)) as SequenceDocument;
+                    }
+                    else
+                        Document = null;
                 }
                 InvokeAsync(() => StateHasChanged());
             }
@@ -378,7 +408,8 @@ namespace LocalEdit.Pages
         private Task GenerateMarkdown()
         {
             //mermaidText = SequencePublisher.Publish(Document);
-            MarkdownText = MarkdownGenerator.WrapMermaid(SequencePublisher.Publish(Document));
+            if(Document != null) 
+                MarkdownText = MarkdownGenerator.WrapMermaid(SequencePublisher.Publish(Document));
 
 //            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
@@ -386,7 +417,9 @@ namespace LocalEdit.Pages
 
         private Task<string> GenerateHtml()
         {
-            string htmlText = HtmlGenerator.WrapMermaid(SequencePublisher.Publish(Document));
+            string htmlText = string.Empty;
+            if (Document != null)
+                htmlText = HtmlGenerator.WrapMermaid(SequencePublisher.Publish(Document));
             return Task.FromResult(htmlText);
         }
 

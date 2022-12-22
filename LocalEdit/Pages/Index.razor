@@ -82,12 +82,12 @@ See https://blazorise.com/docs/theming for details<br />
         if (Theme?.BodyOptions != null)
             Theme.BodyOptions.BackgroundColor = "#0000FF";
 
-        Theme.ThemeHasChanged();
+        Theme?.ThemeHasChanged();
 
         return Task.CompletedTask;
     }
 
-    [CascadingParameter] Theme Theme { get; set; }
+    [CascadingParameter] Theme? Theme { get; set; }
 
 
     private double _rangeValue = 1.0;
@@ -99,7 +99,7 @@ See https://blazorise.com/docs/theming for details<br />
         {
             _rangeValue = value;
             if (_panzoom != null)
-                _panzoom.ZoomAsync(value);
+                _ = _panzoom.ZoomAsync(value);
         }
     }
 
@@ -112,7 +112,7 @@ See https://blazorise.com/docs/theming for details<br />
         {
             _panEnabled = value;
             if (_panzoom != null)
-                _panzoom.SetOptionsAsync(new PanzoomOptions { DisablePan = !_panEnabled });
+                _ = _panzoom.SetOptionsAsync(new PanzoomOptions { DisablePan = !_panEnabled });
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json.Serialization;
 
 // https://json2csharp.com/
 namespace LocalEdit.LpeTypes
@@ -12,13 +13,16 @@ namespace LocalEdit.LpeTypes
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (ValueCondition condition in valueConditions)
+            if (valueConditions != null)
             {
-                if (sb.Length > 0)
+                foreach (ValueCondition condition in valueConditions)
                 {
-                    sb.Append("AND ");
+                    if (sb.Length > 0)
+                    {
+                        sb.Append("AND ");
+                    }
+                    sb.AppendLine($"{condition.ItemName} = {condition.ItemValue}");
                 }
-                sb.AppendLine($"{condition.itemName} = {condition.itemValue}");
             }
 
             return sb.ToString();
@@ -27,31 +31,44 @@ namespace LocalEdit.LpeTypes
 
     public class HeaderConfig
     {
-        public string phoneNumber { get; set; }
-        public string logo { get; set; }
+        [JsonPropertyName("phoneNumber")]
+        public string? PhoneNumber { get; set; }
+        [JsonPropertyName("logo")]
+        public string? Logo { get; set; }
     }
 
     public class ItemSequence
     {
-        public string title { get; set; }
-        public string itemName { get; set; }
-        public string itemType { get; set; }
-        public EntryLogic entryLogic { get; set; }
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+        [JsonPropertyName("itemName")]
+        public string? ItemName { get; set; }
+        [JsonPropertyName("itemType")]
+        public string? ItemType { get; set; }
+        [JsonPropertyName("entryLogic")]
+        public EntryLogic? EntryLogic { get; set; }
     }
 
     public class Root
     {
-        public bool hasFooter { get; set; }
-        public bool hasHeader { get; set; }
-        public HeaderConfig headerConfig { get; set; }
-        public List<ItemSequence> itemFlow { get; set; }
+        [JsonPropertyName("hasFooter")]
+        public bool HasFooter { get; set; }
+        [JsonPropertyName("hasHeader")]
+        public bool HasHeader { get; set; }
+        [JsonPropertyName("headerConfig")]
+        public HeaderConfig? HeaderConfig { get; set; }
+        [JsonPropertyName("itemFlow")]
+        public List<ItemSequence>? ItemFlow { get; set; }
     }
 
     public class ValueCondition
     {
-        public string itemName { get; set; }
-        public string itemValue { get; set; }
-        public string answerType { get; set; }
+        [JsonPropertyName("itemName")]
+        public string? ItemName { get; set; }
+        [JsonPropertyName("itemValue")]
+        public string? ItemValue { get; set; }
+        [JsonPropertyName("answerType")]
+        public string? AnswerType { get; set; }
     }
 
 }

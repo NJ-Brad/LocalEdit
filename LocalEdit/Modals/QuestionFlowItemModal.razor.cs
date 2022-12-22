@@ -6,44 +6,28 @@ namespace LocalEdit.Modals
 {
     public partial class QuestionFlowItemModal : LE_ModalBase
     {
-        Validations? validations;
-
-        public override async Task<bool> Validate()
-        {
-            bool rtnVal = false;
-            if (await validations.ValidateAll())
-            {
-                rtnVal = true;
-            }
-
-            return rtnVal;
-        }
-
-        public override async Task ResetValidation()
-        {
-            await validations.ClearAll();
-        }
-
         [Parameter]
-        public QuestionFlowItem item { get; set; } = new();
+        public QuestionFlowItem Item { get; set; } = new();
 
         [Parameter]
         public List<QuestionFlowItem> Items { get; set; } = new();
 
-        public QuestionFlowRelationship? selectedRelationshipRow { get; set; }
+        public QuestionFlowRelationship? SelectedRelationshipRow { get; set; } = new();
         private QuestionFlowRelationshipModal? QuestionFlowRelationshipModalRef;
         bool adding = false;
 
         private Task ShowRelationshipModal()
         {
-            if (selectedRelationshipRow == null)
+            if (SelectedRelationshipRow == null)
             {
                 return Task.CompletedTask;
             }
-            QuestionFlowRelationshipModalRef.item = selectedRelationshipRow;
+            if (QuestionFlowRelationshipModalRef != null)
+            { 
+                //QuestionFlowRelationshipModalRef.Item = SelectedRelationshipRow;
 
-            QuestionFlowRelationshipModalRef?.ShowModal();
-
+                QuestionFlowRelationshipModalRef?.ShowModal();
+            }
             //InvokeAsync(() => StateHasChanged());
 
             return Task.CompletedTask;
@@ -51,11 +35,13 @@ namespace LocalEdit.Modals
 
         private Task AddNewRelationship()
         {
-            QuestionFlowRelationship newRelationship = new QuestionFlowRelationship();
-            newRelationship.Label = "New Relationship";
+            QuestionFlowRelationship newRelationship = new()
+            {
+                Label = "New Relationship"
+            };
 
-            selectedRelationshipRow = newRelationship;
-            item.NextQuestions.Add(newRelationship);
+            SelectedRelationshipRow = newRelationship;
+            Item?.NextQuestions?.Add(newRelationship);
             adding = true;
 
             return ShowRelationshipModal();
@@ -79,10 +65,10 @@ namespace LocalEdit.Modals
 
         private Task DeleteRelationship()
         {
-            if (selectedRelationshipRow != null)
+            if (SelectedRelationshipRow != null)
             {
-                item.NextQuestions.Remove(selectedRelationshipRow);
-                selectedRelationshipRow = null;
+                Item?.NextQuestions?.Remove(SelectedRelationshipRow);
+                SelectedRelationshipRow = null;
             }
 
             InvokeAsync(() => StateHasChanged());
@@ -95,10 +81,13 @@ namespace LocalEdit.Modals
             if (adding)
             {
                 // remove the new item, if add was cancelled
-                if (QuestionFlowRelationshipModalRef.Result == ModalResult.Cancel)
+                if (QuestionFlowRelationshipModalRef?.Result == ModalResult.Cancel)
                 {
-                    item.NextQuestions.Remove(selectedRelationshipRow);
-                    selectedRelationshipRow = null;
+                    if (SelectedRelationshipRow != null)
+                    {
+                        Item?.NextQuestions?.Remove(SelectedRelationshipRow);
+                        SelectedRelationshipRow = null;
+                    }
                 }
             }
             adding = false;

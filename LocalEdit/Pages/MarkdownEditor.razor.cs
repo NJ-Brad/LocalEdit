@@ -31,7 +31,7 @@ namespace LocalEdit.Pages
 
         string markdownValue = "# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic*, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.";
 
-        string markdownHtml;
+        string? markdownHtml { get; set; }
 
         protected override void OnInitialized()
         {
@@ -49,11 +49,13 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        FileManagementModal fileManagementModalRef;
+        FileManagementModal? FileManagementModalRef { get; set; }
 
         private Task NewMdDocument()
         {
-            fileManagementModalRef.Name = "New_Document.md";
+            if(FileManagementModalRef != null)
+                FileManagementModalRef.Name = "New_Document.md";
+
             markdownValue = "";
 
             return Task.CompletedTask;
@@ -67,7 +69,7 @@ namespace LocalEdit.Pages
             //}
             //flowItemModalRef.item = selectedItemRow;
 
-            fileManagementModalRef?.LoadFile();
+            FileManagementModalRef?.LoadFile();
             //fileManagementModalRef?.ShowModal();
 
             //InvokeAsync(() => StateHasChanged());
@@ -84,7 +86,8 @@ namespace LocalEdit.Pages
             //}
             //flowItemModalRef.item = selectedItemRow;
 
-            fileManagementModalRef.SaveFile(fileText);
+            if (FileManagementModalRef != null)
+                FileManagementModalRef.SaveFile(fileText);
 
             //fileManagementModalRef?.ShowModal();
 
@@ -95,9 +98,10 @@ namespace LocalEdit.Pages
 
         private Task OnFileManagementModalClosed()
         {
-            if (fileManagementModalRef.Result == ModalResult.OK)
+            if (FileManagementModalRef?.Result == ModalResult.OK)
             {
-                markdownValue = fileManagementModalRef.FileText;
+                if ((FileManagementModalRef != null) && (FileManagementModalRef.FileText != null))
+                    markdownValue = FileManagementModalRef.FileText;
                 InvokeAsync(() => StateHasChanged());
             }
 

@@ -33,40 +33,44 @@ namespace LocalEdit.Pages
         // If cancelled - exit
         // else update model and tree
 
-        void Edit()
-        {
+        //void Edit()
+        //{
 
-        }
+        //}
 
             Mermaid?  MermaidOne { get; set; }
 
         protected override Task OnInitializedAsync()
         {
-            this.Document.Items = new List<QuestionFlowItem>(new[]
+            Document = new()
+            {
+                Items = new List<QuestionFlowItem>(new[]
             {
 //            C4TestData.InternalPerson,
             new QuestionFlowItem{/*ID = "Q1", */Label="Question One"},
             new QuestionFlowItem{/*ID = "Q2", */Label="Question Two"},
             new QuestionFlowItem{/*ID = "Q3", */Label="Question Three"},
             new QuestionFlowItem{/*ID = "Q4", */Label="Question Four"}
-        });
+        })
+            };
 
-        //    this.Document.Relationships = new List<QuestionFlowRelationship>(new[]
-        //    {
-        //    new QuestionFlowRelationship{ From="Question One", To ="Question Two", Label= "Step One"},
-        //    new QuestionFlowRelationship{ From="Question One", To ="Question Three", Label="Alt QuestionFlow"},
-        //    new QuestionFlowRelationship{ From="Question Three", To ="Question Four", Label="Step One"},
-        //    new QuestionFlowRelationship{ From="Question Two", To ="Question Four", Label="Weird QuestionFlow"},
-        //    new QuestionFlowRelationship{ From="Question Four", To ="Question One", Label="Vicious Cycle"}
-        //});
+            //    this.Document.Relationships = new List<QuestionFlowRelationship>(new[]
+            //    {
+            //    new QuestionFlowRelationship{ From="Question One", To ="Question Two", Label= "Step One"},
+            //    new QuestionFlowRelationship{ From="Question One", To ="Question Three", Label="Alt QuestionFlow"},
+            //    new QuestionFlowRelationship{ From="Question Three", To ="Question Four", Label="Step One"},
+            //    new QuestionFlowRelationship{ From="Question Two", To ="Question Four", Label="Weird QuestionFlow"},
+            //    new QuestionFlowRelationship{ From="Question Four", To ="Question One", Label="Vicious Cycle"}
+            //});
 
             return base.OnInitializedAsync();
         }
 
-        QuestionFlowItem selectedItemRow { get; set; }
-        QuestionFlowRelationship selectedRelationshipRow { get; set; }
+        QuestionFlowItem? SelectedItemRow { get; set; } = new();
 
-        QuestionFlowDocument Document { get; set; } = new QuestionFlowDocument();
+        //QuestionFlowRelationship? SelectedRelationshipRow { get; set; }
+
+        QuestionFlowDocument? Document { get; set; } = new QuestionFlowDocument();
 
         string MarkdownText { get; set; } = string.Empty;
 
@@ -74,7 +78,7 @@ namespace LocalEdit.Pages
 
         string selectedTab = "general";
 
-        private Task OnSelectedTabChanged(string name)
+        private async Task OnSelectedTabChanged(string name)
         {
             selectedTab = name;
 
@@ -82,26 +86,31 @@ namespace LocalEdit.Pages
             {
                 //GenerateMarkdown();
 
-                MermaidOne.DisplayDiagram(QuestionFlowPublisher.Publish(Document));
+                if((Document != null)&& (MermaidOne != null))
+                    await MermaidOne.DisplayDiagram(QuestionFlowPublisher.Publish(Document));
 
             }
 
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
 
 
         private Task NewQuestionFlow()
         {
-            fileManagementModalRef.Name = "New_QuestionFlow.json";
+            if(FileManagementModalRef != null)
+                FileManagementModalRef.Name = "New_QuestionFlow.json";
 
-            this.Document.Items = new List<QuestionFlowItem>(new[]
+            Document = new()
+            {
+                Items = new List<QuestionFlowItem>(new[]
             {
     //            C4TestData.InternalPerson,
             new QuestionFlowItem{/*ID = "Q1", */Label="Question One"},
             new QuestionFlowItem{/*ID = "Q2", */Label="Question Two"},
             new QuestionFlowItem{/*ID = "Q3", */Label="Question Three"},
             new QuestionFlowItem{/*ID = "Q4", */Label="Question Four"}
-        });
+        })
+            };
 
             //this.Document.Relationships = new List<QuestionFlowRelationship>(new[]
             //{
@@ -140,11 +149,11 @@ namespace LocalEdit.Pages
 
         private Task ShowItemModal()
         {
-            if (selectedItemRow == null)
+            if (SelectedItemRow == null)
             {
                 return Task.CompletedTask;
             }
-            QuestionFlowItemModalRef.item = selectedItemRow;
+            //QuestionFlowItemModalRef.Item = selectedItemRow;
 
             QuestionFlowItemModalRef?.ShowModal();
 
@@ -155,12 +164,14 @@ namespace LocalEdit.Pages
 
         private Task AddNewItem()
         {
-            QuestionFlowItem newItem = new QuestionFlowItem();
-            //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
-            newItem.Label = "New Question";
+            QuestionFlowItem newItem = new()
+            {
+                //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
+                Label = "New Question"
+            };
 
-            selectedItemRow = newItem;
-            Document.Items.Add(newItem);
+            SelectedItemRow = newItem;
+            Document?.Items.Add(newItem);
             adding = true;
 
             return ShowItemModal();
@@ -171,10 +182,11 @@ namespace LocalEdit.Pages
             if(adding)
             {
                 // remove the new item, if add was cancelled
-                if (QuestionFlowItemModalRef.Result == ModalResult.Cancel)
+                if (QuestionFlowItemModalRef?.Result == ModalResult.Cancel)
                 {
-                    Document.Items.Remove(selectedItemRow);
-                    selectedItemRow = null;
+                    if(SelectedItemRow != null)
+                        Document?.Items.Remove(SelectedItemRow);
+                    SelectedItemRow = null;
                 }
             }
             adding = false;
@@ -186,10 +198,10 @@ namespace LocalEdit.Pages
 
         private Task DeleteItem()
         {
-            if (selectedItemRow != null)
+            if (SelectedItemRow != null)
             {
-                Document.Items.Remove(selectedItemRow);
-                selectedItemRow = null;
+                Document?.Items.Remove(SelectedItemRow);
+                SelectedItemRow = null;
             }
 
             InvokeAsync(() => StateHasChanged());
@@ -197,32 +209,32 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        private Task ShowRelationshipModal()
-        {
-            //if (selectedRelationshipRow == null)
-            //{
-            //    return Task.CompletedTask;
-            //}
-            //QuestionFlowRelationshipModalRef.item = selectedRelationshipRow;
+        //private Task ShowRelationshipModal()
+        //{
+        //    //if (selectedRelationshipRow == null)
+        //    //{
+        //    //    return Task.CompletedTask;
+        //    //}
+        //    //QuestionFlowRelationshipModalRef.item = selectedRelationshipRow;
 
-            //QuestionFlowRelationshipModalRef?.ShowModal();
+        //    //QuestionFlowRelationshipModalRef?.ShowModal();
 
-            ////InvokeAsync(() => StateHasChanged());
+        //    ////InvokeAsync(() => StateHasChanged());
 
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
 
-        private Task AddNewRelationship()
-        {
-            //QuestionFlowRelationship newRelationship = new QuestionFlowRelationship();
-            //newRelationship.Label = "New Relationship";
+        //private Task AddNewRelationship()
+        //{
+        //    //QuestionFlowRelationship newRelationship = new QuestionFlowRelationship();
+        //    //newRelationship.Label = "New Relationship";
 
-            //selectedRelationshipRow = newRelationship;
-            //Document.Relationships.Add(newRelationship);
-            //adding = true;
+        //    //selectedRelationshipRow = newRelationship;
+        //    //Document.Relationships.Add(newRelationship);
+        //    //adding = true;
 
-            return ShowRelationshipModal();
-        }
+        //    return ShowRelationshipModal();
+        //}
 
         //private string DecodeQuestionFlowId(string id)
         //{
@@ -240,55 +252,55 @@ namespace LocalEdit.Pages
         //    return rtnVal;
         //}
 
-        private Task DeleteRelationship()
-        {
-            //if (selectedRelationshipRow != null)
-            //{
-            //    Document.Relationships.Remove(selectedRelationshipRow);
-            //    selectedRelationshipRow = null;
-            //}
+        //private Task DeleteRelationship()
+        //{
+        //    //if (selectedRelationshipRow != null)
+        //    //{
+        //    //    Document.Relationships.Remove(selectedRelationshipRow);
+        //    //    selectedRelationshipRow = null;
+        //    //}
 
-            //InvokeAsync(() => StateHasChanged());
+        //    //InvokeAsync(() => StateHasChanged());
 
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
 
-        private Task OnQuestionFlowRelationshipModalClosed()
-        {
-            //if (adding)
-            //{
-            //    // remove the new item, if add was cancelled
-            //    if (QuestionFlowRelationshipModalRef.Result == ModalResult.Cancel)
-            //    {
-            //        Document.Relationships.Remove(selectedRelationshipRow);
-            //        selectedRelationshipRow = null;
-            //    }
-            //}
-            //adding = false;
+        //private Task OnQuestionFlowRelationshipModalClosed()
+        //{
+        //    //if (adding)
+        //    //{
+        //    //    // remove the new item, if add was cancelled
+        //    //    if (QuestionFlowRelationshipModalRef.Result == ModalResult.Cancel)
+        //    //    {
+        //    //        Document.Relationships.Remove(selectedRelationshipRow);
+        //    //        selectedRelationshipRow = null;
+        //    //    }
+        //    //}
+        //    //adding = false;
 
-            //InvokeAsync(() => StateHasChanged());
+        //    //InvokeAsync(() => StateHasChanged());
 
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
 
-        FileManagementModal fileManagementModalRef;
+        FileManagementModal? FileManagementModalRef { get; set; }
 
-        bool isLpeFile = false;
+        //bool isLpeFile = false;
 
         private Task LoadFile()
         {
-            isLpeFile = false;
+            //isLpeFile = false;
 
-            fileManagementModalRef?.LoadFile();
+            FileManagementModalRef?.LoadFile();
 
             return Task.CompletedTask;
         }
 
         private Task LoadLpeFile()
         {
-            isLpeFile = true;
+            //isLpeFile = true;
 
-            fileManagementModalRef?.LoadFile();
+            FileManagementModalRef?.LoadFile();
 
             return Task.CompletedTask;
         }
@@ -303,7 +315,7 @@ namespace LocalEdit.Pages
             //}
             //QuestionFlowItemModalRef.item = selectedItemRow;
 
-            fileManagementModalRef.SaveFile(fileText);
+            FileManagementModalRef?.SaveFile(fileText);
             //fileManagementModalRef?.ShowModal();
 
             //InvokeAsync(() => StateHasChanged());
@@ -317,8 +329,11 @@ namespace LocalEdit.Pages
             {
                 GenerateMarkdown();
 
-                fileManagementModalRef.Name = "QuestionFlow.md";
-                fileManagementModalRef.SaveFile(MarkdownText);
+                if (FileManagementModalRef != null)
+                {
+                    FileManagementModalRef.Name = "QuestionFlow.md";
+                    FileManagementModalRef.SaveFile(MarkdownText);
+                }
             }
 
             return Task.CompletedTask;
@@ -330,8 +345,11 @@ namespace LocalEdit.Pages
             {
                 string htmlText = GenerateHtml().Result;
 
-                fileManagementModalRef.Name = "QuestionFlow.html";
-                fileManagementModalRef.SaveFile(htmlText);
+                if (FileManagementModalRef != null)
+                {
+                    FileManagementModalRef.Name = "QuestionFlow.html";
+                    FileManagementModalRef.SaveFile(htmlText);
+                }
             }
             return Task.CompletedTask;
         }
@@ -339,16 +357,19 @@ namespace LocalEdit.Pages
 
 //        MarkdownRenderer markdownRef = null;
 
-        void OnClickNode(string nodeId)
-        {
-            // TODO: do something with nodeId
-        }
+        //void OnClickNode(string nodeId)
+        //{
+        //    // TODO: do something with nodeId
+        //}
 
         private Task OnFileManagementModalClosed()
         {
-            if (fileManagementModalRef.Result == ModalResult.OK)
+            if (FileManagementModalRef?.Result == ModalResult.OK)
             {
-                Document = (QuestionFlowDocument)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(QuestionFlowDocument));
+                if (string.IsNullOrEmpty(FileManagementModalRef.FileText))
+                    Document = null;
+                else
+                    Document = JsonSerializer.Deserialize(FileManagementModalRef.FileText, typeof(QuestionFlowDocument)) as QuestionFlowDocument;
                 InvokeAsync(() => StateHasChanged());
             }
             //if (adding)
@@ -368,7 +389,8 @@ namespace LocalEdit.Pages
         private Task GenerateMarkdown()
         {
             //mermaidText = QuestionFlowPublisher.Publish(Document);
-            MarkdownText = MarkdownGenerator.WrapMermaid(QuestionFlowPublisher.Publish(Document));
+            if (Document != null)
+                MarkdownText = MarkdownGenerator.WrapMermaid(QuestionFlowPublisher.Publish(Document));
 
 //            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
@@ -376,7 +398,9 @@ namespace LocalEdit.Pages
 
         private Task<string> GenerateHtml()
         {
-            string htmlText = HtmlGenerator.WrapMermaid(QuestionFlowPublisher.Publish(Document));
+            string htmlText = string.Empty;
+            if (Document != null)
+                htmlText = HtmlGenerator.WrapMermaid(QuestionFlowPublisher.Publish(Document));
             return Task.FromResult(htmlText);
         }
 

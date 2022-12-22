@@ -27,8 +27,11 @@ namespace LocalEdit.C4Types
 
     public string diagramType = "";
 
-        public static string Publish(C4Workspace workspace, string diagramType)
+        public static string Publish(C4Workspace? workspace, string diagramType)
         {
+            if (workspace == null)
+                return string.Empty;
+
             C4Publisher me = new C4Publisher();
             return me.Publish_(workspace, diagramType);
         }

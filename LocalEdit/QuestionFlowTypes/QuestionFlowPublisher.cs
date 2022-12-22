@@ -1,4 +1,5 @@
 ﻿using Blazorise;
+using LocalEdit.Shared;
 using System.Text;
 
 namespace LocalEdit.QuestionFlowTypes
@@ -21,10 +22,13 @@ namespace LocalEdit.QuestionFlowTypes
             // go through again and add all of the connections
             foreach (var item in QuestionFlow.Items)
             {
-                foreach (var rel in item.NextQuestions)
+                if (item.NextQuestions != null)
                 {
-                    rel.From = item.Label;
-                    sb.Append(MermaidConnection(rel));
+                    foreach (var rel in item.NextQuestions)
+                    {
+                        rel.From = Utils.VOD(item.Label);
+                        sb.Append(MermaidConnection(rel));
+                    }
                 }
             }
 

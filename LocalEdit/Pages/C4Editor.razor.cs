@@ -89,7 +89,10 @@ namespace LocalEdit.Pages
 
         private Task AddNewItem()
         {
-            C4Item newItem = new C4Item();
+            if (Document == null)
+                return Task.CompletedTask;
+
+            C4Item newItem = new ();
             //newItem.ItemType = FlowItemType.Question;
             //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
             //newItem.Label = "New Question";
@@ -105,14 +108,14 @@ namespace LocalEdit.Pages
 
         private Task AddNewChildItem()
         {
-            C4Item newItem = new C4Item();
+            C4Item newItem = new ();
             //newItem.ItemType = FlowItemType.Question;
             //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
             //newItem.Label = "New Question";
 
             parentNode = SelectedNode;
 
-            SelectedNode.Children.Add(newItem);
+            SelectedNode?.Children.Add(newItem);
             SelectedNode = newItem;
             adding = true;
 
@@ -121,14 +124,16 @@ namespace LocalEdit.Pages
             return ShowItemModal();
         }
 
-        private C4Item FindParent(C4Item NodeInQuestion, IEnumerable<C4Item> collection)
+        private C4Item? FindParent(C4Item? NodeInQuestion, IEnumerable<C4Item> collection)
         {
             C4Item? parentNode = null;
+            if (NodeInQuestion == null)
+                return null;
 
             foreach (C4Item potential in collection)
             {
                 // if it doesn't have childrent, it cannot be a parent
-                if(potential.Children.Count() > 0)
+                if(potential.Children.Count > 0)
                 {
                     foreach (C4Item child in potential.Children)
                     {
@@ -152,23 +157,23 @@ namespace LocalEdit.Pages
             return parentNode;
         }
 
-        IEnumerable<C4Item> C4Items1 = new[]
-        {
-            C4TestData.InternalPerson,
-            C4TestData.ExternalPerson,
-            C4TestData.Boundary,
-            C4TestData.SystemBoundary,
-            C4TestData.EnterpriseBoundary,
-            C4TestData.ContainerBoundary,
-            C4TestData.Component,
-            C4TestData.Database,
-            C4TestData.Container,
-            C4TestData.Node,
-            C4TestData.InternalSystem,
-            C4TestData.ExternalSystem,
-            C4TestData.InternalDatabaseSystem,
-            C4TestData.ExternalDatabaseSystem
-        };
+        //IEnumerable<C4Item> C4Items1 = new[]
+        //{
+        //    C4TestData.InternalPerson,
+        //    C4TestData.ExternalPerson,
+        //    C4TestData.Boundary,
+        //    C4TestData.SystemBoundary,
+        //    C4TestData.EnterpriseBoundary,
+        //    C4TestData.ContainerBoundary,
+        //    C4TestData.Component,
+        //    C4TestData.Database,
+        //    C4TestData.Container,
+        //    C4TestData.Node,
+        //    C4TestData.InternalSystem,
+        //    C4TestData.ExternalSystem,
+        //    C4TestData.InternalDatabaseSystem,
+        //    C4TestData.ExternalDatabaseSystem
+        //};
 
 
         //    IEnumerable<Item> Items = new[]
@@ -196,7 +201,9 @@ namespace LocalEdit.Pages
 
         private Task NewC4Document()
         {
-            Document.Model = new List<C4Item>(new[]
+            Document = new()
+            {
+                Model = new List<C4Item>(new[]
 {
             new C4Item{ItemType=C4TypeEnum.Person, Text="Customer", Description="A customer of the bank, with personal bank accounts", IsExternal=true},
             new C4Item{ItemType=C4TypeEnum.EnterpriseBoundary, Text="Internet Banking",
@@ -204,24 +211,28 @@ namespace LocalEdit.Pages
                     new C4Item{ItemType=C4TypeEnum.Container, Text ="Web Application", Technology="Java, Spring MVC", Description="Delivers the static content and the Internet banking SPA" }
                 })
             }
-        });
+        })
+            };
             return Task.CompletedTask;
         }
 
         private Task LoadFile()
         {
-            fileManagementModalRef?.LoadFile();
+            FileManagementModalRef?.LoadFile();
 
             return Task.CompletedTask;
         }
 
-        FileManagementModal fileManagementModalRef;
+        FileManagementModal? FileManagementModalRef { get; set; }
 
         private Task OnFileManagementModalClosed()
         {
-            if (fileManagementModalRef.Result == ModalResult.OK)
+            if (FileManagementModalRef?.Result == ModalResult.OK)
             {
-                Document = (C4Workspace)JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(C4Workspace));
+                if((FileManagementModalRef != null) &&(!string.IsNullOrEmpty(FileManagementModalRef.FileText)))
+                    Document = JsonSerializer.Deserialize(FileManagementModalRef.FileText, typeof(C4Workspace)) as C4Workspace;
+                else
+                    Document = null;
                 InvokeAsync(() => StateHasChanged());
             }
             //if (adding)
@@ -246,7 +257,7 @@ namespace LocalEdit.Pages
             //}
             //flowItemModalRef.item = selectedItemRow;
 
-            fileManagementModalRef.SaveFile(fileText);
+            FileManagementModalRef?.SaveFile(fileText);
             //fileManagementModalRef?.ShowModal();
 
             //InvokeAsync(() => StateHasChanged());
@@ -257,10 +268,10 @@ namespace LocalEdit.Pages
         C4Item? selectedNode = null;
         C4Item? parentNode = null;
         C4Item? potentialParentNode = null;
-        C4Item? newItem = null;
+//        C4Item? newItem = null;
 
         //private Modal? modalRef;
-        private Modal? NewItemModalRef;
+        //private Modal? NewItemModalRef { get; set; } = null;
         //private Modal? C4ItemModalRef;
 
 
@@ -271,17 +282,17 @@ namespace LocalEdit.Pages
 
         //private bool cancelled = false;
 
-        private Task ShowModal()
-        {
-//            modalVisible = true;
+//        private Task ShowModal()
+//        {
+////            modalVisible = true;
 
-            InvokeAsync(() => StateHasChanged());
+//            InvokeAsync(() => StateHasChanged());
 
-            return Task.CompletedTask;
-        }
+//            return Task.CompletedTask;
+//        }
 
         //        private Task ShowNewItemModal()
-        private Task ShowNewItemModal(C4Item parentNode)
+        private Task ShowNewItemModal(C4Item? parentNode)
         {
             potentialParentNode = parentNode;
             
@@ -309,80 +320,86 @@ namespace LocalEdit.Pages
         //    return modalRef.Hide();
         //}
 
-        C4TypeEnum? newItemType;
+        //C4TypeEnum? NewItemType { get; set; }
 
-        private Task CloseNewItemModal()
-        {
-            newItemType = null;
+        //private Task CloseNewItemModal()
+        //{
+        //    newItemType = null;
 
-            return NewItemModalRef.Close(CloseReason.EscapeClosing);
-        }
+        //    if(NewItemModalRef == null)
+        //        return Task.CompletedTask;
 
-        private Task CreateItem(C4TypeEnum itemType)
-        {
-            newItemType = itemType;
+        //    return NewItemModalRef.Close(CloseReason.EscapeClosing);
+        //}
 
-            newItem = new C4Item() { ItemType = itemType };
-//            selectedNode = newItem;
+        //private Task CreateItem(C4TypeEnum itemType)
+        //{
+        //    newItemType = itemType;
 
-            return NewItemModalRef.Close(CloseReason.EscapeClosing);
-        }
+        //    newItem = new C4Item() { ItemType = itemType };
+        //    //            selectedNode = newItem;
 
-        private bool ShouldShow(C4TypeEnum itemType, C4Item? parentNode)
-        {
-            bool rtnVal = false;
+        //    if (NewItemModalRef == null)
+        //        return Task.CompletedTask;
 
-            if (parentNode == null)
-            {
-                switch (itemType)
-                {
-                    case C4TypeEnum.Person:
-                    case C4TypeEnum.System:
-                    case C4TypeEnum.EnterpriseBoundary:
-                        rtnVal = true;
-                        break;
-                }
-            }
-            else
-            {
-                switch (parentNode.ItemType)
-                {
-                    case C4TypeEnum.Person:
-                        // nothing is allowed
-                        break;
-                    case C4TypeEnum.System:
-                        switch (itemType)
-                        {
-                            case C4TypeEnum.Container:
-                            case C4TypeEnum.Database:
-                                rtnVal = true;
-                                break;
-                        }
-                        break;
-                    case C4TypeEnum.EnterpriseBoundary:
-                        switch (itemType)
-                        {
-                            case C4TypeEnum.Person:
-                            case C4TypeEnum.System:
-                                rtnVal = true;
-                                break;
-                        }
-                        break;
-                    case C4TypeEnum.Container:
-                        switch (itemType)
-                        {
-                            case C4TypeEnum.Component:
-                                rtnVal = true;
-                                break;
-                        }
-                        break;
+        //    return NewItemModalRef.Close(CloseReason.EscapeClosing);
+        //}
 
-                }
-            }
+        //private static bool ShouldShow(C4TypeEnum itemType, C4Item? parentNode)
+        //{
+        //    bool rtnVal = false;
 
-            return rtnVal;
+        //    if (parentNode == null)
+        //    {
+        //        switch (itemType)
+        //        {
+        //            case C4TypeEnum.Person:
+        //            case C4TypeEnum.System:
+        //            case C4TypeEnum.EnterpriseBoundary:
+        //                rtnVal = true;
+        //                break;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        switch (parentNode.ItemType)
+        //        {
+        //            case C4TypeEnum.Person:
+        //                // nothing is allowed
+        //                break;
+        //            case C4TypeEnum.System:
+        //                switch (itemType)
+        //                {
+        //                    case C4TypeEnum.Container:
+        //                    case C4TypeEnum.Database:
+        //                        rtnVal = true;
+        //                        break;
+        //                }
+        //                break;
+        //            case C4TypeEnum.EnterpriseBoundary:
+        //                switch (itemType)
+        //                {
+        //                    case C4TypeEnum.Person:
+        //                    case C4TypeEnum.System:
+        //                        rtnVal = true;
+        //                        break;
+        //                }
+        //                break;
+        //            case C4TypeEnum.Container:
+        //                switch (itemType)
+        //                {
+        //                    case C4TypeEnum.Component:
+        //                        rtnVal = true;
+        //                        break;
+        //                }
+        //                break;
 
-        }
+        //        }
+        //    }
+
+        //    return rtnVal;
+
+        //}
 
         //private async Task TryCloseModal()
         //{
@@ -408,36 +425,37 @@ namespace LocalEdit.Pages
 //            return Task.CompletedTask;
 //        }
 
-        private Task OnNewItemModalOpened()
-        {
-            //// reset, for the next attempt to close
-            //cancelClose = false;
-            ////            propEditor.ResetValidation();
-            //cancelled = false;
+        //private Task OnNewItemModalOpened()
+        //{
+        //    //// reset, for the next attempt to close
+        //    //cancelClose = false;
+        //    ////            propEditor.ResetValidation();
+        //    //cancelled = false;
 
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
 
         string MarkdownText { get; set; } = string.Empty;
 
-        Mermaid mermaidOne;
-        Mermaid mermaidTwo;
-        Mermaid mermaidThree;
+        Mermaid? MermaidOne { get; set; }
+        Mermaid? MermaidTwo { get; set; }
+        Mermaid? MermaidThree { get; set; }
 
-        string diagramOneDefinition = "One";
-        string diagramTwoDefinition = "Two";
-        string diagramThreeDefinition = "Three";
+        //string diagramOneDefinition = "One";
+        //string diagramTwoDefinition = "Two";
+        //string diagramThreeDefinition = "Three";
 
-        void OnClickNode(string nodeId)
-        {
-            // TODO: do something with nodeId
-        }
+        //void OnClickNode(string nodeId)
+        //{
+        //    // TODO: do something with nodeId
+        //}
 
-        public C4Item SelectedNode { get => selectedNode; 
+        public C4Item? SelectedNode { get => selectedNode; 
             set
             {
                 selectedNode = value; 
-                parentNode = FindParent(value, Document.Model);
+                if(Document != null)
+                    parentNode = FindParent(value, Document.Model);
             }
         }
 
@@ -458,25 +476,24 @@ namespace LocalEdit.Pages
         //    return Task.CompletedTask;
         //}
 
-        private Task OnNewItemModalClosed()
-        {
-            if(newItemType != null)
-            {
-                ShowModal();
-            }
-            return Task.CompletedTask;
-        }
+        //private Task OnNewItemModalClosed()
+        //{
+        //    if(NewItemType != null)
+        //    {
+        //        ShowModal();
+        //    }
+        //    return Task.CompletedTask;
+        //}
 
-
-        
             private Task OnC4ItemModalClosed()
         { 
             if(adding)
             {
                 // remove the new item, if add was cancelled
-                if (c4ItemModalRef.Result == ModalResult.Cancel)
+                if (c4ItemModalRef?.Result == ModalResult.Cancel)
                 {
-                    Document.Model.Remove(SelectedNode);
+                    if(SelectedNode != null)
+                        Document?.Model.Remove(SelectedNode);
                     SelectedNode = null;
                 }
 }
@@ -487,20 +504,23 @@ InvokeAsync(() => StateHasChanged());
 return Task.CompletedTask;
 }
 
-        C4Relationship selectedRelationshipRow { get; set; }
+        C4Relationship? SelectedRelationshipRow { get; set; } = new();
 
         // this will need to go deeper, to find child items
         private string DecodeFlowId(string id)
         {
             string rtnVal = id;
 
-            //foreach (C4Item fi in Document.Model)
-            foreach (C4Item fi in c4RelationshipModalRef.AllItems)
+            if (C4RelationshipModalRef != null)
             {
-                if (fi.Alias == id)
+                //foreach (C4Item fi in Document.Model)
+                foreach (C4Item fi in C4RelationshipModalRef.AllItems)
                 {
-                    rtnVal = fi.Text;
-                    break;
+                    if (fi.Alias == id)
+                    {
+                        rtnVal = fi.Text;
+                        break;
+                    }
                 }
             }
 
@@ -509,27 +529,30 @@ return Task.CompletedTask;
 
         private Task AddNewRelationship()
         {
-            C4Relationship newRelationship = new C4Relationship();
-            newRelationship.Text = "New Relationship";
+            C4Relationship newRelationship = new()
+            {
+                Text = "New Relationship"
+            };
 
-            selectedRelationshipRow = newRelationship;
-            Document.Relationships.Add(newRelationship);
+            SelectedRelationshipRow = newRelationship;
+            Document?.Relationships.Add(newRelationship);
             adding = true;
 
             return ShowRelationshipModal();
         }
 
-        C4RelationshipModal c4RelationshipModalRef = null;
+        C4RelationshipModal? C4RelationshipModalRef { get; set; } = null;
 
         private Task ShowRelationshipModal()
         {
-            if (selectedRelationshipRow == null)
+            if (SelectedRelationshipRow == null)
             {
                 return Task.CompletedTask;
             }
-            c4RelationshipModalRef.Item = selectedRelationshipRow;
 
-            c4RelationshipModalRef?.ShowModal();
+//            C4RelationshipModalRef.Item = SelectedRelationshipRow;
+
+            C4RelationshipModalRef?.ShowModal();
 
             //InvokeAsync(() => StateHasChanged());
 
@@ -541,10 +564,13 @@ return Task.CompletedTask;
             if (adding)
             {
                 // remove the new item, if add was cancelled
-                if (c4RelationshipModalRef.Result == ModalResult.Cancel)
+                if (C4RelationshipModalRef?.Result == ModalResult.Cancel)
                 {
-                    Document.Relationships.Remove(selectedRelationshipRow);
-                    selectedRelationshipRow = null;
+                    if (SelectedRelationshipRow != null)
+                    {
+                        Document?.Relationships.Remove(SelectedRelationshipRow);
+                        SelectedRelationshipRow = null;
+                    }
                 }
             }
             adding = false;
@@ -557,10 +583,10 @@ return Task.CompletedTask;
 
         private Task DeleteRelationship()
         {
-            if (selectedRelationshipRow != null)
+            if (SelectedRelationshipRow != null)
             {
-                Document.Relationships.Remove(selectedRelationshipRow);
-                selectedRelationshipRow = null;
+                Document?.Relationships.Remove(SelectedRelationshipRow);
+                SelectedRelationshipRow = null;
             }
 
             InvokeAsync(() => StateHasChanged());
@@ -569,22 +595,22 @@ return Task.CompletedTask;
         }
 
 
-        private Task OnNewItemModalClosing(ModalClosingEventArgs e)
-        {
-            // just set Cancel to prevent modal from closing
+        //private Task OnNewItemModalClosing(ModalClosingEventArgs e)
+        //{
+        //    // just set Cancel to prevent modal from closing
 
-            //if (e.CloseReason == CloseReason.EscapeClosing)
-            //{
-            //    CloseModal();
-            //}
+        //    //if (e.CloseReason == CloseReason.EscapeClosing)
+        //    //{
+        //    //    CloseModal();
+        //    //}
 
-            //if (cancelClose || e.CloseReason != CloseReason.UserClosing)
-            //{
-            //    e.Cancel = true;
-            //}
+        //    //if (cancelClose || e.CloseReason != CloseReason.UserClosing)
+        //    //{
+        //    //    e.Cancel = true;
+        //    //}
 
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
 
         private Task DeleteItem()
         {
@@ -596,7 +622,7 @@ return Task.CompletedTask;
                 }
                 else
                 {
-                    Document.Model.Remove(SelectedNode);
+                    Document?.Model.Remove(SelectedNode);
                 }
                 SelectedNode = null;
             }
@@ -606,10 +632,7 @@ return Task.CompletedTask;
             return Task.CompletedTask;
         }
 
-        protected string testVal { get; set; }
-        public Mermaid? MermaidOne { get => mermaidOne; set => mermaidOne = value; }
-        public Mermaid? MermaidTwo { get => mermaidTwo; set => mermaidTwo = value; }
-        public Mermaid? MermaidThree { get => mermaidThree; set => mermaidThree = value; }
+        //protected string TestVal { get; set; }
 
         private async Task GenerateMarkdown()
         {
@@ -644,6 +667,9 @@ return Task.CompletedTask;
             //            markdownRef.Value = @"# Preview not available:  
             //## The version of Mermaid used by this control is out of date";
             //return Task.CompletedTask;
+
+            await InvokeAsync(() => StateHasChanged());
+
         }
 
         private Task<string> GenerateHtml()
@@ -657,17 +683,20 @@ return Task.CompletedTask;
             return Task.FromResult(htmlText);
         }
 
-        private Task ExportFile()
+        private async Task ExportFile()
         {
             //          if (Validate().Result)
             {
-                GenerateMarkdown();
+                await GenerateMarkdown();
 
-                fileManagementModalRef.Name = "Flow.md";
-                fileManagementModalRef.SaveFile(MarkdownText);
+                if (FileManagementModalRef != null)
+                {
+                    FileManagementModalRef.Name = "Flow.md";
+                    FileManagementModalRef?.SaveFile(MarkdownText);
+                }
             }
 
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
 
         private Task ExportHtml()
@@ -676,8 +705,11 @@ return Task.CompletedTask;
             {
                 string htmlText = GenerateHtml().Result;
 
-                fileManagementModalRef.Name = "flow.html";
-                fileManagementModalRef.SaveFile(htmlText);
+                if (FileManagementModalRef != null)
+                {
+                    FileManagementModalRef.Name = "flow.html";
+                    FileManagementModalRef.SaveFile(htmlText);
+                }
             }
             return Task.CompletedTask;
         }
@@ -690,12 +722,15 @@ return Task.CompletedTask;
 
             if (selectedTab == "preview")
             {
-                GenerateMarkdown();
-                InvokeAsync(() => StateHasChanged());
+                await GenerateMarkdown();
+                _ = InvokeAsync(() => StateHasChanged());
 
-                await MermaidOne.DisplayDiagram(C4Publisher.Publish(Document, "Context"));
-                await MermaidTwo.DisplayDiagram(C4Publisher.Publish(Document, "Container"));
-                await MermaidThree.DisplayDiagram(C4Publisher.Publish(Document, "Component"));
+                if(MermaidOne != null)
+                    await MermaidOne.DisplayDiagram(C4Publisher.Publish(Document, "Context"));
+                if (MermaidTwo != null)
+                    await MermaidTwo.DisplayDiagram(C4Publisher.Publish(Document, "Container"));
+                if (MermaidThree != null)
+                    await MermaidThree.DisplayDiagram(C4Publisher.Publish(Document, "Component"));
 
             }
 

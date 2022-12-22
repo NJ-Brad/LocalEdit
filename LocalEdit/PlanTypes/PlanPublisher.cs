@@ -85,7 +85,7 @@ namespace LocalEdit.PlanTypes
 
             string indentation = BuildIndentation(indent);
             //var displayType: string = item.itemType;
-            bool goDeeper = true;
+            //bool goDeeper = true;
 
             StringBuilder deps = new StringBuilder();
             bool isAfter = true;

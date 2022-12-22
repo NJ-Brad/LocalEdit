@@ -10,11 +10,8 @@ namespace LocalEdit.Modals
 
         [Inject]
         public IBlazorDownloadFileService? BlazorDownloadFileService { get; set; }
-        public string FileText { get => fileText; set => fileText = value; }
-        public string Name { get => name; set => name = value; }
-
-        string fileText = "";
-        string name = "";
+        public string? FileText { get; set; } = "";
+        public string? Name { get; set; } = "";
 
         bool loadFileMode = false;
 
@@ -32,7 +29,7 @@ namespace LocalEdit.Modals
         public Task SaveFile(string fileText)
         {
             loadFileMode = false;
-            this.fileText = fileText;
+            FileText = fileText;
 
             modalVisible = true;
 
@@ -64,7 +61,7 @@ namespace LocalEdit.Modals
                 ms.Seek(0, SeekOrigin.Begin);
                 FileText = await new StreamReader(ms).ReadToEndAsync();
                 //fileText = await new StreamReader(e.File.OpenReadStream()).ReadToEndAsync();
-                name = e.File.Name;
+                Name = e.File.Name;
                 Result = ModalResult.OK;
                 if (modalRef != null)
                     await modalRef.Hide();
@@ -100,17 +97,20 @@ namespace LocalEdit.Modals
         private async void DownloadFile()
         {
             // https://stackoverflow.com/questions/16072709/converting-string-to-byte-array-in-c-sharp
-            byte[] bytes = Encoding.ASCII.GetBytes(FileText);
-
-            Result = ModalResult.Saved;
-
-            if (string.IsNullOrEmpty(name))
+            if (FileText != null)
             {
-                name = "example.txt";
-            }
+                byte[] bytes = Encoding.ASCII.GetBytes(FileText);
 
-            if(BlazorDownloadFileService != null)
-                await BlazorDownloadFileService.DownloadFileAsync(name, bytes);
+                Result = ModalResult.Saved;
+
+                if (string.IsNullOrEmpty(Name))
+                {
+                    Name = "example.txt";
+                }
+
+                if (BlazorDownloadFileService != null)
+                    await BlazorDownloadFileService.DownloadFileAsync(Name, bytes);
+            }
 
             if(modalRef != null)
                 await modalRef.Hide();

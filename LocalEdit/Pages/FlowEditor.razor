@@ -49,14 +49,14 @@
     <Icon Name="IconName.Add" />
     New
 </Button>
-@if (selectedItemRow == null)
+@if (SelectedItemRow == null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Disabled>
         <Icon Name="IconName.Edit" />
         Edit
     </Button>
 }
-@if (selectedItemRow != null)
+@if (SelectedItemRow != null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowItemModal">
         <Icon Name="IconName.Edit" />
@@ -64,14 +64,14 @@
     </Button>
 }
 
-@if (selectedItemRow == null)
+@if (SelectedItemRow == null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Disabled>
     <Icon Name="IconName.Delete" />
     Delete
 </Button>
 }
-@if (selectedItemRow != null)
+@if (SelectedItemRow != null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteItem">
     <Icon Name="IconName.Delete" />
@@ -81,8 +81,8 @@
 
 
 <DataGrid TItem="FlowItem"
-          Data="@Document.Items"
-          @bind-SelectedRow="@selectedItemRow"
+          Data="@Document?.Items"
+          @bind-SelectedRow="@SelectedItemRow"
           Responsive>
     <DataGridColumn Field="@nameof( FlowItem.Label )" Editable="false"></DataGridColumn>
 </DataGrid>
@@ -93,14 +93,14 @@
     <Icon Name="IconName.Add" />
     New
 </Button>
-@if (selectedRelationshipRow == null)
+@if (SelectedRelationshipRow == null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Disabled>
         <Icon Name="IconName.Edit" />
         Edit
     </Button>
 }
-@if (selectedRelationshipRow != null)
+@if (SelectedRelationshipRow != null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowRelationshipModal">
         <Icon Name="IconName.Edit" />
@@ -108,14 +108,14 @@
     </Button>
 }
 
-@if (selectedRelationshipRow == null)
+@if (SelectedRelationshipRow == null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Disabled>
     <Icon Name="IconName.Delete" />
     Delete
 </Button>
 }
-@if (selectedRelationshipRow != null)
+@if (SelectedRelationshipRow != null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteRelationship">
     <Icon Name="IconName.Delete" />
@@ -127,22 +127,23 @@
 
 
             <DataGrid TItem="FlowRelationship"
-          Data="@Document.Relationships"
-          @bind-SelectedRow="@selectedRelationshipRow"
+          Data="@Document?.Relationships"
+          @bind-SelectedRow="@SelectedRelationshipRow"
           Responsive>
           <DataGridColumns>
     <DataGridColumn Field="@nameof( FlowRelationship.From )" Editable="false">
         <DisplayTemplate>
             @{
-                string fromCode = ( context as FlowRelationship )?.From;
-                string toCode = ( context as FlowRelationship )?.To;
-
-                    if (fromCode != null)
-                    {
-                        @($"{DecodeFlowId(fromCode)}") <NBSP/> <Icon Name="IconName.ArrowRight"/> <NBSP/> @($"{DecodeFlowId(toCode)}")
-                        <br />
-                        <span style="padding-left:2em">@($"{context.Label}")</span>
-                    }
+                                FlowRelationship? rel = context as FlowRelationship;
+                                if (rel != null)
+                                {
+                                    if (rel.From != null)
+                                    {
+                                        @($"{DecodeFlowId(rel.From)}") <NBSP /> <Icon Name="IconName.ArrowRight" /> <NBSP /> @($"{DecodeFlowId(rel.To)}")
+                                        <br />
+                                        <span style="padding-left:2em">@($"{rel.Label}")</span>
+                                    }
+                                }
                 //if ( date != null )
                 //{
                 //    @($"{date.Value.ToShortDateString()} | Age: {( DateTime.Now.Year - date.Value.Year )}")
@@ -189,8 +190,8 @@
     RenderInterval="@TimeSpan.FromSeconds(10)"/>
 *@
 
-<LocalEdit.Modals.FlowItemModal @ref="flowItemModalRef" Closed="@OnFlowItemModalClosed"></LocalEdit.Modals.FlowItemModal>
+<LocalEdit.Modals.FlowItemModal @ref="flowItemModalRef" Closed="@OnFlowItemModalClosed" Item="@SelectedItemRow"></LocalEdit.Modals.FlowItemModal>
 
-<LocalEdit.Modals.FlowRelationshipModal @ref="flowRelationshipModalRef" Items="@Document.Items" Closed="@OnFlowRelationshipModalClosed"></LocalEdit.Modals.FlowRelationshipModal>
+<LocalEdit.Modals.FlowRelationshipModal @ref="flowRelationshipModalRef" Items="@Document?.Items" Closed="@OnFlowRelationshipModalClosed" Item="@SelectedRelationshipRow"></LocalEdit.Modals.FlowRelationshipModal>
 
-<LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>
+<LocalEdit.Modals.FileManagementModal  @ref="FileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

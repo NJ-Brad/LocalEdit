@@ -38,8 +38,8 @@
 
     TimeSpan? startTime = null;
     TimeSpan? endTime = null;
-    int warningMinutes = 5;
-    TimeSpan? remainingTime = null;
+    int? warningMinutes = 5;
+//    TimeSpan? remainingTime = null;
 
     CountDownModal? countDownModalRef = null;
 
@@ -54,16 +54,16 @@
     private Task OnCountDownModalClosed()
     {
         // remove the new item, if add was cancelled
-        if (countDownModalRef.Result == ModalResult.Cancel)
+        if (countDownModalRef?.Result == ModalResult.Cancel)
         {
             //Document.Items.Remove(selectedItemRow);
             //selectedItemRow = null;
         }
         else
         {
-            startTime = countDownModalRef.Configuration.StartTime;
-            endTime = countDownModalRef.Configuration.EndTime;
-            warningMinutes = countDownModalRef.Configuration.WarningMinutes;
+            startTime = countDownModalRef?.Configuration.StartTime;
+            endTime = countDownModalRef?.Configuration.EndTime;
+            warningMinutes = countDownModalRef?.Configuration.WarningMinutes;
             started = true;
         }
 //        adding = false;
@@ -104,12 +104,10 @@
         }
         else if ((DateTime.Now.TimeOfDay > startTime) && (DateTime.Now.TimeOfDay < endTime))
         {
-            remainingTime = endTime - DateTime.Now.TimeOfDay;
-            bigTextRef?.RenderText(remainingTime?.ToString(@"hh\:mm\:ss"), (remainingTime?.TotalMinutes < warningMinutes)? "red" : "black");
-            title = remainingTime?.ToString(@"hh\:mm\:ss");
+            TimeSpan remainingTime = endTime.Value - DateTime.Now.TimeOfDay;
+            bigTextRef?.RenderText(remainingTime.ToString(@"hh\:mm\:ss"), (remainingTime.TotalMinutes < warningMinutes)? "red" : "black");
+            title = remainingTime.ToString(@"hh\:mm\:ss");
         }
-
-
 
         //if (fileManagementModalRef.Result == ModalResult.OK)
         //{

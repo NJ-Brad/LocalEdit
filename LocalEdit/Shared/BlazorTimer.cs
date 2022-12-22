@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components;
+using Blazorise;
+using System;
 
 namespace LocalEdit.Shared
 {
@@ -11,7 +13,7 @@ namespace LocalEdit.Shared
 
         private DateTime stopTime;
 
-        private double elapsedtime;
+        //private double elapsedtime;
 
         private bool running = false;
 
@@ -35,13 +37,17 @@ namespace LocalEdit.Shared
 
         public void Dispose()
         {
-            Timer timer = this._timer;
-            if (timer != null)
+            if (_timer != null)
             {
-                timer.Dispose();
-            }
-            else
-            {
+                Timer timer = _timer;
+                if (timer != null)
+                {
+                    timer.Dispose();
+                    GC.SuppressFinalize(this);
+                }
+                else
+                {
+                }
             }
         }
 
@@ -72,33 +78,39 @@ namespace LocalEdit.Shared
                 }
                 this._timer = null;
             }
-            this._timer = new Timer(new TimerCallback(this.timerTicked), null, 0, this.Interval);
+            if (TimerTicked != null)
+            {
+                this._timer = new Timer(new TimerCallback(TimerTicked), null, 0, this.Interval);
+            }
             this.startTime = DateTime.Now;
             this.running = true;
         }
 
         public void Stop()
         {
-            this.stopTime = DateTime.Now;
-            Timer timer = this._timer;
-            if (timer != null)
+            stopTime = DateTime.Now;
+            if (_timer != null)
             {
-                timer.Dispose();
+                Timer timer = _timer;
+                if (timer != null)
+                {
+                    timer.Dispose();
+                }
+                else
+                {
+                }
             }
-            else
-            {
-            }
-            this._timer = null;
+            _timer = null;
         }
 
-        private void Test()
-        {
-            this.Ticked.InvokeAsync();
-        }
+        //private void Test()
+        //{
+        //    this.Ticked.InvokeAsync();
+        //}
 
-        private async void timerTicked(object state)
+        private async void TimerTicked(object? state)
         {
-            this.elapsedtime = this.ElapsedTimeSecs();
+            //this.elapsedtime = this.ElapsedTimeSecs();
             await this.Ticked.InvokeAsync();
             await base.InvokeAsync(new Action(this.StateHasChanged));
         }

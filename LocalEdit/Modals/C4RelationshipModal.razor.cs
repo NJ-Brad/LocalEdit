@@ -6,26 +6,6 @@ namespace LocalEdit.Modals
 {
     public partial class C4RelationshipModal : LE_ModalBase
     {
-        Validations? validations;
-
-        public override async Task<bool> Validate()
-        {
-            bool rtnVal = false;
-            if (validations != null) 
-                if (await validations.ValidateAll())
-                {
-                    rtnVal = true;
-                }
-
-            return rtnVal;
-        }
-
-        public override async Task ResetValidation()
-        {
-            if(validations != null)
-                await validations.ClearAll();
-        }
-
         public override async Task Opened()
         {
             await InvokeAsync(() => StateHasChanged());

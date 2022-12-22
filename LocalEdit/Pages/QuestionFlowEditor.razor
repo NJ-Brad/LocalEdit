@@ -52,14 +52,14 @@
     <Icon Name="IconName.Add" />
     New
 </Button>
-@if (selectedItemRow == null)
+@if (SelectedItemRow == null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Disabled>
         <Icon Name="IconName.Edit" />
         Edit
     </Button>
 }
-@if (selectedItemRow != null)
+@if (SelectedItemRow != null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowItemModal">
         <Icon Name="IconName.Edit" />
@@ -67,14 +67,14 @@
     </Button>
 }
 
-@if (selectedItemRow == null)
+@if (SelectedItemRow == null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Disabled>
     <Icon Name="IconName.Delete" />
     Delete
 </Button>
 }
-@if (selectedItemRow != null)
+@if (SelectedItemRow != null)
 {
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteItem">
     <Icon Name="IconName.Delete" />
@@ -84,8 +84,8 @@
 
 
 <DataGrid TItem="QuestionFlowItem"
-          Data="@Document.Items"
-          @bind-SelectedRow="@selectedItemRow"
+          Data="@Document?.Items"
+          @bind-SelectedRow="@SelectedItemRow"
           Responsive>
     <DataGridColumn Field="@nameof( QuestionFlowItem.Label )" Editable="false"></DataGridColumn>
 </DataGrid>
@@ -192,8 +192,7 @@
     RenderInterval="@TimeSpan.FromSeconds(10)"/>
 *@
 
-<LocalEdit.Modals.QuestionFlowItemModal @ref="QuestionFlowItemModalRef" Items="@Document.Items" Closed="@OnQuestionFlowItemModalClosed"></LocalEdit.Modals.QuestionFlowItemModal>
+<LocalEdit.Modals.QuestionFlowItemModal @ref="QuestionFlowItemModalRef" Items="@Document?.Items" Closed="@OnQuestionFlowItemModalClosed" Item="@SelectedItemRow"></LocalEdit.Modals.QuestionFlowItemModal>
 
-@*<LocalEdit.Modals.QuestionFlowRelationshipModal @ref="QuestionFlowRelationshipModalRef" Items="@Document.Items" Closed="@OnQuestionFlowRelationshipModalClosed"></LocalEdit.Modals.QuestionFlowRelationshipModal>*@
 
-<LocalEdit.Modals.FileManagementModal  @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>
+<LocalEdit.Modals.FileManagementModal  @ref="FileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

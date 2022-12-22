@@ -27,7 +27,7 @@
                     <FieldLabel>From</FieldLabel>
 @*                    <TextEdit @bind-Text="item.From" Placeholder="Enter source" />
 *@
-                    <Select @bind-SelectedValue="@item.From">
+                    <Select @bind-SelectedValue="@Item.From">
                         @foreach (var item in Items)
                         {
                             <SelectItem Value="@(item.ID)">@(item.Label)</SelectItem>
@@ -45,7 +45,7 @@
                     <FieldLabel>To</FieldLabel>
                     @*<TextEdit @bind-Text="item.To" Placeholder="Enter destination" />*@
 
-                    <Select @bind-SelectedValue="@item.To">
+                    <Select @bind-SelectedValue="@Item.To">
                         @foreach (var item in Items)
                         {
                             <SelectItem Value="@(item.ID)">@(item.Label)</SelectItem>
@@ -56,7 +56,7 @@
                 <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                        <TextEdit @bind-Text="item.Label" Placeholder="Enter label">
+                        <TextEdit @bind-Text="Item.Label" Placeholder="Enter label">
                             <Feedback>
                                 <ValidationError>Please enter the label.</ValidationError>
                             </Feedback>

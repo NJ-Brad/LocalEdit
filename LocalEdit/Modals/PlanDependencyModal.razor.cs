@@ -1,39 +1,15 @@
 ﻿using Blazorise;
 using LocalEdit.PlanTypes;
+using LocalEdit.Shared;
 using Microsoft.AspNetCore.Components;
 
 namespace LocalEdit.Modals
 {
     public partial class PlanDependencyModal : LE_ModalBase
     {
-        Validations? validations;
-
-        public override async Task<bool> Validate()
-        {
-            bool rtnVal = false;
-            if (validations != null)
-            {
-                if (await validations.ValidateAll())
-                {
-                    rtnVal = true;
-                }
-            }
-            else
-                rtnVal = true;
-
-            return rtnVal;
-        }
-
-        public override async Task ResetValidation()
-        {
-            if (validations != null)
-                await validations.ClearAll();
-        }
-
         DatePicker<DateTime?>? datePicker;
 
         DateTime? selectedDate;
-
 
         void OnDateChanged(DateTime? date)
         {
@@ -53,11 +29,14 @@ namespace LocalEdit.Modals
             e.Status = ValidationStatus.Success;
             if (Item.DependencyType == "OTHER")
             {
-                string value = Convert.ToString(e.Value);
+                if (e.Value != null)
+                {
+                    string value = Utils.VOD(Convert.ToString(e.Value));
 
-                //e.Status = string.IsNullOrEmpty(startDate) ? ValidationStatus.None :
-                //    email.Contains("@") ? ValidationStatus.Success : ValidationStatus.Error;
-                e.Status = string.IsNullOrEmpty(value) ? ValidationStatus.Error : ValidationStatus.Success;
+                    //e.Status = string.IsNullOrEmpty(startDate) ? ValidationStatus.None :
+                    //    email.Contains("@") ? ValidationStatus.Success : ValidationStatus.Error;
+                    e.Status = string.IsNullOrEmpty(value) ? ValidationStatus.Error : ValidationStatus.Success;
+                }
             }
             else
             {

@@ -27,7 +27,7 @@
                 <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                        <TextEdit @bind-Text="item.Label" Placeholder="Enter condition">
+                        <TextEdit @bind-Text="Item.Label" Placeholder="Enter condition">
                             <Feedback>
                                 <ValidationError>Please enter the condition.</ValidationError>
                             </Feedback>
@@ -40,7 +40,7 @@
                     @*<TextEdit @bind-Text="item.To" Placeholder="Enter destination" />*@
 
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                    <Select @bind-SelectedValue="@item.To">
+                    <Select @bind-SelectedValue="@Item.To">
                         <SelectItem Value="@string.Empty" Disabled>- Select an Item -</SelectItem>
                         @foreach (var item in Items)
                         {

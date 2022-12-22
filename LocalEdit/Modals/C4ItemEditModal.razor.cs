@@ -95,7 +95,7 @@ namespace LocalEdit.Modals
         {
             if (ParentType == C4TypeEnum.Unknown)
             {
-                myAlert.Show();
+                myAlert?.Show();
             }
 
             return Task.CompletedTask;
@@ -126,30 +126,7 @@ namespace LocalEdit.Modals
         //}
 
         bool showA = true;
-        Validations? validations;
         //private bool isRegistrationSuccess = false;
 
-        public async Task<bool> IsValid()
-        {
-            bool rtnVal = false;
-            if (validations != null)
-            {
-                if (await validations.ValidateAll())
-                {
-                    rtnVal = true;
-                }
-            }
-            else
-            {
-                rtnVal = true;
-            }
-
-            return rtnVal;
-        }
-
-        public override async Task ResetValidation()
-        {
-            await validations.ClearAll();
-        }
     }
 }
