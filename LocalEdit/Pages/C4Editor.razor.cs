@@ -67,7 +67,8 @@ namespace LocalEdit.Pages
 
             if (c4ItemModalRef != null)
             {
-                c4ItemModalRef.ParentType = parentNode == null ? C4TypeEnum.Unknown : parentNode.ItemType;
+                //c4ItemModalRef.ParentType = parentNode == null ? C4TypeEnum.Unknown : parentNode.ItemType;
+                c4ItemModalRef.ParentType = parentOfNode == null ? C4TypeEnum.Unknown : parentOfNode.ItemType;
                 c4ItemModalRef.SelectedNode = SelectedNode;
 
                 c4ItemModalRef?.ShowModal();
@@ -92,6 +93,9 @@ namespace LocalEdit.Pages
             if (Document == null)
                 return Task.CompletedTask;
 
+            selectedNodeAtTimeOfClick = SelectedNode;
+            parentOfNode = FindParent(selectedNodeAtTimeOfClick, Document.Model);
+
             C4Item newItem = new ();
             //newItem.ItemType = FlowItemType.Question;
             //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
@@ -108,6 +112,9 @@ namespace LocalEdit.Pages
 
         private Task AddNewChildItem()
         {
+            selectedNodeAtTimeOfClick = SelectedNode;
+            parentOfNode = SelectedNode;
+
             C4Item newItem = new ();
             //newItem.ItemType = FlowItemType.Question;
             //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
@@ -123,6 +130,15 @@ namespace LocalEdit.Pages
 
             return ShowItemModal();
         }
+
+        private Task EditItem()
+        {
+            selectedNodeAtTimeOfClick = SelectedNode;
+            parentOfNode = FindParent(selectedNodeAtTimeOfClick, Document.Model);
+
+            return ShowItemModal();
+        }
+
 
         private C4Item? FindParent(C4Item? NodeInQuestion, IEnumerable<C4Item> collection)
         {
@@ -265,6 +281,8 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        C4Item? selectedNodeAtTimeOfClick = null;
+        C4Item? parentOfNode = null;
         C4Item? selectedNode = null;
         C4Item? parentNode = null;
         C4Item? potentialParentNode = null;
@@ -292,16 +310,16 @@ namespace LocalEdit.Pages
 //        }
 
         //        private Task ShowNewItemModal()
-        private Task ShowNewItemModal(C4Item? parentNode)
-        {
-            potentialParentNode = parentNode;
+        //private Task ShowNewItemModal(C4Item? parentNode)
+        //{
+        //    potentialParentNode = parentNode;
             
-            //newItemModalVisible = true;
+        //    //newItemModalVisible = true;
 
-            InvokeAsync(() => StateHasChanged());
+        //    InvokeAsync(() => StateHasChanged());
 
-            return Task.CompletedTask;
-        }
+        //    return Task.CompletedTask;
+        //}
 
         //private Task HideModal()
         //{
@@ -492,8 +510,17 @@ namespace LocalEdit.Pages
                 // remove the new item, if add was cancelled
                 if (c4ItemModalRef?.Result == ModalResult.Cancel)
                 {
-                    if(SelectedNode != null)
-                        Document?.Model.Remove(SelectedNode);
+                    if (SelectedNode != null)
+                    {
+                        if (parentNode != null)
+                        {
+                            parentNode.Children.Remove(SelectedNode);
+                        }
+                        else
+                        {
+                            Document?.Model.Remove(SelectedNode);
+                        }
+                    }
                     SelectedNode = null;
                 }
 }
