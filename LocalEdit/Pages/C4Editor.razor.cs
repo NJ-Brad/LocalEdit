@@ -5,6 +5,7 @@ using LocalEdit.Modals;
 using System.Text.Json;
 //using StardustDL.RazorComponents.Markdown;
 using LocalEdit.Shared;
+using System.Reflection.Metadata;
 
 namespace LocalEdit.Pages
 {
@@ -134,7 +135,12 @@ namespace LocalEdit.Pages
         private Task EditItem()
         {
             selectedNodeAtTimeOfClick = SelectedNode;
-            parentOfNode = FindParent(selectedNodeAtTimeOfClick, Document.Model);
+            if ((Document != null) && (Document.Model != null))
+            {
+                parentOfNode = FindParent(selectedNodeAtTimeOfClick, Document.Model);
+            }
+            else
+                parentOfNode = null;
 
             return ShowItemModal();
         }
@@ -285,7 +291,7 @@ namespace LocalEdit.Pages
         C4Item? parentOfNode = null;
         C4Item? selectedNode = null;
         C4Item? parentNode = null;
-        C4Item? potentialParentNode = null;
+        //C4Item? potentialParentNode = null;
 //        C4Item? newItem = null;
 
         //private Modal? modalRef;

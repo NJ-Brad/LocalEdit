@@ -57,7 +57,7 @@
                     <Addons>
                         <Addon AddonType="AddonType.Body">
 @*                            <DatePicker @ref="@datePicker" TValue="DateTime?" InputMode="DateInputMode.Date" />*@
-                            <DatePicker @ref="@datePicker" DateChanged="@OnDateChanged" TValue="DateTime?" InputMode="DateInputMode.Date" />
+                            <DatePicker @ref="@datePicker" Date="@StartDateVal" DateChanged="@OnDateChanged" TValue="DateTime?" InputMode="DateInputMode.Date" />
                         </Addon>
                         <Addon AddonType="AddonType.End">
                             <Button Color="Color.Light" Clicked="@(()=>datePicker?.ToggleAsync())">

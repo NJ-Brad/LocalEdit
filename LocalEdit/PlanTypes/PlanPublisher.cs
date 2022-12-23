@@ -6,22 +6,23 @@ namespace LocalEdit.PlanTypes
     {
         public static string Publish(PlanDocument plan)
         {
-
-            string rtnVal = "";
-            rtnVal = PublishMermaid(plan);
+            string rtnVal = PublishMermaid(plan);
 
             return rtnVal;
         }
 
         private static string PublishMermaid(PlanDocument plan)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new ();
 
             sb.AppendLine(MermaidHeader(plan));
 
-            foreach (PlanItem item in plan.Items)
+            if ((plan != null) && (plan.Items != null))
             {
-                sb.Append(MermaidItem(item));
+                foreach (PlanItem item in plan.Items)
+                {
+                    sb.Append(MermaidItem(item));
+                }
             }
 
             return sb.ToString();
@@ -44,7 +45,7 @@ namespace LocalEdit.PlanTypes
 
         private static string MermaidHeader(PlanDocument plan)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new ();
             //        sb.append("flowchart TB");
             //        sb.append("\r\n");
             // classDef borderless stroke-width:0px
@@ -74,20 +75,20 @@ namespace LocalEdit.PlanTypes
 
             for (var i = 0; i < (4 * level); i++)
             {
-                rtnVal = rtnVal + " ";
+                rtnVal += " ";
             }
             return rtnVal;
         }
 
         private static string MermaidItem(PlanItem item, int indent = 1)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new ();
 
             string indentation = BuildIndentation(indent);
             //var displayType: string = item.itemType;
             //bool goDeeper = true;
 
-            StringBuilder deps = new StringBuilder();
+            StringBuilder deps = new();
             bool isAfter = true;
 
             //            if (item.Dependencies.Count == 0)
@@ -103,7 +104,7 @@ namespace LocalEdit.PlanTypes
                         deps.Append($" {dependency.StartDate}");
                         if (deps.ToString().StartsWith("start"))
                         {
-                            deps = new StringBuilder(deps.ToString().Substring(6));
+                            deps = new StringBuilder(deps.ToString()[6..]);
                             isAfter= false;
                         }
                     }

@@ -70,6 +70,7 @@ namespace LocalEdit.Modals
         }
 
         PlanItemDependency item = new();
+        DateTime? StartDateVal { get; set; } = DateTime.Now;
 
         [Parameter]
         public PlanItemDependency Item
@@ -79,13 +80,14 @@ namespace LocalEdit.Modals
             { 
                 item = value;
 
-                DateTime asDate = DateTime.Today;
-
-                if(DateTime.TryParse(value.StartDate, out asDate))
+                if (DateTime.TryParse(value.StartDate, out DateTime asDate))
                 {
                 }
-                if(datePicker != null)
-                    datePicker.Date = asDate;
+                if (datePicker != null)
+                {
+                    StartDateVal = asDate;
+                    //datePicker.Date = asDate;
+                }
             }
         }
 
