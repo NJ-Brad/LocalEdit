@@ -755,8 +755,7 @@ return Task.CompletedTask;
 
             if (selectedTab == "preview")
             {
-                await GenerateMarkdown();
-                _ = InvokeAsync(() => StateHasChanged());
+                //await GenerateMarkdown();
 
                 if(MermaidOne != null)
                     await MermaidOne.DisplayDiagram(C4Publisher.Publish(Document, "Context"));
@@ -764,7 +763,8 @@ return Task.CompletedTask;
                     await MermaidTwo.DisplayDiagram(C4Publisher.Publish(Document, "Container"));
                 if (MermaidThree != null)
                     await MermaidThree.DisplayDiagram(C4Publisher.Publish(Document, "Component"));
-
+                
+                //_ = InvokeAsync(() => StateHasChanged());
             }
 
             return;
