@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalEdit", "LocalEdit\Loca
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPanzoom", "BlazorPanzoom\BlazorPanzoom.csproj", "{C60D2A11-AFB8-4473-9CED-3CBB35E167C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowViz", "FlowViz\FlowViz.csproj", "{C77456F4-2BE4-4878-93D8-852310757A9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C60D2A11-AFB8-4473-9CED-3CBB35E167C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C60D2A11-AFB8-4473-9CED-3CBB35E167C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C60D2A11-AFB8-4473-9CED-3CBB35E167C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C77456F4-2BE4-4878-93D8-852310757A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C77456F4-2BE4-4878-93D8-852310757A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C77456F4-2BE4-4878-93D8-852310757A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C77456F4-2BE4-4878-93D8-852310757A9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

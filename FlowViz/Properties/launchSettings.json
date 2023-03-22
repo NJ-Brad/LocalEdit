@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FlowViz": {
+      "commandName": "Project",
+      "commandLineArgs": "> C:\\Users\\Brad\\source\\repos\\LocalEdit\\FlowViz\\output\\sample.html"
+    }
+  }
+}
