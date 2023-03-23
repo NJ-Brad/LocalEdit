@@ -1,10 +1,10 @@
-﻿using LocalEdit.FlowTypes;
+﻿using Blazorise;
 using LocalEdit.Shared;
 using System.Text;
 
 namespace LocalEdit.QuestionFlowTypes
 {
-    public class QuestionFlowPublisher
+    public class QuestionFlowSequencePublisher
     {
         public static string Publish(QuestionFlowDocument QuestionFlow)
         {
@@ -19,8 +19,6 @@ namespace LocalEdit.QuestionFlowTypes
                 sb.Append(MermaidItem(item));
             }
 
-            // NOTE: Will need to make sure default flows are created.  See FlowViz for details
-
             // go through again and add all of the connections
             foreach (var item in QuestionFlow.Items)
             {
@@ -28,7 +26,7 @@ namespace LocalEdit.QuestionFlowTypes
                 {
                     foreach (var rel in item.NextQuestions)
                     {
-                        rel.From = Utils.VOD(item.ID);
+                        rel.From = Utils.VOD(item.Label);
                         sb.Append(MermaidConnection(rel));
                     }
                 }
@@ -37,10 +35,14 @@ namespace LocalEdit.QuestionFlowTypes
             return sb.ToString();
         }
 
-        private static string MermaidHeader(QuestionFlowDocument flow)
+        private static string MermaidHeader(QuestionFlowDocument QuestionFlow)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("graph TD");
+            //sb.AppendLine("graph TD");
+
+            sb.AppendLine("%% Created by LocalEdit");
+            sb.AppendLine("sequenceDiagram");
+
             // classDef borderless stroke-width:0px
             // classDef darkBlue fill:#00008B, color:#fff
             // classDef brightBlue fill:#6082B6, color:#fff
@@ -69,12 +71,7 @@ namespace LocalEdit.QuestionFlowTypes
 
             string indentation = BuildIndentation(indent);
 
-            // https://bobbyhadz.com/blog/javascript-typeerror-replaceall-is-not-a-function
-            string brokenLabel = String.Join("<br/>", item.Label.Split("`"));
-
-            brokenLabel = $"\"{brokenLabel}\"";
-
-            sb.AppendLine(@$"{indentation}{item.ID}[{brokenLabel}]");
+            sb.AppendLine(@$"{indentation}participant {item.Label}");
 
             return sb.ToString();
         }
@@ -88,7 +85,13 @@ namespace LocalEdit.QuestionFlowTypes
             string from = rel.From;
             string to = rel.To;
 
-            sb.AppendLine($"{indentation}{from}--\"{rel.Label}\"-->{to}");
+            sb.AppendLine($"{indentation}{from}->>{to}: {rel.Label}");
+
+            // solid
+            // Alice->> John: Hello John, how are you?
+
+            // dotted
+            //John-- >> Alice: Great!
 
             return sb.ToString();
         }

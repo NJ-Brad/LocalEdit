@@ -47,21 +47,21 @@ namespace LocalEdit.Modals
             return ShowRelationshipModal();
         }
 
-        //private string DecodeQuestionFlowId(string id)
-        //{
-        //    string rtnVal = id;
+        private string DecodeQuestionFlowId(string id)
+        {
+            string rtnVal = id;
 
-        //    foreach (QuestionFlowItem fi in Document.Items)
-        //    {
-        //        if(fi.ID == id)
-        //        {
-        //            rtnVal = fi.Label;
-        //            break;
-        //        }
-        //    }
+            foreach (QuestionFlowItem fi in Items)
+            {
+                if (fi.ID == id)
+                {
+                    rtnVal = fi.Label;
+                    break;
+                }
+            }
 
-        //    return rtnVal;
-        //}
+            return rtnVal;
+        }
 
         private Task DeleteRelationship()
         {
@@ -91,6 +91,11 @@ namespace LocalEdit.Modals
                 }
             }
             adding = false;
+
+//          if(SelectedRelationshipRow != null)
+//            {
+//                SelectedRelationshipRow.DecodedFlowId = DecodeQuestionFlowId(SelectedRelationshipRow.To);
+//            }
 
             InvokeAsync(() => StateHasChanged());
 

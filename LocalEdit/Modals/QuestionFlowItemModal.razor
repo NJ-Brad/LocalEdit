@@ -27,6 +27,17 @@
                     </Field>
                 *@
                 <Field>
+                    <FieldLabel>ID</FieldLabel>
+                    <Validation Validator="ValidationRule.IsNotEmpty">
+                        <TextEdit @bind-Text="Item.ID" Placeholder="Enter id">
+                            <Feedback>
+                                <ValidationError>Please enter the ID.</ValidationError>
+                            </Feedback>
+                        </TextEdit>
+                    </Validation>
+                </Field>
+
+                <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
                         <TextEdit @bind-Text="Item.Label" Placeholder="Enter label">
@@ -83,7 +94,27 @@
                           Responsive>
                     <DataGridColumns>
                         <DataGridColumn Field="@nameof( QuestionFlowRelationship.Label )" Editable="false" />
-                        <DataGridColumn Field="@nameof( QuestionFlowRelationship.To )" Editable="false" />
+@*                        <DataGridColumn Field="@nameof( QuestionFlowRelationship.To )" Editable="false" />*@
+
+                        <DataGridColumn Field="@nameof( QuestionFlowRelationship.To )" Editable="false">
+                            <DisplayTemplate>
+                                @{
+                                    QuestionFlowRelationship? rel = context as QuestionFlowRelationship;
+                                    if (rel != null)
+                                    {
+                                        @($"{DecodeQuestionFlowId(rel.To)}")
+                                        //if (rel.From != null)
+                                        //{
+                                        //    @($"{DecodeQuestionFlowId(rel.From)}") <NBSP /> <Icon Name="IconName.ArrowRight" /> <NBSP /> @($"{DecodeQuestionFlowId(rel.To)}")
+                                        //    <br />
+                                        //    <span style="padding-left:2em">@($"{rel.Technology}")</span>
+                                        //}
+                                    }
+                                }
+                            </DisplayTemplate>
+                        </DataGridColumn>
+
+
                     </DataGridColumns>
                     <EmptyTemplate>
                         <div class="box">

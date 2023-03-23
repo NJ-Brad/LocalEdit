@@ -44,8 +44,9 @@
                         <SelectItem Value="@string.Empty" Disabled>- Select an Item -</SelectItem>
                         @foreach (var item in Items)
                         {
-                            <SelectItem Value="@(item.Label)">@(item.Label)</SelectItem>
-                        }
+@*                            <SelectItem Value="@(item.Label)">@(item.Label)</SelectItem>*@
+                                <SelectItem Value="@(item.ID)">@(item.Label)</SelectItem>
+                            }
                     </Select>
                     </Validation>
                 </Field>
