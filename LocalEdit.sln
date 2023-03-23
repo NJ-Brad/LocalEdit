@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalEdit", "LocalEdit\Loca
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPanzoom", "BlazorPanzoom\BlazorPanzoom.csproj", "{C60D2A11-AFB8-4473-9CED-3CBB35E167C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowViz", "FlowViz\FlowViz.csproj", "{C77456F4-2BE4-4878-93D8-852310757A9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowViz", "FlowViz\FlowViz.csproj", "{C77456F4-2BE4-4878-93D8-852310757A9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExperiment", "GitExperiment\GitExperiment.csproj", "{0F86E386-6AD9-4AE8-A50F-5C7E3BE2C81C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{C77456F4-2BE4-4878-93D8-852310757A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C77456F4-2BE4-4878-93D8-852310757A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C77456F4-2BE4-4878-93D8-852310757A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F86E386-6AD9-4AE8-A50F-5C7E3BE2C81C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F86E386-6AD9-4AE8-A50F-5C7E3BE2C81C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F86E386-6AD9-4AE8-A50F-5C7E3BE2C81C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F86E386-6AD9-4AE8-A50F-5C7E3BE2C81C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

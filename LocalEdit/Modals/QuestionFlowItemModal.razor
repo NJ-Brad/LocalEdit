@@ -125,7 +125,8 @@
                 </DataGrid>
 *@
                 <hr />
-                <h2>Link Logic</h2>
+ <Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">
+                Link Logic
                 <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewLinkLogic">
                     <Icon Name="IconName.Add" />
                     New
@@ -159,6 +160,8 @@
                         Delete
                     </Button>
                 }
+                </Span>
+
                 <DataGrid TItem="LinkLogic"
                           Data="@Item?.linkLogic"
                           @bind-SelectedRow="@SelectedLinkLogicRow"

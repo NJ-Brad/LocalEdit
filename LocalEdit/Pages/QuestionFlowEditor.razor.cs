@@ -10,6 +10,7 @@ using LocalEdit.LpeTypes;
 using LocalEdit.Shared;
 using LocalEdit.PlanTypes;
 using LocalEdit.FlowTypes;
+using Octokit;
 
 namespace LocalEdit.Pages
 {
@@ -301,6 +302,17 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task LoadFromGitHub()
+        {
+            // in the future I will want to prompt for credential information
+            //FileManagementModalRef?.LoadFile();
+
+            // this will be removed with the modal is created
+            OnCredentialsModalClosed();
+
+            return Task.CompletedTask;
+        }
+
         private Task LoadLpeFile()
         {
             //isLpeFile = true;
@@ -389,6 +401,41 @@ namespace LocalEdit.Pages
 
             return Task.CompletedTask;
         }
+
+        private async Task OnCredentialsModalClosed()
+        {
+            //if (FileManagementModalRef?.Result == ModalResult.OK)
+            //{
+            //    if (string.IsNullOrEmpty(FileManagementModalRef.FileText))
+            //        Document = null;
+            //    else
+
+            var gitHubClient = new GitHubClient(new ProductHeaderValue("GitExperiment"));
+            gitHubClient.Credentials = new Credentials("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");
+
+            //var user = await gitHubClient.User.Get("nj-brad");
+            //Console.WriteLine($"Woah! Brad has {user.PublicRepos} public repositories.");
+
+            //Repository repo = await gitHubClient.Repository.Get("nj-brad", "localedit");
+
+            //var docs = await gitHubClient.Repository
+            //                    .Content
+            //                    .GetAllContents("nj-brad", "localedit", "LocalEdit/SampleFiles/sample.flow");
+
+            var fileContent = await gitHubClient.Repository
+                                .Content
+                                .GetRawContent("nj-brad", "localedit", "LocalEdit/SampleFiles/sample.flow");
+
+            var fileText = System.Text.Encoding.UTF8.GetString(fileContent, 0, fileContent.Length);
+
+            Document = JsonSerializer.Deserialize(fileText, typeof(QuestionFlowDocument)) as QuestionFlowDocument;
+
+                InvokeAsync(() => StateHasChanged());
+            //}
+            //return Task.CompletedTask;
+            return;
+        }
+
 
         //        private string GenerateMermaidText(QuestionFlowDocument document)
         private Task GenerateMarkdown()
