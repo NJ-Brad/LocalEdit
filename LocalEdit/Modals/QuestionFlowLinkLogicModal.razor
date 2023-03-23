@@ -2,7 +2,7 @@
 <Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModalOpened">
     <ModalContent Centered>
         <ModalHeader>
-            <ModalTitle>Question Flow Relationship Edit</ModalTitle>
+            <ModalTitle>Question Flow Link Logic Edit</ModalTitle>
             <CloseButton />
         </ModalHeader>
         <ModalBody>
@@ -24,7 +24,7 @@
                     </Field>
                 *@
 
-                <Field>
+@*                <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
                         <TextEdit @bind-Text="Item.Label" Placeholder="Enter condition">
@@ -34,13 +34,13 @@
                         </TextEdit>
                     </Validation>
                 </Field>
-
+*@
                 <Field>
                     <FieldLabel>To</FieldLabel>
                     @*<TextEdit @bind-Text="item.To" Placeholder="Enter destination" />*@
 
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                    <Select @bind-SelectedValue="@Item.To">
+                        <Select @bind-SelectedValue="@Item.jumpToItemId">
                         <SelectItem Value="@string.Empty" Disabled>- Select an Item -</SelectItem>
                         @foreach (var item in Items)
                         {

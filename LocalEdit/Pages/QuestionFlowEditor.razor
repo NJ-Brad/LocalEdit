@@ -18,11 +18,12 @@
     <Icon Name="IconName.FileUpload" />
     Load
 </Button>
+@*
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadLpeFile">
     <Icon Name="IconName.FileUpload" />
     Load LPE
 </Button>
-
+*@
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveFile">
     <Icon Name="IconName.FileDownload" />
     Save
@@ -84,10 +85,10 @@
 
 
 <DataGrid TItem="QuestionFlowItem"
-          Data="@Document?.Items"
+          Data="@Document?.items"
           @bind-SelectedRow="@SelectedItemRow"
           Responsive>
-    <DataGridColumn Field="@nameof( QuestionFlowItem.Label )" Editable="false"></DataGridColumn>
+                <DataGridColumn Field="@nameof( QuestionFlowItem.title )" Editable="false"></DataGridColumn>
 </DataGrid>
 
 </TabPanel>
@@ -192,7 +193,7 @@
     RenderInterval="@TimeSpan.FromSeconds(10)"/>
 *@
 
-<LocalEdit.Modals.QuestionFlowItemModal @ref="QuestionFlowItemModalRef" Items="@Document?.Items" Closed="@OnQuestionFlowItemModalClosed" Item="@SelectedItemRow"></LocalEdit.Modals.QuestionFlowItemModal>
+<LocalEdit.Modals.QuestionFlowItemModal @ref="QuestionFlowItemModalRef" Items="@Document?.items" Closed="@OnQuestionFlowItemModalClosed" Item="@SelectedItemRow"></LocalEdit.Modals.QuestionFlowItemModal>
 
 
 <LocalEdit.Modals.FileManagementModal  @ref="FileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>

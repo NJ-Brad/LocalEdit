@@ -29,7 +29,7 @@
                 <Field>
                     <FieldLabel>ID</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                        <TextEdit @bind-Text="Item.ID" Placeholder="Enter id">
+                        <TextEdit @bind-Text="Item.id" Placeholder="Enter id">
                             <Feedback>
                                 <ValidationError>Please enter the ID.</ValidationError>
                             </Feedback>
@@ -40,7 +40,7 @@
                 <Field>
                     <FieldLabel>Label</FieldLabel>
                     <Validation Validator="ValidationRule.IsNotEmpty">
-                        <TextEdit @bind-Text="Item.Label" Placeholder="Enter label">
+                        <TextEdit @bind-Text="Item.title" Placeholder="Enter label">
                             <Feedback>
                                 <ValidationError>Please enter the label.</ValidationError>
                             </Feedback>
@@ -53,7 +53,9 @@
                     <TextEdit @bind-Text="item.Description" Placeholder="Enter description" />
                 </Field>
 *@
-<hr />
+@*<hr />
+                <h2>Relations</h2>
+
                 <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewRelationship">
                     <Icon Name="IconName.Add" />
                     New
@@ -94,7 +96,6 @@
                           Responsive>
                     <DataGridColumns>
                         <DataGridColumn Field="@nameof( QuestionFlowRelationship.Label )" Editable="false" />
-@*                        <DataGridColumn Field="@nameof( QuestionFlowRelationship.To )" Editable="false" />*@
 
                         <DataGridColumn Field="@nameof( QuestionFlowRelationship.To )" Editable="false">
                             <DisplayTemplate>
@@ -122,6 +123,77 @@
                         </div>
                     </EmptyTemplate>
                 </DataGrid>
+*@
+                <hr />
+                <h2>Link Logic</h2>
+                <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewLinkLogic">
+                    <Icon Name="IconName.Add" />
+                    New
+                </Button>
+                @if (SelectedLinkLogicRow == null)
+                {
+                    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+                    <Icon Name="IconName.Edit" />
+                    Edit
+                </Button>
+                }
+                @if (SelectedLinkLogicRow != null)
+                {
+                    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ShowLinkLogicModal">
+                        <Icon Name="IconName.Edit" />
+                        Edit
+                    </Button>
+                }
+
+                @if (SelectedLinkLogicRow == null)
+                {
+                    <Button Size="Size.Small" Color="Color.Primary" Disabled>
+                    <Icon Name="IconName.Delete" />
+                    Delete
+                </Button>
+                }
+                @if (SelectedLinkLogicRow != null)
+                {
+                    <Button Size="Size.Small" Color="Color.Primary" Clicked="@DeleteLinkLogic">
+                        <Icon Name="IconName.Delete" />
+                        Delete
+                    </Button>
+                }
+                <DataGrid TItem="LinkLogic"
+                          Data="@Item?.linkLogic"
+                          @bind-SelectedRow="@SelectedLinkLogicRow"
+                          Responsive>
+                    <DataGridColumns>
+                        <DataGridColumn Field="@nameof( LinkLogic.asString )" Editable="false" />
+                        @*                        <DataGridColumn Field="@nameof( QuestionFlowRelationship.To )" Editable="false" />*@
+
+                        <DataGridColumn Field="@nameof( LinkLogic.jumpToItemId )" Editable="false">
+                            <DisplayTemplate>
+                                @{
+                                    LinkLogic? rel = context as LinkLogic;
+                                    if (rel != null)
+                                    {
+                                        @($"{DecodeQuestionFlowId(rel.jumpToItemId)}")
+                                        //if (rel.From != null)
+                                        //{
+                                        //    @($"{DecodeQuestionFlowId(rel.From)}") <NBSP /> <Icon Name="IconName.ArrowRight" /> <NBSP /> @($"{DecodeQuestionFlowId(rel.To)}")
+                                        //    <br />
+                                        //    <span style="padding-left:2em">@($"{rel.Technology}")</span>
+                                        //}
+                                    }
+                                }
+                            </DisplayTemplate>
+                        </DataGridColumn>
+
+
+                    </DataGridColumns>
+                    <EmptyTemplate>
+                        <div class="box">
+                            No logical links were found!
+                        </div>
+                    </EmptyTemplate>
+                </DataGrid>
+
             </Validations>
         </ModalBody>
         <ModalFooter>
@@ -132,3 +204,4 @@
 </Modal>
 
 <LocalEdit.Modals.QuestionFlowRelationshipModal @ref="QuestionFlowRelationshipModalRef" Items="@Items" Closed="@OnQuestionFlowRelationshipModalClosed" Item="@SelectedRelationshipRow"></LocalEdit.Modals.QuestionFlowRelationshipModal>
+<LocalEdit.Modals.QuestionFlowLinkLogicModal @ref="QuestionFlowLinkLogicModalRef" Items="@Items" Closed="@OnQuestionFlowLinkLogicModalClosed" Item="@SelectedLinkLogicRow"></LocalEdit.Modals.QuestionFlowLinkLogicModal>

@@ -1,80 +1,51 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 // https://json2csharp.com/
-namespace FlowViz.LpeTypes_
+namespace FlowViz.LpeTypes
 {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-    public class EntryLogic
+    public class HeaderConfig
     {
-        public List<ValueCondition>? valueConditions { get; set; }
+        public string phoneNumber { get; set; }
+        public string logo { get; set; }
+    }
+
+    public class Item
+    {
+        public string id { get; set; }
+        [JsonPropertyName("type")]
+        public string itemType { get; set; }
+        public string title { get; set; }
+        public List<object> queryLogic { get; set; }
+        public List<object> flowEntryLogic { get; set; }
+        public List<LinkLogic> linkLogic { get; set; }
+    }
+
+    public class LinkLogic
+    {
+        public string jumpToItemId { get; set; }
+        public string id { get; set; }
+        public string value { get; set; }
+        [JsonPropertyName("type")]
+        public string linkType { get; set; }
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-
-            if (valueConditions != null)
-            {
-                foreach (ValueCondition condition in valueConditions)
-                {
-                    if (sb.Length > 0)
-                    {
-                        sb.Append("AND ");
-                    }
-                    sb.AppendLine($"{condition.ItemName} = {condition.ItemValue}");
-                }
-            }
-
-            return sb.ToString();
+            return $"{linkType} {value}";
         }
-    }
-
-    public class HeaderConfig
-    {
-        [JsonPropertyName("phoneNumber")]
-        public string? PhoneNumber { get; set; }
-        [JsonPropertyName("logo")]
-        public string? Logo { get; set; }
-    }
-
-    public class ItemSequence
-    {
-        [JsonPropertyName("id")]
-        public string? ID { get; set; }
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
-        [JsonPropertyName("type")]
-        public string? ItemType { get; set; }
-
-        //""id"": ""Logic1"", 
-        //""type"": ""textInput"", 
-        //""title"": ""Question #1 What state are you in?"", 
-        //""queryLogic"": [], 
-        //""flowEntryLogic"": [], 
-        //""linkLogic"": []
-
     }
 
     public class Root
     {
-        [JsonPropertyName("hasFooter")]
-        public bool HasFooter { get; set; }
-        [JsonPropertyName("hasHeader")]
-        public bool HasHeader { get; set; }
-        [JsonPropertyName("headerConfig")]
-        public HeaderConfig? HeaderConfig { get; set; }
-        [JsonPropertyName("itemFlow")]
-        public List<ItemSequence>? ItemFlow { get; set; }
-    }
-
-    public class ValueCondition
-    {
-        [JsonPropertyName("itemName")]
-        public string? ItemName { get; set; }
-        [JsonPropertyName("itemValue")]
-        public string? ItemValue { get; set; }
-        [JsonPropertyName("answerType")]
-        public string? AnswerType { get; set; }
+        public bool hasFooter { get; set; }
+        public bool hasHeader { get; set; }
+        public HeaderConfig headerConfig { get; set; }
+        public List<Item> items { get; set; }
     }
 
 }

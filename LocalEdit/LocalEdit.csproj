@@ -16,11 +16,19 @@
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.2.2" />
     <PackageReference Include="Blazorise.Markdown" Version="1.2.2" />
     <PackageReference Include="Blazorise.TreeView" Version="1.2.2" />
+    <PackageReference Include="GitInfo" Version="3.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Markdig" Version="0.31.0" />
     <PackageReference Include="MermaidJS.Blazor" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0-preview.2.23153.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0-preview.2.23153.2" PrivateAssets="all" />
     <PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.0.2" />
+    <PackageReference Include="ThisAssembly.Git" Version="1.2.12">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

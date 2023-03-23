@@ -14,6 +14,9 @@ namespace LocalEdit.Modals
 
         public QuestionFlowRelationship? SelectedRelationshipRow { get; set; } = new();
         private QuestionFlowRelationshipModal? QuestionFlowRelationshipModalRef;
+        public LinkLogic? SelectedLinkLogicRow { get; set; } = new();
+        private QuestionFlowLinkLogicModal? QuestionFlowLinkLogicModalRef;
+
         bool adding = false;
 
         private Task ShowRelationshipModal()
@@ -33,6 +36,20 @@ namespace LocalEdit.Modals
             return Task.CompletedTask;
         }
 
+        private Task ShowLinkLogicModal()
+        {
+            if (SelectedLinkLogicRow == null)
+            {
+                return Task.CompletedTask;
+            }
+            if (QuestionFlowLinkLogicModalRef != null)
+            {
+                QuestionFlowLinkLogicModalRef?.ShowModal();
+            }
+
+            return Task.CompletedTask;
+        }
+
         private Task AddNewRelationship()
         {
             QuestionFlowRelationship newRelationship = new()
@@ -47,15 +64,29 @@ namespace LocalEdit.Modals
             return ShowRelationshipModal();
         }
 
+        private Task AddNewLinkLogic()
+        {
+            LinkLogic newLinkLogic = new()
+            {
+                //Label = "New Relationship"
+            };
+
+            SelectedLinkLogicRow = newLinkLogic;
+            Item?.linkLogic?.Add(newLinkLogic);
+            adding = true;
+
+            return ShowLinkLogicModal();
+        }
+
         private string DecodeQuestionFlowId(string id)
         {
             string rtnVal = id;
 
             foreach (QuestionFlowItem fi in Items)
             {
-                if (fi.ID == id)
+                if (fi.id == id)
                 {
-                    rtnVal = fi.Label;
+                    rtnVal = fi.title;
                     break;
                 }
             }
@@ -69,6 +100,19 @@ namespace LocalEdit.Modals
             {
                 Item?.NextQuestions?.Remove(SelectedRelationshipRow);
                 SelectedRelationshipRow = null;
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteLinkLogic()
+        {
+            if (SelectedLinkLogicRow != null)
+            {
+                Item?.linkLogic?.Remove(SelectedLinkLogicRow);
+                SelectedLinkLogicRow = null;
             }
 
             InvokeAsync(() => StateHasChanged());
@@ -96,6 +140,27 @@ namespace LocalEdit.Modals
 //            {
 //                SelectedRelationshipRow.DecodedFlowId = DecodeQuestionFlowId(SelectedRelationshipRow.To);
 //            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnQuestionFlowLinkLogicModalClosed()
+        {
+            if (adding)
+            {
+                // remove the new item, if add was cancelled
+                if (QuestionFlowLinkLogicModalRef?.Result == ModalResult.Cancel)
+                {
+                    if (SelectedLinkLogicRow != null)
+                    {
+                        Item?.linkLogic?.Remove(SelectedLinkLogicRow);
+                        SelectedLinkLogicRow = null;
+                    }
+                }
+            }
+            adding = false;
 
             InvokeAsync(() => StateHasChanged());
 

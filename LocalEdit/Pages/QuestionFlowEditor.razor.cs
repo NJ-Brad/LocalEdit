@@ -9,6 +9,7 @@ using LocalEdit.LpeTypes;
 //using StardustDL.RazorComponents.Markdown;
 using LocalEdit.Shared;
 using LocalEdit.PlanTypes;
+using LocalEdit.FlowTypes;
 
 namespace LocalEdit.Pages
 {
@@ -44,23 +45,23 @@ namespace LocalEdit.Pages
         {
             Document = new()
             {
-                Items = new List<QuestionFlowItem>(new[]
+                items = new List<QuestionFlowItem>(new[]
             {
 //            C4TestData.InternalPerson,
-            new QuestionFlowItem{ID = "Q1", Label="Question One"},
-            new QuestionFlowItem{ID = "Q2", Label="Question Two"},
-            new QuestionFlowItem{ID = "Q3", Label="Question Three"},
-            new QuestionFlowItem{ID = "Q4", Label="Question Four"}
+            new QuestionFlowItem{id = "Q1", title="Question One"},
+            new QuestionFlowItem{id = "Q2", title="Question Two"},
+            new QuestionFlowItem{id = "Q3", title="Question Three"},
+            new QuestionFlowItem{id = "Q4", title="Question Four"}
         })
             };
 
             //    this.Document.Relationships = new List<QuestionFlowRelationship>(new[]
             //    {
-            //    new QuestionFlowRelationship{ From="Question One", To ="Question Two", Label= "Step One"},
-            //    new QuestionFlowRelationship{ From="Question One", To ="Question Three", Label="Alt QuestionFlow"},
-            //    new QuestionFlowRelationship{ From="Question Three", To ="Question Four", Label="Step One"},
-            //    new QuestionFlowRelationship{ From="Question Two", To ="Question Four", Label="Weird QuestionFlow"},
-            //    new QuestionFlowRelationship{ From="Question Four", To ="Question One", Label="Vicious Cycle"}
+            //    new QuestionFlowRelationship{ From="Question One", To ="Question Two", title= "Step One"},
+            //    new QuestionFlowRelationship{ From="Question One", To ="Question Three", title="Alt QuestionFlow"},
+            //    new QuestionFlowRelationship{ From="Question Three", To ="Question Four", title="Step One"},
+            //    new QuestionFlowRelationship{ From="Question Two", To ="Question Four", title="Weird QuestionFlow"},
+            //    new QuestionFlowRelationship{ From="Question Four", To ="Question One", title="Vicious Cycle"}
             //});
 
             return base.OnInitializedAsync();
@@ -86,9 +87,13 @@ namespace LocalEdit.Pages
             {
                 //GenerateMarkdown();
 
-                if((Document != null)&& (MermaidOne != null))
-                    await MermaidOne.DisplayDiagram(QuestionFlowPublisher.Publish(Document));
+                if ((Document != null) && (MermaidOne != null))
+                {
+                    // convert to "normal" flow
+                    FlowDocument fd = LocalEdit.QuestionFlowTypes.LpeConverter.ToFlowDocument(Document);
 
+                    await MermaidOne.DisplayDiagram(QuestionFlowPublisher.Publish(Document));
+                }
             }
 
             //return Task.CompletedTask;
@@ -102,23 +107,23 @@ namespace LocalEdit.Pages
 
             Document = new()
             {
-                Items = new List<QuestionFlowItem>(new[]
+                items = new List<QuestionFlowItem>(new[]
             {
     //            C4TestData.InternalPerson,
-            new QuestionFlowItem{ID = "Q1", Label="Question One"},
-            new QuestionFlowItem{ID = "Q2", Label="Question Two"},
-            new QuestionFlowItem{ID = "Q3", Label="Question Three"},
-            new QuestionFlowItem{ID = "Q4", Label="Question Four"}
+            new QuestionFlowItem{id = "Q1", title="Question One"},
+            new QuestionFlowItem{id = "Q2", title="Question Two"},
+            new QuestionFlowItem{id = "Q3", title="Question Three"},
+            new QuestionFlowItem{id = "Q4", title="Question Four"}
         })
             };
 
             //this.Document.Relationships = new List<QuestionFlowRelationship>(new[]
             //{
-            //new QuestionFlowRelationship{ From="Question One", To ="Question Two", Label= "Step One"},
-            //new QuestionFlowRelationship{ From="Question One", To ="Question Three", Label="Alt QuestionFlow"},
-            //new QuestionFlowRelationship{ From="Question Three", To ="Question Four", Label="Step One"},
-            //new QuestionFlowRelationship{ From="Question Two", To ="Question Four", Label="Weird QuestionFlow"},
-            //new QuestionFlowRelationship{ From="Question Four", To ="Question One", Label="Vicious Cycle"}
+            //new QuestionFlowRelationship{ From="Question One", To ="Question Two", title= "Step One"},
+            //new QuestionFlowRelationship{ From="Question One", To ="Question Three", title="Alt QuestionFlow"},
+            //new QuestionFlowRelationship{ From="Question Three", To ="Question Four", title="Step One"},
+            //new QuestionFlowRelationship{ From="Question Two", To ="Question Four", title="Weird QuestionFlow"},
+            //new QuestionFlowRelationship{ From="Question Four", To ="Question One", title="Vicious Cycle"}
             //});
 
             //ResetValidation();
@@ -129,19 +134,19 @@ namespace LocalEdit.Pages
         //        List<QuestionFlowItem> QuestionFlowItems = new List<QuestionFlowItem>(new[]
         //        {
         ////            C4TestData.InternalPerson,
-        //            new QuestionFlowItem{ID = "Q1", ItemType=QuestionFlowItemType.Question, Label="Question One"},
-        //            new QuestionFlowItem{ID = "Q2", ItemType=QuestionFlowItemType.Question, Label="Question Two"},
-        //            new QuestionFlowItem{ID = "Q3", ItemType=QuestionFlowItemType.Question, Label="Question Three"},
-        //            new QuestionFlowItem{ID = "Q4", ItemType=QuestionFlowItemType.Question, Label="Question Four"}
+        //            new QuestionFlowItem{ID = "Q1", ItemType=QuestionFlowItemType.Question, title="Question One"},
+        //            new QuestionFlowItem{ID = "Q2", ItemType=QuestionFlowItemType.Question, title="Question Two"},
+        //            new QuestionFlowItem{ID = "Q3", ItemType=QuestionFlowItemType.Question, title="Question Three"},
+        //            new QuestionFlowItem{ID = "Q4", ItemType=QuestionFlowItemType.Question, title="Question Four"}
         //        });
 
         //        List<QuestionFlowRelationship> QuestionFlowRelationships = new List<QuestionFlowRelationship>(new[]
         //        {
-        //            new QuestionFlowRelationship{ From="Q1", To ="Q2", Label= "Step One"},
-        //            new QuestionFlowRelationship{ From="Q1", To ="Q3", Label="Alt QuestionFlow"},
-        //            new QuestionFlowRelationship{ From="Q3", To ="Q4", Label="Step One"},
-        //            new QuestionFlowRelationship{ From="Q2", To ="Q4", Label="Weird QuestionFlow"},
-        //            new QuestionFlowRelationship{ From="Q4", To ="Q1", Label="Vicious Cycle"}
+        //            new QuestionFlowRelationship{ From="Q1", To ="Q2", title= "Step One"},
+        //            new QuestionFlowRelationship{ From="Q1", To ="Q3", title="Alt QuestionFlow"},
+        //            new QuestionFlowRelationship{ From="Q3", To ="Q4", title="Step One"},
+        //            new QuestionFlowRelationship{ From="Q2", To ="Q4", title="Weird QuestionFlow"},
+        //            new QuestionFlowRelationship{ From="Q4", To ="Q1", title="Vicious Cycle"}
         //        });
 
         private QuestionFlowItemModal? QuestionFlowItemModalRef;
@@ -167,11 +172,11 @@ namespace LocalEdit.Pages
             QuestionFlowItem newItem = new()
             {
                 //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
-                Label = "New Question"
+                title = "New Question"
             };
 
             SelectedItemRow = newItem;
-            Document?.Items.Add(newItem);
+            Document?.items.Add(newItem);
             adding = true;
 
             return ShowItemModal();
@@ -185,7 +190,7 @@ namespace LocalEdit.Pages
                 if (QuestionFlowItemModalRef?.Result == ModalResult.Cancel)
                 {
                     if(SelectedItemRow != null)
-                        Document?.Items.Remove(SelectedItemRow);
+                        Document?.items.Remove(SelectedItemRow);
                     SelectedItemRow = null;
                 }
             }
@@ -200,7 +205,7 @@ namespace LocalEdit.Pages
         {
             if (SelectedItemRow != null)
             {
-                Document?.Items.Remove(SelectedItemRow);
+                Document?.items.Remove(SelectedItemRow);
                 SelectedItemRow = null;
             }
 
@@ -227,7 +232,7 @@ namespace LocalEdit.Pages
         //private Task AddNewRelationship()
         //{
         //    //QuestionFlowRelationship newRelationship = new QuestionFlowRelationship();
-        //    //newRelationship.Label = "New Relationship";
+        //    //newRelationship.title = "New Relationship";
 
         //    //selectedRelationshipRow = newRelationship;
         //    //Document.Relationships.Add(newRelationship);
@@ -244,7 +249,7 @@ namespace LocalEdit.Pages
         //    {
         //        if(fi.ID == id)
         //        {
-        //            rtnVal = fi.Label;
+        //            rtnVal = fi.title;
         //            break;
         //        }
         //    }

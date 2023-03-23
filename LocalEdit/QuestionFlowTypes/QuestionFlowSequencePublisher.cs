@@ -13,20 +13,20 @@ namespace LocalEdit.QuestionFlowTypes
             sb.Append(MermaidHeader(QuestionFlow));
 
             // go through and get all of the questions created
-            foreach (var item in QuestionFlow.Items)
+            foreach (var item in QuestionFlow.items)
             {
                 //item = workspace.items[itmNum];
                 sb.Append(MermaidItem(item));
             }
 
             // go through again and add all of the connections
-            foreach (var item in QuestionFlow.Items)
+            foreach (var item in QuestionFlow.items)
             {
                 if (item.NextQuestions != null)
                 {
                     foreach (var rel in item.NextQuestions)
                     {
-                        rel.From = Utils.VOD(item.Label);
+                        rel.From = Utils.VOD(item.title);
                         sb.Append(MermaidConnection(rel));
                     }
                 }
@@ -71,7 +71,7 @@ namespace LocalEdit.QuestionFlowTypes
 
             string indentation = BuildIndentation(indent);
 
-            sb.AppendLine(@$"{indentation}participant {item.Label}");
+            sb.AppendLine(@$"{indentation}participant {item.title}");
 
             return sb.ToString();
         }
