@@ -43,6 +43,8 @@ namespace LocalEdit.Pages
 
         Mermaid? MermaidOne { get; set; }
 
+        public Validations? validations { get; set; }
+
         protected override Task OnInitializedAsync()
         {
             Document = new()

@@ -53,7 +53,37 @@
     </Items>
     <Content>
         <TabPanel Name="general"  Border="Border.Primary">
-</TabPanel>
+            <Validations @ref="validations" Mode="ValidationMode.Manual" ValidateOnLoad=false>
+                <Field>
+                    <Check TValue="bool" @bind-Checked="@Document.hasHeader">Has Header</Check>
+                </Field>
+                <Field>
+                    <Check TValue="bool" @bind-Checked="@Document.hasFooter">Has Footer</Check>
+                </Field>
+
+                <Field>
+                <FieldLabel>Phone Number</FieldLabel>
+                <Validation Validator="ValidationRule.IsNotEmpty">
+                    <TextEdit @bind-Text="Document.headerConfig.phoneNumber" Placeholder="Enter phone number">
+                        <Feedback>
+                            <ValidationError>Please enter the label.</ValidationError>
+                        </Feedback>
+                    </TextEdit>
+                </Validation>
+            </Field>
+            <Field>
+                <FieldLabel>Url</FieldLabel>
+                <Validation Validator="ValidationRule.IsNotEmpty">
+                    <TextEdit @bind-Text="Document.headerConfig.logo" Placeholder="Enter logo">
+                        <Feedback>
+                            <ValidationError>Please enter the label.</ValidationError>
+                        </Feedback>
+                    </TextEdit>
+                </Validation>
+            </Field>
+            </Validations>
+        </TabPanel>
+
         <TabPanel Name="model"  Border="Border.Primary">
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewItem">
     <Icon Name="IconName.Add" />
