@@ -89,6 +89,35 @@
 </Button>
 }
 
+            @if (!downAllowed)
+            {
+                <Button Size="Size.Small" Color="Color.Primary" Disabled>
+                    <Icon Name="IconName.ArrowDown" />
+                    Move Down
+                </Button>
+            }
+            @if (downAllowed)
+            {
+                <Button Size="Size.Small" Color="Color.Primary" Clicked="@ItemDown">
+                    <Icon Name="IconName.ArrowDown" />
+                    Move Down
+                </Button>
+            }
+
+            @if (!upAllowed)
+            {
+                <Button Size="Size.Small" Color="Color.Primary" Disabled>
+                    <Icon Name="IconName.ArrowUp" />
+                    Move Up
+                </Button>
+            }
+            @if (upAllowed)
+            {
+                <Button Size="Size.Small" Color="Color.Primary" Clicked="@ItemUp">
+                    <Icon Name="IconName.ArrowUp" />
+                    Move Up
+                </Button>
+            }
 
 <DataGrid TItem="QuestionFlowItem"
           Data="@Document?.items"
@@ -96,6 +125,7 @@
           Responsive>
                 <DataGridColumn Field="@nameof( QuestionFlowItem.title )" Editable="false"></DataGridColumn>
 </DataGrid>
+
 
 </TabPanel>
 @*        <TabPanel Name="relations"  Border="Border.Primary">

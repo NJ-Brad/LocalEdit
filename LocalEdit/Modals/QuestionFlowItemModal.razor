@@ -9,6 +9,16 @@
             <CloseButton />
         </ModalHeader>
         <ModalBody>
+
+            @if (Item == null)
+            {
+                <h1>No item selected to edit</h1>
+            }
+
+            @if (Item != null)
+{
+
+
             @*https://blazorise.com/docs/components/validation*@
             @*<Validations Mode="ValidationMode.Manual">*@
             <Validations @ref="validations" Mode="ValidationMode.Manual" ValidateOnLoad=false>
@@ -196,8 +206,8 @@
                         </div>
                     </EmptyTemplate>
                 </DataGrid>
-
             </Validations>
+            }
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Secondary" Clicked="@CloseModal">Cancel</Button>

@@ -14,7 +14,9 @@ namespace LocalEdit.Modals
 
         public QuestionFlowRelationship? SelectedRelationshipRow { get; set; } = new();
         private QuestionFlowRelationshipModal? QuestionFlowRelationshipModalRef;
-        public LinkLogic? SelectedLinkLogicRow { get; set; } = new();
+
+        // setting to null allows the toolbar buttons to enable/disable properly
+        public LinkLogic? SelectedLinkLogicRow { get; set; } = null;
         private QuestionFlowLinkLogicModal? QuestionFlowLinkLogicModalRef;
 
         bool adding = false;

@@ -41,7 +41,7 @@ namespace LocalEdit.Pages
 
         //}
 
-            Mermaid?  MermaidOne { get; set; }
+        Mermaid? MermaidOne { get; set; }
 
         protected override Task OnInitializedAsync()
         {
@@ -69,7 +69,58 @@ namespace LocalEdit.Pages
             return base.OnInitializedAsync();
         }
 
-        QuestionFlowItem? SelectedItemRow { get; set; } = new();
+        // setting to null allows the toolbar buttons to be disabled properly
+        QuestionFlowItem? SelectedItemRow
+        {
+            get => selectedItemRow;
+            set
+            {
+                selectedItemRow = value;
+
+                upAllowed = false;
+                downAllowed = false;
+
+
+                if (selectedItemRow != null)
+                {
+                    int? numItems = Document?.items.Count;
+
+                    if (numItems > 1) 
+                    {
+                        int rowPosition = GetPosition(selectedItemRow.id);
+                        if (rowPosition != -1)  // there is a selection
+                        {
+                            if(rowPosition > 0)
+                            {
+                                upAllowed = true;
+                            }
+                            if(rowPosition < numItems - 1)
+                            {
+                                downAllowed = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private int GetPosition(string itemId)
+        {
+            int rtnVal = -1;    // not found
+
+            for(int pos = 0; pos < Document?.items.Count; pos ++)
+            {
+                if (Document?.items[pos].id == itemId)
+                {
+                    rtnVal = pos;
+                }
+            }
+
+            return rtnVal;
+        }
+
+        bool upAllowed { get; set; } = false;
+        bool downAllowed { get; set; } = false;
 
         //QuestionFlowRelationship? SelectedRelationshipRow { get; set; }
 
@@ -104,7 +155,7 @@ namespace LocalEdit.Pages
 
         private Task NewQuestionFlow()
         {
-            if(FileManagementModalRef != null)
+            if (FileManagementModalRef != null)
                 FileManagementModalRef.Name = "New_QuestionFlow.json";
 
             Document = new()
@@ -152,6 +203,8 @@ namespace LocalEdit.Pages
         //        });
 
         private QuestionFlowItemModal? QuestionFlowItemModalRef;
+        private QuestionFlowItem? selectedItemRow = null;
+
         //private QuestionFlowRelationshipModal? QuestionFlowRelationshipModalRef;
 
         private Task ShowItemModal()
@@ -186,12 +239,12 @@ namespace LocalEdit.Pages
 
         private Task OnQuestionFlowItemModalClosed()
         {
-            if(adding)
+            if (adding)
             {
                 // remove the new item, if add was cancelled
                 if (QuestionFlowItemModalRef?.Result == ModalResult.Cancel)
                 {
-                    if(SelectedItemRow != null)
+                    if (SelectedItemRow != null)
                         Document?.items.Remove(SelectedItemRow);
                     SelectedItemRow = null;
                 }
@@ -215,6 +268,47 @@ namespace LocalEdit.Pages
 
             return Task.CompletedTask;
         }
+
+        private Task ItemUp()
+        {
+            if (SelectedItemRow != null)
+            {
+                int position = GetPosition(SelectedItemRow.id);
+
+                if (position != -1)
+                {
+                    Document?.items.Remove(SelectedItemRow);
+                    Document?.items.Insert(position - 1, SelectedItemRow);
+                    // enable buttons appropriately
+                    SelectedItemRow = SelectedItemRow;
+                }
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        private Task ItemDown()
+        {
+            if (SelectedItemRow != null)
+            {
+                int position = GetPosition(SelectedItemRow.id);
+
+                if(position != -1)
+                {
+                    Document?.items.Remove(SelectedItemRow);
+                    Document?.items.Insert(position +1, SelectedItemRow);
+                    // enable buttons appropriately
+                    SelectedItemRow = SelectedItemRow;
+                }
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
 
         //private Task ShowRelationshipModal()
         //{
@@ -292,7 +386,7 @@ namespace LocalEdit.Pages
 
         FileManagementModal? FileManagementModalRef { get; set; }
         GitManagementModal? GitManagementModalRef { get; set; }
-        
+
 
         //bool isLpeFile = false;
 
@@ -342,7 +436,7 @@ namespace LocalEdit.Pages
 
         private Task ExportFile()
         {
-  //          if (Validate().Result)
+            //          if (Validate().Result)
             {
                 GenerateMarkdown();
 
@@ -358,7 +452,7 @@ namespace LocalEdit.Pages
 
         private Task ExportHtml()
         {
-//            if (Validate().Result)
+            //            if (Validate().Result)
             {
                 string htmlText = GenerateHtml().Result;
 
@@ -372,7 +466,7 @@ namespace LocalEdit.Pages
         }
 
 
-//        MarkdownRenderer markdownRef = null;
+        //        MarkdownRenderer markdownRef = null;
 
         //void OnClickNode(string nodeId)
         //{
@@ -410,10 +504,10 @@ namespace LocalEdit.Pages
                 //        Document = null;
                 //    else
                 try
-            {
-                var gitHubClient = new GitHubClient(new ProductHeaderValue("LocalEdit"));
+                {
+                    var gitHubClient = new GitHubClient(new ProductHeaderValue("LocalEdit"));
 
-                    if(GitManagementModalRef.Token != "")
+                    if (GitManagementModalRef.Token != "")
                     {
                         gitHubClient.Credentials = new Credentials(GitManagementModalRef.Token);
                     }
@@ -434,12 +528,12 @@ namespace LocalEdit.Pages
                                 .Content
                                 .GetRawContent("nj-brad", "localedit", "LocalEdit/SampleFiles/sample.flow");
 
-            var fileText = System.Text.Encoding.UTF8.GetString(fileContent, 0, fileContent.Length);
+                    var fileText = System.Text.Encoding.UTF8.GetString(fileContent, 0, fileContent.Length);
 
-            Document = JsonSerializer.Deserialize(fileText, typeof(QuestionFlowDocument)) as QuestionFlowDocument;
-        }
-            catch
-            {
+                    Document = JsonSerializer.Deserialize(fileText, typeof(QuestionFlowDocument)) as QuestionFlowDocument;
+                }
+                catch
+                {
                     Document = null;
                 }
 

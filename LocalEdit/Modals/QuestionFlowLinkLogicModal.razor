@@ -6,7 +6,14 @@
             <CloseButton />
         </ModalHeader>
         <ModalBody>
-            @*https://blazorise.com/docs/components/validation*@
+            @if (Item == null)
+            {
+                <h1>No item selected to edit</h1>
+            }
+
+            @if (Item != null)
+            {
+                @*https://blazorise.com/docs/components/validation*@
             @*<Validations Mode="ValidationMode.Manual">*@
             <Validations @ref="validations" Mode="ValidationMode.Manual" ValidateOnLoad=false>
                 <Blazorise.ValidationSummary Label="The following errors were found..." />
@@ -53,6 +60,7 @@
 
 
             </Validations>
+            }
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Secondary" Clicked="@CloseModal">Cancel</Button>

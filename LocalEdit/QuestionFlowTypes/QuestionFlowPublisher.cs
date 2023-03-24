@@ -22,8 +22,27 @@ namespace LocalEdit.QuestionFlowTypes
             // NOTE: Will need to make sure default flows are created.  See FlowViz for details
 
             // go through again and add all of the connections
+            string prevItemId = "";
             foreach (var item in QuestionFlow.items)
             {
+                if (prevItemId != "")
+                {
+                    // create default connection for "next", by default
+                    QuestionFlowRelationship rel = new();
+                    rel.From = prevItemId;
+                    rel.To = Utils.VOD(item.id);
+                    rel.Label = " ";
+                    sb.Append(MermaidConnection(rel));
+
+                    // reset
+                    prevItemId = "";
+                }
+
+                if ((item.linkLogic == null) || (item.linkLogic.Count == 0))
+                {
+                    prevItemId = Utils.VOD(item.id);
+                }
+
                 if (item.linkLogic != null)
                 {
                     foreach (LinkLogic linkLogic in item.linkLogic)
@@ -33,80 +52,12 @@ namespace LocalEdit.QuestionFlowTypes
                         rel.To = linkLogic.jumpToItemId;
                         rel.Label = linkLogic.asString;
                         sb.Append(MermaidConnection(rel));
-
-                        //rtnVal.Relationships.Add(new FlowRelationship { From = Utils.VOD(itmFlow.id), To = Utils.VOD(linkLogic.jumpToItemId), Label = linkLogic.ToString().Trim().Replace("\r\n", "<br/>") });
                     }
                 }
-                //if (item.NextQuestions != null)
-                //{
-                //    foreach (var rel in item.NextQuestions)
-                //    {
-                //        rel.From = Utils.VOD(item.id);
-                //        sb.Append(MermaidConnection(rel));
-                //    }
-                //}
             }
 
             return sb.ToString();
         }
-
-        //private static FlowDocument ToFlowDocument(QuestionFlowDocument flow)
-        //{
-        //    FlowDocument rtnVal = new FlowDocument();
-
-        //    QuestionFlowItem? previousItem = null;
-        //    QuestionFlowItem? previousUnconditional = null;
-
-        //    if (flow == null)
-        //        return rtnVal;
-
-        //    if (flow.items != null)
-        //    {
-        //        foreach (QuestionFlowItem itmFlow in flow.items)
-        //        {
-        //            rtnVal.Items.Add(new FlowItem { ID = itmFlow.id, Description = "", Label = Utils.VOD(itmFlow.title) });
-
-        //            if (previousItem != null)
-        //            {
-        //                if ((itmFlow.flowEntryLogic == null) || (itmFlow.flowEntryLogic.Count == 0))
-        //                {
-        //                    rtnVal.Relationships.Add(new FlowRelationship { From = Utils.VOD(previousItem.id), To = Utils.VOD(itmFlow.id), Label = " " });
-        //                }
-        //                else
-        //                {
-        //                    foreach (object obj in itmFlow.flowEntryLogic)
-        //                    {
-        //                        rtnVal.Relationships.Add(new FlowRelationship { From = Utils.VOD(previousItem.id), To = Utils.VOD(itmFlow.id), Label = obj.ToString().Trim().Replace("\r\n", "<br/>") });
-        //                    }
-        //                }
-        //            }
-
-        //            if ((previousUnconditional != null) && (previousUnconditional != previousItem))
-        //            {
-        //                rtnVal.Relationships.Add(new FlowRelationship { From = Utils.VOD(previousUnconditional.id), To = Utils.VOD(itmFlow.id), Label = "Otherwise" });
-        //            }
-
-        //            if (itmFlow.flowEntryLogic == null)
-        //            {
-        //                previousUnconditional = itmFlow;
-        //            }
-
-        //            previousItem = itmFlow;
-
-        //            if (itmFlow.linkLogic != null)
-        //            {
-        //                foreach (LinkLogic linkLogic in itmFlow.linkLogic)
-        //                {
-        //                    rtnVal.Relationships.Add(new FlowRelationship { From = Utils.VOD(itmFlow.id), To = Utils.VOD(linkLogic.jumpToItemId), Label = linkLogic.ToString().Trim().Replace("\r\n", "<br/>") });
-        //                }
-
-        //                previousItem = null;
-        //            }
-
-        //        }
-        //    }
-        //    return rtnVal;
-        //}
 
         private static string MermaidHeader(QuestionFlowDocument flow)
         {
