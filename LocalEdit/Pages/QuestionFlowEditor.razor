@@ -6,6 +6,7 @@
 @using Blazorise.Extensions;
 @using LocalEdit.QuestionFlowTypes
 
+<Div Style="margin:20px">
 <h1>Question Flow Editor</h1> 
 <hr/>
 
@@ -53,6 +54,9 @@
     </Items>
     <Content>
         <TabPanel Name="general"  Border="Border.Primary">
+
+<Div Style="margin:20px">
+
             <Validations @ref="validations" Mode="ValidationMode.Manual" ValidateOnLoad=false>
                 <Field>
                     <Check TValue="bool" @bind-Checked="@Document.hasHeader">Has Header</Check>
@@ -82,6 +86,7 @@
                 </Validation>
             </Field>
             </Validations>
+            </Div>
         </TabPanel>
 
         <TabPanel Name="model"  Border="Border.Primary">
@@ -152,10 +157,9 @@
 <DataGrid TItem="QuestionFlowItem"
           Data="@Document?.items"
           @bind-SelectedRow="@SelectedItemRow"
-          Responsive>
+          FixedHeader FixedHeaderDataGridHeight="300px">
                 <DataGridColumn Field="@nameof( QuestionFlowItem.title )" Editable="false"></DataGridColumn>
 </DataGrid>
-
 
 </TabPanel>
 @*        <TabPanel Name="relations"  Border="Border.Primary">
@@ -250,6 +254,7 @@
 </TabPanel>
     </Content>
 </Tabs>
+</Div>
 
 @*
 <StardustDL.RazorComponents.Markdown.MarkdownRenderer
