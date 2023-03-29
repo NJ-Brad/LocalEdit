@@ -11,7 +11,15 @@
       "type": "textInput",
       "title": "Question #1 What state are you in?",
       "queryLogic": [],
-      "flowEntryLogic": []
+      "flowEntryLogic": [],
+      "linkLogic": [
+        {
+          "jumpToItemId": "Logic2",
+          "id": "Logic1",
+          "value": "",
+          "type": "any"
+        }
+      ]
     },
     {
       "id": "Logic2",
