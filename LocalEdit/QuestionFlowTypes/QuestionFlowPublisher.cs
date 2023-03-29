@@ -19,13 +19,13 @@ namespace LocalEdit.QuestionFlowTypes
                 sb.Append(MermaidItem(item));
             }
 
-            // NOTE: Will need to make sure default flows are created.  See FlowViz for details
+            const bool createDefaultConnection = false;
 
             // go through again and add all of the connections
             string prevItemId = "";
             foreach (var item in QuestionFlow.items)
             {
-                if (prevItemId != "")
+                if (createDefaultConnection && (prevItemId != ""))
                 {
                     // create default connection for "next", by default
                     QuestionFlowRelationship rel = new();
