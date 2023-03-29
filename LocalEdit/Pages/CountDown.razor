@@ -39,7 +39,7 @@
     TimeSpan? startTime = null;
     TimeSpan? endTime = null;
     int? warningMinutes = 5;
-//    TimeSpan? remainingTime = null;
+    //    TimeSpan? remainingTime = null;
 
     CountDownModal? countDownModalRef = null;
 
@@ -66,7 +66,7 @@
             warningMinutes = countDownModalRef?.Configuration.WarningMinutes;
             started = true;
         }
-//        adding = false;
+        //        adding = false;
 
         InvokeAsync(() => StateHasChanged());
 
@@ -87,6 +87,8 @@
 
     Task OnTimerTicked()
     {
+        TimeZone tz = TimeZone.CurrentTimeZone;
+
         if (!started)
         {
             bigTextRef?.RenderText("Meeting has not started yet.");
