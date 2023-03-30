@@ -142,18 +142,22 @@ namespace LocalEdit.Pages
             {
                 //GenerateMarkdown();
 
-                if ((Document != null) && (MermaidOne != null))
-                {
-                    // convert to "normal" flow
-                    FlowDocument fd = LocalEdit.QuestionFlowTypes.LpeConverter.ToFlowDocument(Document);
-
-                    await MermaidOne.DisplayDiagram(QuestionFlowPublisher.Publish(Document));
-                }
+                await UpdatePreview();
             }
 
             //return Task.CompletedTask;
         }
 
+        private async Task UpdatePreview()
+        {
+            if ((Document != null) && (MermaidOne != null))
+            {
+                // convert to "normal" flow
+                FlowDocument fd = LocalEdit.QuestionFlowTypes.LpeConverter.ToFlowDocument(Document);
+
+                await MermaidOne.DisplayDiagram(QuestionFlowPublisher.Publish(Document));
+            }
+        }
 
         private Task NewQuestionFlow()
         {

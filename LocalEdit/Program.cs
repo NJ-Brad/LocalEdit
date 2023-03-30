@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 //using StardustDL.RazorComponents.Markdown;
 using MermaidJS.Blazor;
 using BlazorPanzoom;
+using Microsoft.JSInterop;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -45,5 +46,11 @@ builder.Services.AddMermaidJS(options =>
 
 builder.Services.AddBlazorPanzoomServices();
 
-//await builder.Build().RunAsyncWithModules();
-await builder.Build().RunAsync();
+
+// https://www.xyb.name/2020/08/02/correct-localtime-in-blazor-webassembly/
+var host = builder.Build();
+
+LocalEdit.Shared.DateTimeExtension.sTimezoneOffset = await host.Services.GetRequiredService<IJSRuntime>().InvokeAsync<int>("eval", "-new Date().getTimezoneOffset()");
+
+//await builder.Build().RunAsync();
+await host.RunAsync();

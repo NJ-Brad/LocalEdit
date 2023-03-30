@@ -87,27 +87,33 @@
 
     Task OnTimerTicked()
     {
-        TimeZone tz = TimeZone.CurrentTimeZone;
+        //        TimeZoneInfo tz = TimeZoneInfo.Local;
+
+        DateTime calcCurrentTime = LocalEdit.Shared.DateTimeExtension.ToRealLocalTime(DateTime.Now);
 
         if (!started)
         {
             bigTextRef?.RenderText("Meeting has not started yet.");
             title = "Meeting Countdown";
         }
-        else if (DateTime.Now.TimeOfDay < startTime)
+        //else if (DateTime.Now.TimeOfDay < startTime)
+        else if (calcCurrentTime.TimeOfDay < startTime)
         {
             bigTextRef?.RenderText("Meeting has not started yet.");
             title = "Meeting has not started yet.";
         }
-        else if (DateTime.Now.TimeOfDay > endTime)
+        //else if (DateTime.Now.TimeOfDay > endTime)
+        else if (calcCurrentTime.TimeOfDay > endTime)
         {
             bigTextRef?.RenderText("Meeting should have ended by now.");
             title = "Overtime";
         }
-        else if ((DateTime.Now.TimeOfDay > startTime) && (DateTime.Now.TimeOfDay < endTime))
+        //else if ((DateTime.Now.TimeOfDay > startTime) && (DateTime.Now.TimeOfDay < endTime))
+        else if ((calcCurrentTime.TimeOfDay > startTime) && (calcCurrentTime.TimeOfDay < endTime))
         {
-            TimeSpan remainingTime = endTime.Value - DateTime.Now.TimeOfDay;
-            bigTextRef?.RenderText(remainingTime.ToString(@"hh\:mm\:ss"), (remainingTime.TotalMinutes < warningMinutes)? "red" : "black");
+            //TimeSpan remainingTime = endTime.Value - DateTime.Now.TimeOfDay;
+            TimeSpan remainingTime = endTime.Value - calcCurrentTime.TimeOfDay;
+            bigTextRef?.RenderText(remainingTime.ToString(@"hh\:mm\:ss"), (remainingTime.TotalMinutes < warningMinutes) ? "red" : "black");
             title = remainingTime.ToString(@"hh\:mm\:ss");
         }
 
@@ -117,7 +123,7 @@
         //    InvokeAsync(() => StateHasChanged());
         //}
 
-        currentTime = DateTime.Now.ToString();
+        currentTime = calcCurrentTime.ToString();
         InvokeAsync(() => StateHasChanged());
 
         return Task.CompletedTask;

@@ -65,7 +65,9 @@ See https://blazorise.com/docs/theming for details<br />
         //    InvokeAsync(() => StateHasChanged());
         //}
 
-        currentTime = DateTime.Now.ToString();
+        DateTime calcCurrentTime = LocalEdit.Shared.DateTimeExtension.ToRealLocalTime(DateTime.Now);
+
+        currentTime = calcCurrentTime.ToString();
         InvokeAsync(() => StateHasChanged());
 
         return Task.CompletedTask;

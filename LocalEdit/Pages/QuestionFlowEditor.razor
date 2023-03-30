@@ -6,7 +6,10 @@
 @using Blazorise.Extensions;
 @using LocalEdit.QuestionFlowTypes
 
-<Div Style="margin:20px">
+    @*<Div Style="float: left;height: 470px;width: 50%;padding: 0 10px;">*@
+@*<Div Style="float: left;height: 470px;padding: 0 10px;">*@
+<Div Style="padding: 10px;">
+
 <h1>Question Flow Editor</h1> 
 <hr/>
 
@@ -255,13 +258,11 @@
     </Content>
 </Tabs>
 </Div>
-
 @*
-<StardustDL.RazorComponents.Markdown.MarkdownRenderer
-    Value="@MarkdownText"
-    Class="your class"
-    Style="your styles"
-    RenderInterval="@TimeSpan.FromSeconds(10)"/>
+            <Div Style="float: left;height: 470px;width: 50%;padding: 0 10px; ">
+
+            <Mermaid Id="output1" @ref="MermaidOne"></Mermaid>
+</Div>
 *@
 
 <LocalEdit.Modals.QuestionFlowItemModal @ref="QuestionFlowItemModalRef" Items="@Document?.items" Closed="@OnQuestionFlowItemModalClosed" Item="@SelectedItemRow"></LocalEdit.Modals.QuestionFlowItemModal>
