@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MermaidJS.Blazor;
 using BlazorPanzoom;
 using Microsoft.JSInterop;
-using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -47,8 +46,6 @@ builder.Services.AddMermaidJS(options =>
 
 builder.Services.AddBlazorPanzoomServices();
 
-// ?? and add this line to register a "PWA updater" service to a DI container.
-builder.Services.AddPWAUpdater();
 
 // https://www.xyb.name/2020/08/02/correct-localtime-in-blazor-webassembly/
 var host = builder.Build();
