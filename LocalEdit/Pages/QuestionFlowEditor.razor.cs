@@ -240,6 +240,8 @@ namespace LocalEdit.Pages
             Document?.items.Add(newItem);
             adding = true;
 
+            InvokeAsync(() => StateHasChanged());
+
             return ShowItemModal();
         }
 
