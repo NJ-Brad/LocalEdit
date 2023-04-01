@@ -70,8 +70,99 @@ namespace LocalEdit.Pages
             return base.OnInitializedAsync();
         }
 
-        PlanItem? SelectedItemRow { get; set; } = new();
+        PlanItem? selectedItemRow = new();
+        PlanItem? SelectedItemRow
+        {
+            get => selectedItemRow;
+            set
+            {
+                selectedItemRow = value;
 
+                upAllowed = false;
+                downAllowed = false;
+
+
+                if (selectedItemRow != null)
+                {
+                    int? numItems = Document?.Items?.Count;
+
+                    if (numItems > 1)
+                    {
+                        int rowPosition = GetPosition(selectedItemRow.ID);
+                        if (rowPosition != -1)  // there is a selection
+                        {
+                            if (rowPosition > 0)
+                            {
+                                upAllowed = true;
+                            }
+                            if (rowPosition < numItems - 1)
+                            {
+                                downAllowed = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private int GetPosition(string itemId)
+        {
+            int rtnVal = -1;    // not found
+
+            for (int pos = 0; pos < Document?.Items?.Count; pos++)
+            {
+                if (Document?.Items[pos].ID == itemId)
+                {
+                    rtnVal = pos;
+                }
+            }
+
+            return rtnVal;
+        }
+
+        private Task ItemUp()
+        {
+            if (SelectedItemRow != null)
+            {
+                int position = GetPosition(SelectedItemRow.ID);
+
+                if (position != -1)
+                {
+                    Document?.Items.Remove(SelectedItemRow);
+                    Document?.Items.Insert(position - 1, SelectedItemRow);
+                    // enable buttons appropriately
+                    SelectedItemRow = SelectedItemRow;
+                }
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+        private Task ItemDown()
+        {
+            if (SelectedItemRow != null)
+            {
+                int position = GetPosition(SelectedItemRow.ID);
+
+                if (position != -1)
+                {
+                    Document?.Items.Remove(SelectedItemRow);
+                    Document?.Items.Insert(position + 1, SelectedItemRow);
+                    // enable buttons appropriately
+                    SelectedItemRow = SelectedItemRow;
+                }
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+
+        bool upAllowed { get; set; } = false;
+        bool downAllowed { get; set; } = false;
         PlanDocument Document { get; set; } = new();
 
         string MarkdownText { get; set; } = string.Empty;
