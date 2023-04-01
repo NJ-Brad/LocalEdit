@@ -160,9 +160,9 @@
 <DataGrid TItem="QuestionFlowItem"
           Data="@Document?.items"
           @bind-SelectedRow="@SelectedItemRow"
-                            ShowPager=true
-                          PageSize="10"
-                    Responsive>
+                            ShowPager=false
+                          PageSize="50"
+                    FixedHeader FixedHeaderDataGridHeight="300px">
                 <DataGridColumn Field="@nameof( QuestionFlowItem.title )" Editable="false"></DataGridColumn>
 </DataGrid>
 
