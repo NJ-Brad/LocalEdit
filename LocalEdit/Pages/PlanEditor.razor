@@ -6,6 +6,8 @@
 @using Blazorise.Extensions;
 @using LocalEdit.PlanTypes
 
+<Div Style="padding: 10px;">
+
 <h1>Plan Editor</h1> 
 <hr/>
 
@@ -65,6 +67,7 @@
     </Items>
     <Content>
         <TabPanel Name="general"  Border="Border.Primary">
+<Div Style="margin:20px">
             <Validations @ref="validations" Mode="ValidationMode.Manual" ValidateOnLoad=false>
                 <Blazorise.ValidationSummary Label="The following errors were found..." />
                 @*    <Field>
@@ -128,8 +131,10 @@
                 </Field>
 *@
 </Validations>        
+</Div>
 </TabPanel>
         <TabPanel Name="workitems"  Border="Border.Primary">
+<Div Style="margin:20px">
 <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewItem">
     <Icon Name="IconName.Add" />
     New
@@ -167,8 +172,10 @@
 <DataGrid TItem="PlanItem"
           Data="@Document?.Items"
           @bind-SelectedRow="@SelectedItemRow"
-          Responsive>
-    <DataGridColumns>
+                              ShowPager=false
+                              PageSize="50"
+                                FixedHeader FixedHeaderDataGridHeight="300px">
+                        <DataGridColumns>
     <DataGridColumn Field="@nameof( PlanItem.Label )" Editable="false">
         <DisplayTemplate>
                             @{
@@ -191,6 +198,7 @@
         </div>
     </EmptyTemplate>
 </DataGrid>
+</Div>
         </TabPanel>
         <TabPanel Name="preview"  Border="Border.Primary">
 
@@ -207,6 +215,7 @@
 </TabPanel>
     </Content>
 </Tabs>
+</Div>
 
 
 

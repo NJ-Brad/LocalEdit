@@ -116,7 +116,8 @@ namespace LocalEdit.Pages
             PlanItem newItem = new()
             {
                 ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper(),
-                Label = "New Plan Item"
+                Label = "New Plan Item",
+                Duration = "1"
             };
 
             SelectedItemRow = newItem;
