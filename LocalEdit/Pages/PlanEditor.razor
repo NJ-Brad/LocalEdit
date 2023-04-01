@@ -202,6 +202,7 @@
 <DataGrid TItem="PlanItem"
           Data="@Document?.Items"
           @bind-SelectedRow="@SelectedItemRow"
+                              RowDoubleClicked="@ShowItemModal"
                               ShowPager=false
                               PageSize="50"
                                 FixedHeader FixedHeaderDataGridHeight="300px">
