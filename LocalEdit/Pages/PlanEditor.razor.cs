@@ -7,6 +7,7 @@ using Blazorise.Components;
 using System.Text.Json;
 //using StardustDL.RazorComponents.Markdown;
 using LocalEdit.Shared;
+using Blazorise.DataGrid;
 
 namespace LocalEdit.Pages
 {
@@ -44,8 +45,12 @@ namespace LocalEdit.Pages
         //    // TODO: do something with nodeId
         //}
 
-    Mermaid? MermaidOne { get; set; }
+        Mermaid? MermaidOne { get; set; }
+        Mermaid? MermaidTwo { get; set; }
 
+
+        bool useBuiltInEditor = false;
+        private DataGridEditMode sprintEditMode = DataGridEditMode.Inline;
 
         protected override Task OnInitializedAsync()
         {
@@ -63,7 +68,14 @@ namespace LocalEdit.Pages
                 }) },
                 new PlanItem{ID = "Q3", Label="Question Three", StoryId="3", Duration="3"},
                 new PlanItem{ID = "Q4", Label="Question Four", StoryId="4", Duration="4"}
-            })
+            }),
+                Sprints = new List<Sprint>(new[]
+                {
+                    new Sprint{Label = "Sprint 1", StartDate=new DateOnly(2022, 11,  04), EndDate=new DateOnly(2022, 11,  5)},
+                    new Sprint{Label = "Sprint 2", StartDate=new DateOnly(2022, 11,  06), EndDate=new DateOnly(2022, 11,  7)},
+                    new Sprint{Label = "Sprint 3", StartDate=new DateOnly(2022, 11,  8), EndDate=new DateOnly(2022, 11,  8)},
+                    new Sprint{Label = "Sprint 4", StartDate=new DateOnly(2022, 11,  9), EndDate=new DateOnly(2022, 11,  10)}
+                })
             };
 
 
@@ -105,6 +117,42 @@ namespace LocalEdit.Pages
             }
         }
 
+        Sprint? selectedSprintRow = new();
+        Sprint? SelectedSprintRow
+        {
+            get => selectedSprintRow;
+            set
+            {
+                selectedSprintRow = value;
+
+                sprintUpAllowed = false;
+                sprintDownAllowed = false;
+
+
+                if (selectedSprintRow != null)
+                {
+                    int? numItems = Document?.Sprints?.Count;
+
+                    if (numItems > 1)
+                    {
+                        int rowPosition = GetSprintPosition(selectedSprintRow.ID);
+                        if (rowPosition != -1)  // there is a selection
+                        {
+                            if (rowPosition > 0)
+                            {
+                                upAllowed = true;
+                            }
+                            if (rowPosition < numItems - 1)
+                            {
+                                downAllowed = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
         private int GetPosition(string itemId)
         {
             int rtnVal = -1;    // not found
@@ -119,6 +167,22 @@ namespace LocalEdit.Pages
 
             return rtnVal;
         }
+
+        private int GetSprintPosition(string itemId)
+        {
+            int rtnVal = -1;    // not found
+
+            for (int pos = 0; pos < Document?.Sprints?.Count; pos++)
+            {
+                if (Document?.Sprints[pos].ID == itemId)
+                {
+                    rtnVal = pos;
+                }
+            }
+
+            return rtnVal;
+        }
+
 
         private Task ItemUp()
         {
@@ -140,6 +204,27 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task SprintUp()
+        {
+            if (SelectedSprintRow != null)
+            {
+                int position = GetSprintPosition(SelectedSprintRow.ID);
+
+                if (position != -1)
+                {
+                    Document?.Sprints.Remove(SelectedSprintRow);
+                    Document?.Sprints.Insert(position - 1, SelectedSprintRow);
+                    // enable buttons appropriately
+                    SelectedSprintRow = SelectedSprintRow;
+                }
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
+
         private Task ItemDown()
         {
             if (SelectedItemRow != null)
@@ -160,16 +245,42 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task SprintDown()
+        {
+            if (SelectedSprintRow != null)
+            {
+                int position = GetSprintPosition(SelectedSprintRow.ID);
+
+                if (position != -1)
+                {
+                    Document?.Sprints.Remove(SelectedSprintRow);
+                    Document?.Sprints.Insert(position + 1, SelectedSprintRow);
+                    // enable buttons appropriately
+                    SelectedSprintRow = SelectedSprintRow;
+                }
+            }
+
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
+
 
         bool upAllowed { get; set; } = false;
         bool downAllowed { get; set; } = false;
+        bool sprintUpAllowed { get; set; } = false;
+        bool sprintDownAllowed { get; set; } = false;
+
+
         PlanDocument Document { get; set; } = new();
 
         string MarkdownText { get; set; } = string.Empty;
 
         bool adding = false;
+        bool addingSprint = false;
 
         private PlanItemModal? planItemModalRef;
+        private SprintModal? sprintModalRef;
 
         string selectedTab = "general";
 
@@ -184,6 +295,13 @@ namespace LocalEdit.Pages
                     await MermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
             }
 
+            if (selectedTab == "preview2")
+            {
+                //GenerateMarkdown();
+                if ((MermaidTwo != null) && (Document != null))
+                    await MermaidTwo.DisplayDiagram(TimelinePublisher.Publish(Document));
+            }
+
             //return Task.CompletedTask;
         }
 
@@ -193,11 +311,20 @@ namespace LocalEdit.Pages
             {
                 return Task.CompletedTask;
             }
-            //planItemModalRef.Item = SelectedItemRow;
 
             planItemModalRef?.ShowModal();
 
-            //InvokeAsync(() => StateHasChanged());
+            return Task.CompletedTask;
+        }
+
+        private Task ShowSprintModal()
+        {
+            if (SelectedSprintRow == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            sprintModalRef?.ShowModal();
 
             return Task.CompletedTask;
         }
@@ -217,6 +344,23 @@ namespace LocalEdit.Pages
 
             return ShowItemModal();
         }
+        private Task AddNewSprint()
+        {
+            Sprint newItem = new()
+            {
+                ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper(),
+                Label = "New Sprint",
+                StartDate = DateOnly.FromDateTime( DateTime.Now.Date),
+                EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(7).Date)
+            };
+
+            SelectedSprintRow = newItem;
+            Document?.Sprints?.Add(newItem);
+            addingSprint = true;
+
+            return ShowSprintModal();
+        }
+
 
         private Task OnPlanItemModalClosed()
         {
@@ -235,6 +379,24 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task OnSprintModalClosed()
+        {
+            if (addingSprint)
+            {
+                // remove the new item, if add was cancelled
+                if (sprintModalRef?.Result == ModalResult.Cancel)
+                {
+                    if (SelectedSprintRow != null)
+                        Document?.Sprints?.Remove(SelectedSprintRow);
+                    SelectedSprintRow = null;
+                }
+            }
+            addingSprint = false;
+
+            return Task.CompletedTask;
+        }
+
+
         private Task DeleteItem()
         {
             // remove the new item, if add was cancelled
@@ -242,6 +404,18 @@ namespace LocalEdit.Pages
             {
                 Document?.Items?.Remove(SelectedItemRow);
                 SelectedItemRow = null;
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task DeleteSprint()
+        {
+            // remove the new item, if add was cancelled
+            if (SelectedSprintRow != null)
+            {
+                Document?.Sprints?.Remove(SelectedSprintRow);
+                SelectedSprintRow = null;
             }
 
             return Task.CompletedTask;

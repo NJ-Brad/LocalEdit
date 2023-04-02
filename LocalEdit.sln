@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorPanzoom", "BlazorPanz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowViz", "FlowViz\FlowViz.csproj", "{C77456F4-2BE4-4878-93D8-852310757A9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExperiment", "GitExperiment\GitExperiment.csproj", "{0F86E386-6AD9-4AE8-A50F-5C7E3BE2C81C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExperiment", "GitExperiment\GitExperiment.csproj", "{0F86E386-6AD9-4AE8-A50F-5C7E3BE2C81C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
