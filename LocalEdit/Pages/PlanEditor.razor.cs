@@ -304,25 +304,35 @@ namespace LocalEdit.Pages
             {
                 if ((MermaidTwo != null) && (Document != null))
                 {
-                    string input = TimelinePublisher.Publish(Document);
-                    //                    await MermaidTwo.DisplayDiagram(input);
-                    try
-                    {
-                        await MermaidTwo.DisplayDiagram(TimelinePublisher.Publish(Document));
-                        ////SvgDisplayOne.ChildContent = new MarkupString(MermaidTwo.SvgText);
-                        ////timelineSvg = AddContent(MermaidTwo.SvgText);
-                        //timelineSvg = new MarkupString(MermaidTwo.SvgText);
+                    // this wonky work around takes care of an issue where it takes THREE TRIES to get the diagram to update
+                    int tries = 0;
+                    bool worked = false;
 
-                        //timelineSvg = new MarkupString(MermaidTwo.GenerateSvg(TimelinePublisher.Publish(Document)).Result);
-                        //timelineSvg = new MarkupString(MermaidTwo.SvgText);
-
-                    }
-                    catch (Exception ex)
+                    while (!worked && (tries < 4))
                     {
-                        System.Console.WriteLine(ex.ToString());
+                        try
+                        {
+                            //string input = TimelinePublisher.Publish(Document);
+                            //await MermaidTwo.DisplayDiagram(input);
+
+                            await MermaidTwo.DisplayDiagram(TimelinePublisher.Publish(Document));
+
+                            ////SvgDisplayOne.ChildContent = new MarkupString(MermaidTwo.SvgText);
+                            ////timelineSvg = AddContent(MermaidTwo.SvgText);
+                            //timelineSvg = new MarkupString(MermaidTwo.SvgText);
+
+                            //timelineSvg = new MarkupString(MermaidTwo.GenerateSvg(TimelinePublisher.Publish(Document)));
+                            //timelineSvg = new MarkupString(MermaidTwo.SvgText);
+                            worked = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Console.WriteLine(ex.ToString());
+                            tries++;
+                        }
+                        // <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+                        // https://stackoverflow.com/questions/60785749/using-svgs-in-blazor-page#60787289
                     }
-                    // <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
-                    // https://stackoverflow.com/questions/60785749/using-svgs-in-blazor-page#60787289
                 }
             }
 

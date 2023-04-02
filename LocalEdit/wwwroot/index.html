@@ -68,7 +68,7 @@
         function generateMermaidSvg(diagramText) {
             var rtnVal;
 
-            mermaid.mermaidAPI.renderAsync('theGraph', diagramText, function (svgCode) {
+            mermaid.mermaidAPI.render('theGraph', diagramText, function (svgCode) {
                 //mermaid.mermaidAPI.render(Id + "_Graph", diagramText, function (svgCode) {
                 rtnVal = svgCode;
             });

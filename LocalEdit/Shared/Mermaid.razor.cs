@@ -42,9 +42,9 @@ namespace LocalEdit.Shared
             await InvokeAsync(() => StateHasChanged());
         }
 
-        public async Task<string> GenerateSvg(string input)
+        public string GenerateSvg(string input)
         {
-            SvgText = await JSRuntime.InvokeAsync<string>("generateMermaidSvg", input);
+            SvgText = JSRuntime.InvokeAsync<string>("generateMermaidSvg", input).Result;
             return SvgText;
         }
 
