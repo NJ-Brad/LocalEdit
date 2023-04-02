@@ -48,7 +48,17 @@
         window.renderMermaidDiagram = (Id, input) => {
             var output = document.getElementById(Id);
             //mermaid.mermaidAPI.render('theGraph', input, function (svgCode) {
-            mermaid.mermaidAPI.render(Id + '_Graph', input, function (svgCode) {
+            mermaid.mermaidAPI.renderAsync(Id + '_Graph', input, function (svgCode) {
+                output.innerHTML = svgCode;
+            });
+        }
+    </script>
+
+    <script>
+        window.renderMermaidDiagramAsync = (Id, input) => {
+            var output = document.getElementById(Id);
+            //mermaid.mermaidAPI.render('theGraph', input, function (svgCode) {
+            mermaid.mermaidAPI.renderAsync(Id + '_Graph', input, function (svgCode) {
                 output.innerHTML = svgCode;
             });
         }
@@ -58,7 +68,7 @@
         function generateMermaidSvg(diagramText) {
             var rtnVal;
 
-            mermaid.mermaidAPI.render('theGraph', diagramText, function (svgCode) {
+            mermaid.mermaidAPI.renderAsync('theGraph', diagramText, function (svgCode) {
                 //mermaid.mermaidAPI.render(Id + "_Graph", diagramText, function (svgCode) {
                 rtnVal = svgCode;
             });

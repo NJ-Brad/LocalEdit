@@ -1,0 +1,9 @@
+﻿@*<svg width="100" height="100">*@
+    @ChildContent
+@*</svg>*@
+
+@code {
+    [Parameter]
+    //public RenderFragment ChildContent { get; set; }
+    public MarkupString ChildContent { get; set; }
+}

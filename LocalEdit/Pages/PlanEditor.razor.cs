@@ -47,6 +47,7 @@ namespace LocalEdit.Pages
 
         Mermaid? MermaidOne { get; set; }
         Mermaid? MermaidTwo { get; set; }
+        SvgDisplay? SvgDisplayOne { get; set; }
 
 
         bool useBuiltInEditor = false;
@@ -284,25 +285,63 @@ namespace LocalEdit.Pages
 
         string selectedTab = "general";
 
+        //        int tabSwitchesToIgnore = 0;
+        MarkupString timelineSvg { get; set; }
+
         private async Task OnSelectedTabChanged(string name)
         {
             selectedTab = name;
 
             if (selectedTab == "preview")
             {
-                //GenerateMarkdown();
-                if((MermaidOne != null) &&(Document != null))
+                if ((MermaidOne != null) && (Document != null))
+                {
                     await MermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
+                }
             }
 
             if (selectedTab == "preview2")
             {
-                //GenerateMarkdown();
                 if ((MermaidTwo != null) && (Document != null))
-                    await MermaidTwo.DisplayDiagram(TimelinePublisher.Publish(Document));
+                {
+                    string input = TimelinePublisher.Publish(Document);
+                    //                    await MermaidTwo.DisplayDiagram(input);
+                    try
+                    {
+                        await MermaidTwo.DisplayDiagram(TimelinePublisher.Publish(Document));
+                        ////SvgDisplayOne.ChildContent = new MarkupString(MermaidTwo.SvgText);
+                        ////timelineSvg = AddContent(MermaidTwo.SvgText);
+                        //timelineSvg = new MarkupString(MermaidTwo.SvgText);
+
+                        //timelineSvg = new MarkupString(MermaidTwo.GenerateSvg(TimelinePublisher.Publish(Document)).Result);
+                        //timelineSvg = new MarkupString(MermaidTwo.SvgText);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Console.WriteLine(ex.ToString());
+                    }
+                    // <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+                    // https://stackoverflow.com/questions/60785749/using-svgs-in-blazor-page#60787289
+                }
             }
 
             //return Task.CompletedTask;
+        }
+
+        private RenderFragment AddContent(string textContent) => builder =>
+        {
+            builder.AddContent(1, textContent);
+        };
+
+
+        private async Task RefreshTimeline()
+        {
+            if ((MermaidTwo != null) && (Document != null))
+            {
+                string input = TimelinePublisher.Publish(Document);
+                MermaidTwo.DisplayDiagram(input);
+            }
         }
 
         private Task ShowItemModal()

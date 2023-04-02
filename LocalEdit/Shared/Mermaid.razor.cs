@@ -13,8 +13,8 @@ namespace LocalEdit.Shared
         // https://stackoverflow.com/questions/58346600/why-do-blazor-components-and-elements-not-have-id-attributes
         [Parameter] public string Id { get; set; } = Guid.NewGuid().ToString("N");
 
-        [Parameter]
-        public RenderFragment? ChildContent { get; set; }
+        //[Parameter]
+        //public RenderFragment? ChildContent { get; set; }
 
         public async Task TriggerClick()
         {
@@ -28,18 +28,26 @@ namespace LocalEdit.Shared
             //await JSRuntime.InvokeVoidAsync("renderMermaidDiagram2", "output");
         }
 
-        string SvgText { get; set; } = "";
+        public string SvgText { get; set; } = "";
 
         public async Task DisplayDiagram(string input)
         {
             SvgText = await JSRuntime.InvokeAsync<string>("generateMermaidSvg", input);
-            // https://stackoverflow.com/questions/60785749/using-svgs-in-blazor-page
-            ToPng(SvgText);
+            //// https://stackoverflow.com/questions/60785749/using-svgs-in-blazor-page
+            //ToPng(SvgText);
 
-             await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input);
+            await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", this.Id, input);
+            //await JSRuntime.InvokeVoidAsync("renderMermaidDiagramAsync", this.Id, input);
 
             await InvokeAsync(() => StateHasChanged());
         }
+
+        public async Task<string> GenerateSvg(string input)
+        {
+            SvgText = await JSRuntime.InvokeAsync<string>("generateMermaidSvg", input);
+            return SvgText;
+        }
+
 
         // https://stackoverflow.com/questions/1879395/how-do-i-generate-a-stream-from-a-string
         //public static Stream ToStream(this string value, Encoding encoding)

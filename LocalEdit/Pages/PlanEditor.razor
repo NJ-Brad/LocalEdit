@@ -382,7 +382,12 @@
                 <Mermaid Id="output1" @ref="MermaidOne"></Mermaid>
             </TabPanel>
             <TabPanel Name="preview2" Border="Border.Primary">
+@*                <button @onclick="RefreshTimeline">
+                    Refresh
+                </button>
+                *@
                 <Mermaid Id="output2" @ref="MermaidTwo"></Mermaid>
+                <SvgDisplay @ref="SvgDisplayOne" ChildContent="timelineSvg"></SvgDisplay>
             </TabPanel>
         </Content>
     </Tabs>
