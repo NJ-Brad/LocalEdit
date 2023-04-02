@@ -58,6 +58,7 @@ namespace LocalEdit.PlanTypes
         {
             StringBuilder sb = new();
 
+            sb.AppendLine("%%{ init: { 'theme':'neutral'} }%%");
             sb.AppendLine("timeline");
             sb.AppendLine($"    title       {plan.Title}");
 
@@ -92,15 +93,17 @@ namespace LocalEdit.PlanTypes
 
             if(itemsInSprint.Count == 0) 
             {
-                sb.Append(sprint.Label);
+                //sb.Append(sprint.Label);
+                sb.Append($"{sprint.Label}<br>{sprint.StartDate} - {sprint.EndDate}");
                 sb.Append(" : ");
                 sb.AppendLine("No Work Planned");
             }
             else
             {
-                sb.Append(sprint.Label);
+                // https://mermaid.js.org/syntax/timeline.html
+                sb.Append($"{sprint.Label}<br>{sprint.StartDate} - {sprint.EndDate}");
 
-                foreach(string  item in itemsInSprint)
+                foreach (string item in itemsInSprint)
                 {
                     sb.Append(" : ");
                     sb.AppendLine(item);
