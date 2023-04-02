@@ -57,7 +57,7 @@ namespace LocalEdit.PlanTypes
         private static string MermaidHeader(PlanDocument plan)
         {
             StringBuilder sb = new();
-
+            // https://mermaid.js.org/config/theming.html
             sb.AppendLine("%%{ init: { 'theme':'neutral'} }%%");
             sb.AppendLine("timeline");
             sb.AppendLine($"    title       {plan.Title}");
