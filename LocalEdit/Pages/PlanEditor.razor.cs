@@ -49,6 +49,9 @@ namespace LocalEdit.Pages
         Mermaid? MermaidTwo { get; set; }
         SvgDisplay? SvgDisplayOne { get; set; }
 
+        private WIPManager? wIPManagerRef;
+
+
 
         bool useBuiltInEditor = false;
         private DataGridEditMode sprintEditMode = DataGridEditMode.Inline;
@@ -557,6 +560,27 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+
+        private Task StartWIP()
+        {
+            wIPManagerRef.Start();
+            return Task.CompletedTask;
+        }
+
+        private Task LoadWIP()
+        {
+            wIPManagerRef.Load();
+            return Task.CompletedTask;
+        }
+
+        private Task SaveWIP()
+        {
+            string fileText = JsonSerializer.Serialize(Document, new JsonSerializerOptions { WriteIndented = true }); ;
+            wIPManagerRef.Data = fileText;
+            //            wIPManagerRef.Load();
+            return Task.CompletedTask;
+        }
+
         private Task SaveFile()
         {
             string fileText = JsonSerializer.Serialize(Document, new JsonSerializerOptions { WriteIndented = true }); ;
@@ -606,6 +630,39 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task OnWipDataRequired()
+        {
+            //if (fileManagementModalRef?.Result == ModalResult.OK)
+            //{
+            //    //MarkdownText = fileManagementModalRef.FileText;
+            //    if (fileManagementModalRef.FileText != null)
+            //    {
+            //        Document = (JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
+            //    }
+            //    InvokeAsync(() => StateHasChanged());
+            //}
+
+            return Task.CompletedTask;
+        }
+
+
+        private Task OnWipDataReady()
+        {
+            //if (fileManagementModalRef?.Result == ModalResult.OK)
+            //{
+            //    //MarkdownText = fileManagementModalRef.FileText;
+            //    if (fileManagementModalRef.FileText != null)
+            //    {
+            //        Document = (JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
+            //    }
+            //    InvokeAsync(() => StateHasChanged());
+            //}
+
+            Document = (JsonSerializer.Deserialize(wIPManagerRef.Data, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
 
         private Task OnFileManagementModalClosed()
         {

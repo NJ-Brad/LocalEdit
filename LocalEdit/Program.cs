@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MermaidJS.Blazor;
 using BlazorPanzoom;
 using Microsoft.JSInterop;
+using Blazored.LocalStorage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -29,7 +30,7 @@ builder.Services
 builder.Services.AddBlazorDownloadFile();
 
 // https://github.com/Blazored/LocalStorage
-//builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddBlazoredLocalStorage();
 
 // https://github.com/StardustDL/RazorComponents.Markdown
 //builder.Services.AddModules(builder =>

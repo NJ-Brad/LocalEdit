@@ -27,6 +27,19 @@
         Save
     </Button>
 
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@StartWIP">
+        <Icon Name="IconName.FileDownload" />
+        Start WIP
+    </Button>
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@LoadWIP">
+        <Icon Name="IconName.FileDownload" />
+        Load WIP
+    </Button>
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@SaveWIP">
+        <Icon Name="IconName.FileDownload" />
+        Save WIP
+    </Button>
+
     @*@if (string.IsNullOrEmpty(MarkdownText))
     {
     <Button Size="Size.Small" Color="Color.Primary"  Disabled>
@@ -43,6 +56,8 @@
         <Icon Name="IconName.ArrowRight" />
         Export HTML
     </Button>
+    &nbsp;<WIPManager @ref="wIPManagerRef" EditorName="PlanEditor" DataRequired="@OnWipDataRequired" DataReady="OnWipDataReady" Interval=30></WIPManager>
+
 
     @*</Div>*@
 
