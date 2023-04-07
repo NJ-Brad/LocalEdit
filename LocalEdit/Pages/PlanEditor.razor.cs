@@ -52,7 +52,7 @@ namespace LocalEdit.Pages
 
         private WIPManager? wIPManagerRef;
 
-
+        private string lastSavedDocumentText = "";
 
         bool useBuiltInEditor = false;
         private DataGridEditMode sprintEditMode = DataGridEditMode.Inline;
@@ -92,10 +92,10 @@ namespace LocalEdit.Pages
             {
                 if (await wIPManagerRef.DataExists())
                 {
-                    //messageBoxRef.ShowModal();
-                    // last button will be "primary"
-                    // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
-                    messageBoxRef.ShowModal("RESUME_WIP", "Resume", "Would you like to pick up where you left off?<br/>Select Yes, if you have not saved your work.", new List<string>() { "No", "Yes" });
+                        //messageBoxRef.ShowModal();
+                        // last button will be "primary"
+                        // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
+                        messageBoxRef.ShowModal("RESUME_WIP", "Resume", "Would you like to pick up where you left off?<br/>Select Yes, if you have not saved your work.", new List<string>() { "No", "Yes" });
                 }
             }
             base.OnAfterRender(firstRender);
@@ -544,12 +544,16 @@ namespace LocalEdit.Pages
 
         private async Task NewPlan()
         {
-            if (await wIPManagerRef.DataExists())
+            if ((await IsDocumentDirty()) && (await wIPManagerRef.DataExists()))
+                {
+                    //messageBoxRef.ShowModal();
+                    // last button will be "primary"
+                    // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
+                    messageBoxRef.ShowModal("NEW_PLAN", "New Plan", "Would you like to save your current work before creating a new plan.", new List<string>() { "No", "Yes" });
+                }
+            else
             {
-                //messageBoxRef.ShowModal();
-                // last button will be "primary"
-                // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
-                messageBoxRef.ShowModal("NEW_PLAN", "New Plan", "Would you like to save your current work before creating a new file.", new List<string>() { "No", "Yes" });
+                ImplementNewPlan();
             }
 
             //if (fileManagementModalRef != null)
@@ -565,24 +569,33 @@ namespace LocalEdit.Pages
 
             //_ = ResetValidation();
 
-//            return Task.CompletedTask;
+            //            return Task.CompletedTask;
         }
 
         private async Task LoadFile()
         {
-            if (await wIPManagerRef.DataExists())
+            if ((await IsDocumentDirty()) && (await wIPManagerRef.DataExists()))
             {
                 //messageBoxRef.ShowModal();
                 // last button will be "primary"
                 // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
-                messageBoxRef.ShowModal("LOAD_PLAN", "Load Plan", "Would you like to save your current work before loading a different file.", new List<string>() { "No", "Yes" });
+                messageBoxRef.ShowModal("LOAD_PLAN", "Load Plan", "Would you like to save your current work before loading a different plan.", new List<string>() { "No", "Yes" });
             }
-
+            else
+            { 
+                ImplementLoadPlan();
+            }
             //fileManagementModalRef?.LoadFile();
 
 //            return Task.CompletedTask;
         }
 
+        private async Task<bool>IsDocumentDirty()
+        {
+            string fileText = JsonSerializer.Serialize(Document, new JsonSerializerOptions { WriteIndented = true }); ;
+
+            return (lastSavedDocumentText != fileText);
+        }
 
         private Task StartWIP()
         {
@@ -593,6 +606,8 @@ namespace LocalEdit.Pages
         private Task LoadWIP()
         {
             wIPManagerRef.Load();
+            // we don't know if it has been saved
+            lastSavedDocumentText = "";
             return Task.CompletedTask;
         }
 
@@ -614,6 +629,7 @@ namespace LocalEdit.Pages
             //flowItemModalRef.item = selectedItemRow;
 
             fileManagementModalRef?.SaveFile(fileText);
+            lastSavedDocumentText = fileText;
 
             //fileManagementModalRef?.ShowModal();
 
@@ -711,17 +727,22 @@ namespace LocalEdit.Pages
                     {
                         case ModalResult.ButtonTwo:
                             wIPManagerRef.Load();
+                            //lastSavedDocumentText = wIPManagerRef.Data;
+                            lastSavedDocumentText = "";
                             break;
                     }
+                    wIPManagerRef.Start();
                     break;
                 case "LOAD_PLAN":
                     switch (messageBoxRef?.Result)
                     {
                         case ModalResult.ButtonOne:
-                            fileManagementModalRef?.LoadFile();
+                            ImplementLoadPlan();
                             break;
                         case ModalResult.ButtonTwo:
                             wIPManagerRef.Load();
+                            //lastSavedDocumentText = wIPManagerRef.Data;
+                            lastSavedDocumentText = "";
                             break;
                     }
                     break;
@@ -729,21 +750,12 @@ namespace LocalEdit.Pages
                     switch (messageBoxRef?.Result)
                     {
                         case ModalResult.ButtonOne:
-                            if (fileManagementModalRef != null)
-                                fileManagementModalRef.Name = "New_Plan.json";
-
-                            Document = new()
-                            {
-                                Title = "Hello Brad",
-                                StartDate = ToIsoString(DateTime.Today),
-                                BaseUrl = "https://gimme",
-                                Items = new List<PlanItem>()
-                            };
-
-                            _ = ResetValidation();
+                            ImplementNewPlan();
                             break;
                         case ModalResult.ButtonTwo:
                             wIPManagerRef.Load();
+                            //lastSavedDocumentText = wIPManagerRef.Data;
+                            lastSavedDocumentText = "";
                             break;
                     }
                     break;
@@ -778,6 +790,29 @@ namespace LocalEdit.Pages
             }
 
             return Task.CompletedTask;
+        }
+
+        private void ImplementLoadPlan()
+        {
+            fileManagementModalRef?.LoadFile();
+            lastSavedDocumentText = wIPManagerRef.Data;
+        }
+
+        void ImplementNewPlan()
+        {
+            if (fileManagementModalRef != null)
+                fileManagementModalRef.Name = "New_Plan.json";
+
+            Document = new()
+            {
+                Title = "Hello Brad",
+                StartDate = ToIsoString(DateTime.Today),
+                BaseUrl = "https://gimme",
+                Items = new List<PlanItem>()
+            };
+
+            lastSavedDocumentText = JsonSerializer.Serialize(Document, new JsonSerializerOptions { WriteIndented = true }); ;
+            _ = ResetValidation();
         }
 
         //        private string GenerateMermaidText(FlowDocument document)
