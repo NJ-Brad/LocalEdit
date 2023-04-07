@@ -29,7 +29,8 @@ namespace LocalEdit.Modals
         {
             // just set Cancel to prevent modal from closing
 
-            if (e.CloseReason == CloseReason.EscapeClosing)
+            if ((e.CloseReason == CloseReason.EscapeClosing)
+                || (Result == ModalResult.Unknown))
             {
                 Result = ModalResult.Cancel;
 
@@ -51,7 +52,7 @@ namespace LocalEdit.Modals
 
         protected Task CloseModal()
         {
-            // possibly add a chack for changed and prompt to lose changes
+            // possibly add a check for changed and prompt to lose changes
 
             cancelClose = false;
             //cancelled = true;

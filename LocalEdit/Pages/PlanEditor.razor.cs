@@ -8,6 +8,7 @@ using System.Text.Json;
 //using StardustDL.RazorComponents.Markdown;
 using LocalEdit.Shared;
 using Blazorise.DataGrid;
+using System.Threading.Channels;
 
 namespace LocalEdit.Pages
 {
@@ -82,8 +83,22 @@ namespace LocalEdit.Pages
                 })
             };
 
-
             return base.OnInitializedAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                if (await wIPManagerRef.DataExists())
+                {
+                    //messageBoxRef.ShowModal();
+                    // last button will be "primary"
+                    // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
+                    messageBoxRef.ShowModal("RESUME_WIP", "Resume", "Would you like to pick up where you left off?<br/>Select Yes, if you have not saved your work.", new List<string>() { "No", "Yes" });
+                }
+            }
+            base.OnAfterRender(firstRender);
         }
 
         PlanItem? selectedItemRow = new();
@@ -498,6 +513,7 @@ namespace LocalEdit.Pages
         //}
 
         FileManagementModal? fileManagementModalRef;
+        MessageBox? messageBoxRef;
 
         Validations? validations;
         public async Task<bool> Validate()
@@ -526,38 +542,45 @@ namespace LocalEdit.Pages
         }
 
 
-        private Task NewPlan()
+        private async Task NewPlan()
         {
-            if(fileManagementModalRef != null)
-                fileManagementModalRef.Name = "New_Plan.json";
-
-            Document = new()
+            if (await wIPManagerRef.DataExists())
             {
-                Title = "Hello Brad",
-                StartDate = ToIsoString(DateTime.Today),
-                BaseUrl = "https://gimme",
-                Items = new List<PlanItem>()
-            };
+                //messageBoxRef.ShowModal();
+                // last button will be "primary"
+                // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
+                messageBoxRef.ShowModal("NEW_PLAN", "New Plan", "Would you like to save your current work before creating a new file.", new List<string>() { "No", "Yes" });
+            }
 
-            _ = ResetValidation();
+            //if (fileManagementModalRef != null)
+            //    fileManagementModalRef.Name = "New_Plan.json";
 
-            return Task.CompletedTask;
+            //Document = new()
+            //{
+            //    Title = "Hello Brad",
+            //    StartDate = ToIsoString(DateTime.Today),
+            //    BaseUrl = "https://gimme",
+            //    Items = new List<PlanItem>()
+            //};
+
+            //_ = ResetValidation();
+
+//            return Task.CompletedTask;
         }
 
-        private Task LoadFile()
+        private async Task LoadFile()
         {
-            //if (selectedItemRow == null)
-            //{
-            //    return Task.CompletedTask;
-            //}
-            //flowItemModalRef.item = selectedItemRow;
+            if (await wIPManagerRef.DataExists())
+            {
+                //messageBoxRef.ShowModal();
+                // last button will be "primary"
+                // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
+                messageBoxRef.ShowModal("LOAD_PLAN", "Load Plan", "Would you like to save your current work before loading a different file.", new List<string>() { "No", "Yes" });
+            }
 
-            fileManagementModalRef?.LoadFile();
-            //fileManagementModalRef?.ShowModal();
+            //fileManagementModalRef?.LoadFile();
 
-            //InvokeAsync(() => StateHasChanged());
-
-            return Task.CompletedTask;
+//            return Task.CompletedTask;
         }
 
 
@@ -674,6 +697,84 @@ namespace LocalEdit.Pages
                     Document = (JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
                 }
                 InvokeAsync(() => StateHasChanged());
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task OnMessageBoxClosed()
+        {
+            switch(messageBoxRef?.MessageBoxID)
+            {
+                case "RESUME_WIP":
+                    switch (messageBoxRef?.Result)
+                    {
+                        case ModalResult.ButtonTwo:
+                            wIPManagerRef.Load();
+                            break;
+                    }
+                    break;
+                case "LOAD_PLAN":
+                    switch (messageBoxRef?.Result)
+                    {
+                        case ModalResult.ButtonOne:
+                            fileManagementModalRef?.LoadFile();
+                            break;
+                        case ModalResult.ButtonTwo:
+                            wIPManagerRef.Load();
+                            break;
+                    }
+                    break;
+                case "NEW_PLAN":
+                    switch (messageBoxRef?.Result)
+                    {
+                        case ModalResult.ButtonOne:
+                            if (fileManagementModalRef != null)
+                                fileManagementModalRef.Name = "New_Plan.json";
+
+                            Document = new()
+                            {
+                                Title = "Hello Brad",
+                                StartDate = ToIsoString(DateTime.Today),
+                                BaseUrl = "https://gimme",
+                                Items = new List<PlanItem>()
+                            };
+
+                            _ = ResetValidation();
+                            break;
+                        case ModalResult.ButtonTwo:
+                            wIPManagerRef.Load();
+                            break;
+                    }
+                    break;
+
+        }
+            //// "RESUME_WIP"
+            //switch (messageBoxRef?.Result)
+            //{
+            //    case ModalResult.ButtonOne:
+            //        break;
+            //    case ModalResult.ButtonTwo:
+            //        break;
+            //    case ModalResult.ButtonThree:
+            //        break;
+            //    case ModalResult.ButtonFour:
+            //        break;
+            //    case ModalResult.ButtonFive:
+            //        break;
+            //    default:
+            //        break;
+            //}
+
+
+            if (messageBoxRef?.Result == ModalResult.OK)
+            {
+                ////MarkdownText = fileManagementModalRef.FileText;
+                //if (fileManagementModalRef.FileText != null)
+                //{
+                //    Document = (JsonSerializer.Deserialize(fileManagementModalRef.FileText, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
+                //}
+                //InvokeAsync(() => StateHasChanged());
             }
 
             return Task.CompletedTask;

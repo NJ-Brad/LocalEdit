@@ -12,15 +12,25 @@ namespace LocalEdit.Shared
 
         [Parameter] 
         public EventCallback DataRequired { get; set; }
+
         [Parameter]
         public EventCallback DataReady { get; set; }
+
         [Parameter]
         public string EditorName { get; set; } = "EDITOR";
+
         [Parameter]
         public int Interval
         {
             get;
             set;
+        }
+
+        public async Task <bool> DataExists()
+        {
+            data = await localStorage.GetItemAsStringAsync($"{EditorName}_WIP");
+
+            return data != null;
         }
 
         private string data = "";
