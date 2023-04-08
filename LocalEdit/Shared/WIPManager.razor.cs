@@ -1,5 +1,6 @@
 ﻿using Blazor.DownloadFileFast.Interfaces;
 using Blazorise;
+using Blazorise.DataGrid;
 using LocalEdit.Modals;
 using Microsoft.AspNetCore.Components;
 
@@ -38,7 +39,17 @@ namespace LocalEdit.Shared
             set
             { 
                 data = value;
-                _ = localStorage.SetItemAsStringAsync($"{EditorName}_WIP", data);
+                if (prevData != data)
+                {
+                    _ = localStorage.SetItemAsStringAsync($"{EditorName}_WIP", data);
+                    //DisplayText = "Saved";
+                    DateTime calcCurrentTime = LocalEdit.Shared.DateTimeExtension.ToRealLocalTime(DateTime.Now);
+                    DisplayText = $"Last Saved: {calcCurrentTime}";
+                }
+                //else
+                //{ 
+                //    DisplayText = "";
+                //}
             }
         }
 
@@ -269,10 +280,15 @@ namespace LocalEdit.Shared
         ////    this.Ticked.InvokeAsync();
         ////}
 
+        string DisplayText { get; set; } = string.Empty;
+
+        private string prevData = string.Empty;
+
         private async void TimerTicked(object? state)
         {
             if (DataRequired.HasDelegate)
             {
+                prevData = data;
                 await this.DataRequired.InvokeAsync();
             }
             await base.InvokeAsync(new Action(this.StateHasChanged));

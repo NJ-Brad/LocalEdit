@@ -92,10 +92,14 @@ namespace LocalEdit.Pages
             {
                 if (await wIPManagerRef.DataExists())
                 {
-                        //messageBoxRef.ShowModal();
-                        // last button will be "primary"
-                        // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
-                        messageBoxRef.ShowModal("RESUME_WIP", "Resume", "Would you like to pick up where you left off?<br/>Select Yes, if you have not saved your work.", new List<string>() { "No", "Yes" });
+                    //messageBoxRef.ShowModal();
+                    // last button will be "primary"
+                    // messageBoxRef.ShowModal("MYMESSAGE", "Parameter Title", "Parameter Question Text", new List<string>(){ "Cancel", "Get Rekt", "OK" });
+                    messageBoxRef.ShowModal("RESUME_WIP", "Resume", "Would you like to pick up where you left off?<br/>Select Yes, if you have not saved your work.", new List<string>() { "No", "Yes" });
+                }
+                else
+                {
+                    wIPManagerRef.Start();
                 }
             }
             base.OnAfterRender(firstRender);
@@ -680,6 +684,8 @@ namespace LocalEdit.Pages
             //    }
             //    InvokeAsync(() => StateHasChanged());
             //}
+
+            wIPManagerRef.Data = JsonSerializer.Serialize(Document, new JsonSerializerOptions { WriteIndented = true }); ;
 
             return Task.CompletedTask;
         }
