@@ -43,13 +43,13 @@ namespace LocalEdit.Shared
                 {
                     _ = localStorage.SetItemAsStringAsync($"{EditorName}_WIP", data);
                     //DisplayText = "Saved";
-                    DateTime calcCurrentTime = LocalEdit.Shared.DateTimeExtension.ToRealLocalTime(DateTime.Now);
-                    DisplayText = $"Last Saved: {calcCurrentTime}";
+//                    DateTime calcCurrentTime = LocalEdit.Shared.DateTimeExtension.ToRealLocalTime(DateTime.Now);
+//                    DisplayText = $"Last Saved: {calcCurrentTime.ToShortTimeString()}";
                 }
-                //else
-                //{ 
-                //    DisplayText = "";
-                //}
+
+                // This should reflect "last attempted save", whether there was an actual update or not
+                DateTime calcCurrentTime = LocalEdit.Shared.DateTimeExtension.ToRealLocalTime(DateTime.Now);
+                DisplayText = $"Last Saved: {calcCurrentTime.ToShortTimeString()}";
             }
         }
 
