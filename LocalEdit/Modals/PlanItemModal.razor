@@ -58,27 +58,7 @@
                 </Field>
 
 
-
-@*                <Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">
-                Depends On
-                </Span>
-                <br />
-                *@
-                <h3>Depends On</h3>
-                <div style="overflow-y : auto; height:150px">
-                    @foreach (var item in @Items)
-                    {
-                        @*<SelectItem Value="@(item.ID)">@(item.Label)</SelectItem>*@
-                        @*<Check TValue="bool" Checked="@rememberMe" CheckedChanged="@OnRememberMeChanged">Remember Me</Check>*@
-                        @*<Check TValue="bool" CheckedChanged="@OnRememberMeChanged">@(item.Label)</Check>*@
-                        <Check TValue="bool" Checked="@(IsChecked(item.ID))" CheckedChanged="@(() => OnRememberMeChanged2(item.ID))">@(item.Label)</Check>
-                    }
-                </div>
-@*                <br />
-                <h3>Earliest Start Date</h3>
-                <DateEdit TValue="DateTime?" Date="@earliestDate" DateChanged="@OnDateChanged" />
-*@
-@*                <Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">
+                <Span Style="font-size: calc(1.3rem + .6vw); font-weight: 500; line-height: 1.2; margin-top: 0.5rem;margin-bottom: 0.25rem;">
                     Depends On
 
                     <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewDependency">
@@ -144,7 +124,7 @@
                         </div>
                     </EmptyTemplate>
                 </DataGrid>
-*@
+
             </Validations>
 
 
