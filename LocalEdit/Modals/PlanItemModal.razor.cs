@@ -1,6 +1,7 @@
 ﻿using Blazorise;
 using LocalEdit.PlanTypes;
 using Microsoft.AspNetCore.Components;
+using Octokit;
 
 namespace LocalEdit.Modals
 {
@@ -22,6 +23,84 @@ namespace LocalEdit.Modals
             return rtnVal;
         }
 
+//        DateTime? earliestDate;
+
+//        void OnDateChanged(DateTime? date)
+//        {
+////            earliestDate = date;
+
+//            int numItems = Item.Dependencies.Count;
+
+//            for (int itemNum = numItems - 1; itemNum > -1; itemNum--)
+//            {
+//                if (Item.Dependencies[itemNum].DependencyType == "DATE")
+//                {
+//                    Item.Dependencies.RemoveAt(itemNum);
+//                }
+//            }
+
+//            if (date.HasValue)
+//            {
+//                PlanItemDependency newItem = new PlanItemDependency();
+//                newItem.DependencyType = "DATE";
+//                newItem.StartDate = date.Value.ToShortDateString();
+//                Item.Dependencies.Add(newItem);
+//            }
+//        }
+
+        void OnRememberMeChanged2(string value)
+        {
+            if (IsChecked(value))
+            {
+                RemoveItemDependency(value);
+            }
+            else
+            {
+                AddItemDependency(value);
+            }
+        }
+
+        private void AddItemDependency(string value)
+        {
+            PlanItemDependency newItem = new PlanItemDependency();
+            newItem.DependencyType = "OTHER";
+            newItem.ID = value;
+            //    < SelectItem Value =@("DATE") > Date </ SelectItem >
+            //< SelectItem Value =@("OTHER") > Other Item </ SelectItem >
+            Item.Dependencies.Add(newItem);
+        }
+
+        private void RemoveItemDependency(string value)
+        {
+            int idx = GetDependencyIndex(value);
+
+            if (idx != -1)
+            {
+                Item.Dependencies.RemoveAt(idx);
+            }
+        }
+
+        private int GetDependencyIndex(string value)
+        {
+            int numItems = Item.Dependencies.Count;
+            int rtnVal = -1;
+
+            for (int itemNum = 0; itemNum < numItems; itemNum++)
+            {
+                if (Item.Dependencies[itemNum].ID == value)
+                {
+                    rtnVal = itemNum;
+                }
+            }
+
+            return rtnVal;
+        }
+
+
+        bool IsChecked(string value)
+        {
+            return (GetDependencyIndex(value) != -1);
+        }
 
         PlanDependencyModal? planDependencyModalRef = null;
         bool adding = false;
