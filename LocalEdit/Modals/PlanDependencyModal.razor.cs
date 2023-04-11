@@ -69,24 +69,27 @@ namespace LocalEdit.Modals
             //    email.Contains("@") ? ValidationStatus.Success : ValidationStatus.Error;
         }
 
-        PlanItemDependency item = new();
+        PlanItemDependency? item = null;
         DateTime? StartDateVal { get; set; } = DateTime.Now;
 
         [Parameter]
-        public PlanItemDependency Item
+        public PlanItemDependency? Item
         {
             get { return item; }
             set
             { 
                 item = value;
 
-                if (DateTime.TryParse(value.StartDate, out DateTime asDate))
+                if (value != null)
                 {
-                }
-                if (datePicker != null)
-                {
-                    StartDateVal = asDate;
-                    //datePicker.Date = asDate;
+                    if (DateTime.TryParse(value.StartDate, out DateTime asDate))
+                    {
+                    }
+                    if (datePicker != null)
+                    {
+                        StartDateVal = asDate;
+                        //datePicker.Date = asDate;
+                    }
                 }
             }
         }

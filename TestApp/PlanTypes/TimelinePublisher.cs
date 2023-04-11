@@ -1,10 +1,8 @@
-﻿using System.Reflection.Metadata;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text;
 
 namespace LocalEdit.PlanTypes
 {
-    public class PlanPublisher
+    public class TimelinePublisher
     {
         public static string Publish(PlanDocument plan)
         {
@@ -15,23 +13,38 @@ namespace LocalEdit.PlanTypes
 
         private static string PublishMermaid(PlanDocument plan)
         {
-            StringBuilder sb = new ();
+            StringBuilder sb = new();
+
+            // Get plan ready for publishing
+            List<PlanItem> items = DependencySorter.Generate(plan.Items, DateOnly.Parse(plan.StartDate));
 
             sb.AppendLine(MermaidHeader(plan));
 
+            if ((plan != null) && (plan.Sprints != null))
+            {
+                foreach(Sprint sprint in plan.Sprints)
+                {
+                    sb.Append(MermaidSprint(sprint, plan.Items));
+                }
+                //foreach (PlanItem item in plan.Items)
+                //{
+                //    sb.Append(MermaidItem(item));
+                //}
+            }
+
+            return sb.ToString().Replace("\n", "\r\n");
+        }
+
+
+        private static string PublishMermaidOld(PlanDocument plan)
+        {
+            StringBuilder sb = new();
+
+            sb.AppendLine(MermaidHeader(plan));
 
             if ((plan != null) && (plan.Items != null))
             {
-                // Get plan ready for publishing
-                // This is BRUTE FORCE
-                string tempText = JsonSerializer.Serialize(plan, new JsonSerializerOptions { WriteIndented = true }); ;
-                PlanDocument doc = (JsonSerializer.Deserialize(tempText, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
-
-                // this is destructive to item dependencies
-                List<PlanItem> items = DependencySorter.Generate(doc.Items, DateOnly.Parse(doc.StartDate));
-
-                //foreach (PlanItem item in plan.Items)
-                foreach (PlanItem item in items)
+                foreach (PlanItem item in plan.Items)
                 {
                     sb.Append(MermaidItem(item));
                 }
@@ -40,43 +53,14 @@ namespace LocalEdit.PlanTypes
             return sb.ToString();
         }
 
-        //private isInList(lookFor: string, lookIn: string[]): boolean
-        //{
-        //    var rtnVal: boolean = false;
-
-        //    for (var lookInItem of lookIn)
-        //    {
-        //        if (this.ciEquals(lookFor, lookInItem))
-        //        {
-        //            rtnVal = true;
-        //        }
-        //    }
-
-        //    return rtnVal;
-        //}
 
         private static string MermaidHeader(PlanDocument plan)
         {
-            StringBuilder sb = new ();
-            //        sb.append("flowchart TB");
-            //        sb.append("\r\n");
-            // classDef borderless stroke-width:0px
-            // classDef darkBlue fill:#00008B, color:#fff
-            // classDef brightBlue fill:#6082B6, color:#fff
-            // classDef gray fill:#62524F, color:#fff
-            // classDef gray2 fill:#4F625B, color:#fff
-
-            // ");
-
-            // start date and title MUST be filled in
-
-            sb.AppendLine("gantt");
-            // gantt
-            sb.AppendLine("    dateFormat  YYYY-MM-DD");
+            StringBuilder sb = new();
+            // https://mermaid.js.org/config/theming.html
+            sb.AppendLine("%%{ init: { 'theme':'neutral'} }%%");
+            sb.AppendLine("timeline");
             sb.AppendLine($"    title       {plan.Title}");
-            sb.AppendLine("    excludes    weekends");
-            //        sb.appendLine(`    %% (`excludes` accepts specific dates in YYYY-MM-DD format, days of the week ("sunday") or "weekends", but not the word "weekdays".)`);
-            sb.AppendLine($"    Start: milestone, start, {plan.StartDate}, 0min");
 
             return sb.ToString();
         }
@@ -92,9 +76,51 @@ namespace LocalEdit.PlanTypes
             return rtnVal;
         }
 
+        private static string MermaidSprint(Sprint sprint, List<PlanItem> items)
+        {
+            StringBuilder sb = new();
+
+            List<string> itemsInSprint = new List<string>();
+
+            foreach (PlanItem item in items)
+            {
+                if((item.StartDate<= sprint.EndDate) &&
+                    (item.EndDate >= sprint.StartDate))
+                {
+                    itemsInSprint.Add($"{item.Label} ({item.StoryId})");
+                }
+            }
+
+            if(itemsInSprint.Count == 0) 
+            {
+                //sb.Append(sprint.Label);
+                sb.Append($"{sprint.Label}<br>{sprint.StartDate} - {sprint.EndDate}");
+                sb.Append(" : ");
+                sb.AppendLine("No Work Planned");
+            }
+            else
+            {
+                // https://mermaid.js.org/syntax/timeline.html
+                sb.Append($"{sprint.Label}<br>{sprint.StartDate} - {sprint.EndDate}");
+
+                foreach (string item in itemsInSprint)
+                {
+                    sb.Append(" : ");
+                    sb.AppendLine(item);
+                }
+            }
+
+            //sb.Append(sprint.Label);
+            //sb.Append(" : ");
+
+            //sb.AppendLine("Test");
+
+            return sb.ToString();
+        }
+
         private static string MermaidItem(PlanItem item, int indent = 1)
         {
-            StringBuilder sb = new ();
+            StringBuilder sb = new();
 
             string indentation = BuildIndentation(indent);
             //var displayType: string = item.itemType;
@@ -107,7 +133,7 @@ namespace LocalEdit.PlanTypes
             {
                 deps.Append("start");
             }
-  //          else
+            //          else
             {
                 foreach (PlanItemDependency dependency in item.Dependencies)
                 {
@@ -117,7 +143,7 @@ namespace LocalEdit.PlanTypes
                         if (deps.ToString().StartsWith("start"))
                         {
                             deps = new StringBuilder(deps.ToString()[6..]);
-                            isAfter= false;
+                            isAfter = false;
                         }
                     }
                     else

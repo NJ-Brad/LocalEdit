@@ -26,6 +26,7 @@ namespace LocalEdit.Modals
         PlanDependencyModal? planDependencyModalRef = null;
         bool adding = false;
 
+        //        PlanItemDependency? SelectedDependencyRow { get; set; } = null;
         PlanItemDependency? SelectedDependencyRow { get; set; } = new();
 
         private Task EditDependency()

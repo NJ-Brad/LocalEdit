@@ -8,7 +8,17 @@ namespace LocalEdit.PlanTypes
     {
         public static string Publish(PlanDocument plan)
         {
-            string rtnVal = PublishMermaid(plan);
+
+            // Get plan ready for publishing
+            // This is BRUTE FORCE
+            string tempText = JsonSerializer.Serialize(plan, new JsonSerializerOptions { WriteIndented = true }); ;
+            PlanDocument doc = (JsonSerializer.Deserialize(tempText, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
+
+            List<PlanItem> items = DependencySorter.Generate(doc.Items, DateOnly.Parse(doc.StartDate));
+
+            //            List<PlanItem> items = DependencySorter.Generate(plan.Items, DateOnly.Parse(plan.StartDate));
+
+            string rtnVal = PublishMermaid(doc);
 
             return rtnVal;
         }
@@ -19,19 +29,9 @@ namespace LocalEdit.PlanTypes
 
             sb.AppendLine(MermaidHeader(plan));
 
-
             if ((plan != null) && (plan.Items != null))
             {
-                // Get plan ready for publishing
-                // This is BRUTE FORCE
-                string tempText = JsonSerializer.Serialize(plan, new JsonSerializerOptions { WriteIndented = true }); ;
-                PlanDocument doc = (JsonSerializer.Deserialize(tempText, typeof(PlanDocument)) as PlanDocument) ?? new PlanDocument();
-
-                // this is destructive to item dependencies
-                List<PlanItem> items = DependencySorter.Generate(doc.Items, DateOnly.Parse(doc.StartDate));
-
-                //foreach (PlanItem item in plan.Items)
-                foreach (PlanItem item in items)
+                foreach (PlanItem item in plan.Items)
                 {
                     sb.Append(MermaidItem(item));
                 }

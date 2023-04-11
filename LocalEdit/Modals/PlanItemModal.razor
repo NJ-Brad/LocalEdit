@@ -129,8 +129,6 @@
 
 
 
-            <LocalEdit.Modals.PlanDependencyModal @ref="planDependencyModalRef" Items=@Items Closed="@OnDependencyModalClosed" Item="@SelectedDependencyRow"></LocalEdit.Modals.PlanDependencyModal>
-
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Secondary" Clicked="@CloseModal">Cancel</Button>
@@ -138,3 +136,6 @@
         </ModalFooter>
     </ModalContent>
 </Modal>
+
+<LocalEdit.Modals.PlanDependencyModal @ref="planDependencyModalRef" Items=@Items Closed="@OnDependencyModalClosed" Item="@SelectedDependencyRow"></LocalEdit.Modals.PlanDependencyModal>
+

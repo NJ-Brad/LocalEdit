@@ -26,8 +26,8 @@
             "A[Client] --- B[Load Balancer] \n" +
             "B-->C[Server01] \n" +
             "B-->D(Server02) \n";
-        mermaidOne.DisplayDiagram(mOneText);
-        mermaidTwo.DisplayDiagram(mTwoText);
+        await mermaidOne.DisplayDiagram(mOneText);
+        await mermaidTwo.DisplayDiagram(mTwoText);
 
         //        await JSRuntime.InvokeVoidAsync("renderMermaidDiagram", input);
     }

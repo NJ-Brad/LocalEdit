@@ -68,7 +68,7 @@ namespace LocalEdit.PlanTypes
             return rtnVal;
         }
 
-        private static bool AllDependenciewMet(PlanItem item, List<PlanItem> alreadyCreated)
+        private static bool AllDependenciewMet(PlanItem item, List<PlanItem>alreadyCreated)
         {
             bool rtnVal = true;
 
@@ -84,8 +84,8 @@ namespace LocalEdit.PlanTypes
                     }
                 }
                 if (!found)
-                {
-                    rtnVal = false;
+                { 
+                    rtnVal = false; 
                 }
             }
 
