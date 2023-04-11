@@ -24,7 +24,8 @@ namespace LocalEdit.PlanTypes
             {
                 foreach(Sprint sprint in plan.Sprints)
                 {
-                    sb.Append(MermaidSprint(sprint, plan.Items));
+                    //sb.Append(MermaidSprint(sprint, plan.Items));
+                    sb.Append(MermaidSprint(sprint, items));
                 }
                 //foreach (PlanItem item in plan.Items)
                 //{
