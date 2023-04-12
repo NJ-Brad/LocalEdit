@@ -26,7 +26,8 @@
         <Icon Name="IconName.FileDownload" />
         Save
     </Button>
-
+    &nbsp;<WIPManager @ref="wIPManagerRef" EditorName="PlanEditor" DataRequired="@OnWipDataRequired" DataReady="OnWipDataReady" Interval=30></WIPManager>
+    <br />
 @*    <Button Size="Size.Small" Color="Color.Primary" Clicked="@StartWIP">
         <Icon Name="IconName.FileDownload" />
         Start WIP
@@ -48,23 +49,24 @@
     </Button>
     }
     *@
+    <Span>Export  </Span>
+
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportGanttMarkdown">
         <Icon Name="IconName.ArrowRight" />
-        Export Markdown (Gantt)
+        Gantt (Markdown)
     </Button>
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportTimelineMarkdown">
         <Icon Name="IconName.ArrowRight" />
-        Export Markdown (Timeline)
+        Timeline (Markdown)
     </Button>
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportGanttHtml">
         <Icon Name="IconName.ArrowRight" />
-        Export HTML (Gantt)
+        Gantt (HTML)
     </Button>
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportTimelineHtml">
         <Icon Name="IconName.ArrowRight" />
-        Export HTML (Timeline)
+        Timeline (HTML)
     </Button>
-    &nbsp;<WIPManager @ref="wIPManagerRef" EditorName="PlanEditor" DataRequired="@OnWipDataRequired" DataReady="OnWipDataReady" Interval=30></WIPManager>
 
 
     @*</Div>*@
