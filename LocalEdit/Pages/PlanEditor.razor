@@ -48,13 +48,21 @@
     </Button>
     }
     *@
-    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportFile">
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportGanttMarkdown">
         <Icon Name="IconName.ArrowRight" />
-        Export Markdown Snippet
+        Export Markdown (Gantt)
     </Button>
-    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportHtml">
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportTimelineMarkdown">
         <Icon Name="IconName.ArrowRight" />
-        Export HTML
+        Export Markdown (Timeline)
+    </Button>
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportGanttHtml">
+        <Icon Name="IconName.ArrowRight" />
+        Export HTML (Gantt)
+    </Button>
+    <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportTimelineHtml">
+        <Icon Name="IconName.ArrowRight" />
+        Export HTML (Timeline)
     </Button>
     &nbsp;<WIPManager @ref="wIPManagerRef" EditorName="PlanEditor" DataRequired="@OnWipDataRequired" DataReady="OnWipDataReady" Interval=30></WIPManager>
 

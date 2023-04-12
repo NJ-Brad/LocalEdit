@@ -643,11 +643,11 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        private Task ExportFile()
+        private Task ExportGanttMarkdown()
         {
             if (Validate().Result)
             {
-                GenerateMarkdown();
+                GenerateGanntMarkdown();
 
                 if (fileManagementModalRef != null)
                 {
@@ -659,11 +659,11 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
-        private Task ExportHtml()
+        private Task ExportGanttHtml()
         {
             if (Validate().Result)
             {
-                string htmlText = GenerateHtml().Result;
+                string htmlText = GenerateGanttHtml().Result;
 
                 if (fileManagementModalRef != null)
                 {
@@ -674,6 +674,36 @@ namespace LocalEdit.Pages
             return Task.CompletedTask;
         }
 
+        private Task ExportTimelineMarkdown()
+        {
+            if (Validate().Result)
+            {
+                GenerateTimelineMarkdown();
+
+                if (fileManagementModalRef != null)
+                {
+                    fileManagementModalRef.Name = "plan.md";
+                    fileManagementModalRef.SaveFile(MarkdownText);
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private Task ExportTimelineHtml()
+        {
+            if (Validate().Result)
+            {
+                string htmlText = GenerateTimelineHtml().Result;
+
+                if (fileManagementModalRef != null)
+                {
+                    fileManagementModalRef.Name = "plan.html";
+                    fileManagementModalRef.SaveFile(htmlText);
+                }
+            }
+            return Task.CompletedTask;
+        }
         private Task OnWipDataRequired()
         {
             //if (fileManagementModalRef?.Result == ModalResult.OK)
@@ -823,7 +853,7 @@ namespace LocalEdit.Pages
         }
 
         //        private string GenerateMermaidText(FlowDocument document)
-        private Task GenerateMarkdown()
+        private Task GenerateGanntMarkdown()
         {
             //mermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
             //mermaidText = PlanPublisher.Publish(Document);
@@ -832,7 +862,7 @@ namespace LocalEdit.Pages
 //            markdownRef.Value = MarkdownText;
             return Task.CompletedTask;
         }
-        private Task<string> GenerateHtml()
+        private Task<string> GenerateGanttHtml()
         {
             string rtnVal = string.Empty;
             if (Document != null)
@@ -840,6 +870,22 @@ namespace LocalEdit.Pages
             return Task.FromResult(rtnVal);
         }
 
+        private Task GenerateTimelineMarkdown()
+        {
+            //mermaidOne.DisplayDiagram(PlanPublisher.Publish(Document));
+            //mermaidText = PlanPublisher.Publish(Document);
+            if (Document != null)
+                MarkdownText = MarkdownGenerator.WrapMermaid(TimelinePublisher.Publish(Document));
+            //            markdownRef.Value = MarkdownText;
+            return Task.CompletedTask;
+        }
+        private Task<string> GenerateTimelineHtml()
+        {
+            string rtnVal = string.Empty;
+            if (Document != null)
+                rtnVal = HtmlGenerator.WrapMermaid(TimelinePublisher.Publish(Document));
+            return Task.FromResult(rtnVal);
+        }
         public static string ToIsoString(DateTime date)
         {
             int year = date.Year;
