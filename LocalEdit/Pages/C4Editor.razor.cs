@@ -6,6 +6,7 @@ using System.Text.Json;
 //using StardustDL.RazorComponents.Markdown;
 using LocalEdit.Shared;
 using System.Reflection.Metadata;
+using System.Collections.ObjectModel;
 
 namespace LocalEdit.Pages
 {
@@ -59,6 +60,8 @@ namespace LocalEdit.Pages
 //        MarkdownRenderer markdownRef;
         C4ItemEditModal? c4ItemModalRef = null;
 
+        Blazorise.TreeView.TreeView<C4Item>? c4Tree { get; set; }
+
         private Task ShowItemModal()
         {
             if (SelectedNode == null)
@@ -91,6 +94,19 @@ namespace LocalEdit.Pages
 
         private Task AddNewItem()
         {
+            //C4Item testItem = new();
+            //testItem.Text = "New Question";
+            //Document.Model.Add(testItem);
+
+            //C4Workspace? holdMe = Document;
+            //Document = holdMe;
+
+            //InvokeAsync(() => StateHasChanged());
+
+
+            //return Task.CompletedTask;
+
+
             if (Document == null)
                 return Task.CompletedTask;
 
@@ -102,13 +118,21 @@ namespace LocalEdit.Pages
             //newItem.ID = Guid.NewGuid().ToString().Replace('-', '_').ToUpper();
             //newItem.Label = "New Question";
 
-            Document.Model.Add(newItem);
+            if (parentOfNode == null)
+            {
+                Document.Model.Add(newItem);
+            }
+            else
+            {
+                parentOfNode.Children.Add(newItem);
+            }
             SelectedNode = newItem;
             adding = true;
 
             InvokeAsync(() => StateHasChanged());
 
             return ShowItemModal();
+            //return Task.CompletedTask;
         }
 
         private Task AddNewChildItem()
@@ -225,11 +249,12 @@ namespace LocalEdit.Pages
         {
             Document = new()
             {
-                Model = new List<C4Item>(new[]
+                //Model = new List<C4Item>(new[]
+                Model = new ObservableCollection<C4Item>(new[]
 {
             new C4Item{ItemType=C4TypeEnum.Person, Text="Customer", Description="A customer of the bank, with personal bank accounts", IsExternal=true},
             new C4Item{ItemType=C4TypeEnum.EnterpriseBoundary, Text="Internet Banking",
-                Children=new List<C4Item>( new[]{
+                Children=new ObservableCollection<C4Item>( new[]{
                     new C4Item{ItemType=C4TypeEnum.Container, Text ="Web Application", Technology="Java, Spring MVC", Description="Delivers the static content and the Internet banking SPA" }
                 })
             }
@@ -529,13 +554,18 @@ namespace LocalEdit.Pages
                     }
                     SelectedNode = null;
                 }
-}
-adding = false;
+            }
+            adding = false;
 
-InvokeAsync(() => StateHasChanged());
+            if (SelectedNode != null)
+            {
+                c4Tree.ExpandAll();
+            }
 
-return Task.CompletedTask;
-}
+            InvokeAsync(() => StateHasChanged());
+
+            return Task.CompletedTask;
+        }
 
         C4Relationship? SelectedRelationshipRow { get; set; } = new();
 

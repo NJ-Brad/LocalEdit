@@ -1,4 +1,6 @@
-﻿namespace LocalEdit.C4Types
+﻿using System.Collections.ObjectModel;
+
+namespace LocalEdit.C4Types
 {
     public class C4Item
     {
@@ -21,7 +23,7 @@
             set => alias = value; }
         public string Description { get; set; } = "";
         public string Technology { get; set; } = string.Empty;
-        public List<C4Item> Children { get; set; } = new List<C4Item>();
+        public ObservableCollection<C4Item> Children { get; set; } = new ObservableCollection<C4Item>();
 
         private void FixAlias()
         {

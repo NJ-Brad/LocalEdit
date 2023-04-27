@@ -9,6 +9,7 @@ using System.Text.Json;
 using LocalEdit.Shared;
 using Blazorise.DataGrid;
 using System.Threading.Channels;
+using System.Xml.Linq;
 
 namespace LocalEdit.Pages
 {
@@ -305,6 +306,7 @@ namespace LocalEdit.Pages
 
         private PlanItemModal? planItemModalRef;
         private SprintModal? sprintModalRef;
+        private PlanExportModal? planExportModalRef;
 
         string selectedTab = "general";
 
@@ -443,7 +445,8 @@ namespace LocalEdit.Pages
                 {
                     if(SelectedItemRow != null)
                         Document?.Items?.Remove(SelectedItemRow);
-                    SelectedItemRow = null;
+                    //SelectedItemRow = null;
+                    SelectedItemRow = new();
                 }
             }
             adding = false;
@@ -575,6 +578,11 @@ namespace LocalEdit.Pages
             //_ = ResetValidation();
 
             //            return Task.CompletedTask;
+        }
+
+        private async Task Export()
+        {
+            planExportModalRef.ShowModal();
         }
 
         private async Task LoadFile()
@@ -753,6 +761,56 @@ namespace LocalEdit.Pages
             }
 
             return Task.CompletedTask;
+        }
+
+        private Task OnPlanExportClosed()
+        {
+            switch(planExportModalRef.DiagramType)
+            {
+                case "gantt":
+                    switch (planExportModalRef.OutputFormat)
+                    {
+                        case "html":
+                            ExportGanttHtml();
+                            break;
+                        case "markdown":
+                            ExportGanttMarkdown();
+                            break;
+                    }
+                    break;
+                case "timeline":
+                    switch (planExportModalRef.OutputFormat)
+                    {
+                        case "html":
+                            ExportTimelineHtml();
+                            break;
+                        case "markdown":
+                            ExportTimelineMarkdown();
+                            break;
+                    }
+                    break;
+            }
+            //planExportModalRef.OutputFormat
+
+            return Task.CompletedTask;
+
+    //< Button Size = "Size.Small" Color = "Color.Primary" Clicked = "@ExportGanttMarkdown" >
+    //    < Icon Name = "IconName.ArrowRight" />
+    //    Gantt(Markdown)
+    //</ Button >
+    //< Button Size = "Size.Small" Color = "Color.Primary" Clicked = "@ExportTimelineMarkdown" >
+    //    < Icon Name = "IconName.ArrowRight" />
+    //    Timeline(Markdown)
+    //</ Button >
+    //< Button Size = "Size.Small" Color = "Color.Primary" Clicked = "@ExportGanttHtml" >
+    //    < Icon Name = "IconName.ArrowRight" />
+    //    Gantt(HTML)
+    //</ Button >
+    //< Button Size = "Size.Small" Color = "Color.Primary" Clicked = "@ExportTimelineHtml" >
+    //    < Icon Name = "IconName.ArrowRight" />
+    //    Timeline(HTML)
+    //</ Button >
+
         }
 
         private Task OnMessageBoxClosed()

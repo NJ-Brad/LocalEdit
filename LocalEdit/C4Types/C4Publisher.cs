@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.ObjectModel;
+using System.Text;
 namespace LocalEdit.C4Types
 {
     public class C4Publisher
@@ -247,7 +248,7 @@ private string PublishPlantContainer(C4Workspace workspace)
         //    return rtnVal;
         //}
 
-        private void CreateContextRedirects(List<C4Item> items, string redirectTo = "") {
+        private void CreateContextRedirects(ObservableCollection<C4Item> items, string redirectTo = "") {
 
     C4Item item;
     for (var itmNum = 0; itmNum < items.Count; itmNum++)
@@ -279,7 +280,7 @@ private string PublishPlantContainer(C4Workspace workspace)
     }
 }
 
-private void CreateContainerRedirects(List<C4Item> items, string redirectTo = "") {
+private void CreateContainerRedirects(ObservableCollection<C4Item> items, string redirectTo = "") {
     C4Item item;
     for (var itmNum = 0; itmNum < items.Count; itmNum++)
     {

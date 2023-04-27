@@ -1,9 +1,10 @@
-﻿@using LocalEdit.C4Types
+﻿@using Blazorise.Components
+@using LocalEdit.C4Types
 @inherits LE_ModalBase
 <Modal @ref="modalRef" @bind-Visible="@modalVisible" Closing="@OnModalClosing" Opened="@OnModalOpened">
     <ModalContent Centered>
         <ModalHeader>
-            <ModalTitle>Employee edit</ModalTitle>
+            <ModalTitle>Edit Item</ModalTitle>
             <CloseButton />
         </ModalHeader>
         <ModalBody>
@@ -45,7 +46,19 @@
 
         <Field>
             <FieldLabel>Item Type</FieldLabel>
-            <Select @bind-SelectedValue="@SelectedNode.ItemType">
+            <SelectList TItem="C4TypeNamePair"
+            TValue="C4TypeEnum"
+            Data="@c4Types"
+            TextField="@((item)=>item.Description)"
+            ValueField="@((item)=>item.Value)"
+            @bind-SelectedValue="@SelectedNode.ItemType"
+            DefaultItemText="Choose node type" />
+
+@*
+
+                    <Select @bind-SelectedValue="@SelectedNode.ItemType">
+
+
             @if (ShouldShow(C4TypeEnum.Person))
             {
                 <SelectItem Value=C4TypeEnum.Person>Person</SelectItem>
@@ -75,9 +88,9 @@
                 <SelectItem Value=C4TypeEnum.Node>Node</SelectItem>
             }
 
-
             </Select>
-        </Field>
+                    *@
+                </Field>
 
 
 

@@ -42,6 +42,8 @@
         <TabPanel Name="general" Border="Border.Primary">
         </TabPanel>
         <TabPanel Name="model" Border="Border.Primary">
+                <Div Style="margin:20px; height:300px">
+
             <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewItem">
                 <Icon Name="IconName.Add" />
                 New
@@ -98,12 +100,13 @@
             <TreeView Nodes="Document?.Model"
                       GetChildNodes="@(item => item?.Children)"
                       HasChildNodes="@(item => item?.Children?.Any() == true)"
-                      @bind-SelectedNode="SelectedNode">
+                      @bind-SelectedNode="SelectedNode"
+                      @ref="c4Tree" >
                 <NodeContent>@context?.Text</NodeContent>
             </TreeView>
 
             @*          SelectedNodeChanged="@((C4Item item) => SelChanged(item))" *@
-
+            </Div>
         </TabPanel>
         <TabPanel Name="relations" Border="Border.Primary">
             <Button Size="Size.Small" Color="Color.Primary" Clicked="@AddNewRelationship">

@@ -26,6 +26,23 @@
         <Icon Name="IconName.FileDownload" />
         Save
     </Button>
+
+@*    <Button Size="Size.Small" Color="Color.Primary" Clicked="@Export">
+        <Icon Name="IconName.ArrowRight" />
+        Export
+    </Button>
+*@
+@*    <Dropdown>
+        <DropdownToggle Size="Size.Small" Color="Color.Primary">
+            Export
+        </DropdownToggle>
+        <DropdownMenu>
+            <DropdownItem>Action</DropdownItem>
+            <DropdownDivider />
+            <DropdownItem>Another Action</DropdownItem>
+        </DropdownMenu>
+    </Dropdown>
+*@
     &nbsp;<WIPManager @ref="wIPManagerRef" EditorName="PlanEditor" DataRequired="@OnWipDataRequired" DataReady="OnWipDataReady" Interval=30></WIPManager>
     <br />
 @*    <Button Size="Size.Small" Color="Color.Primary" Clicked="@StartWIP">
@@ -49,6 +66,7 @@
     </Button>
     }
     *@
+
     <Span>Export  </Span>
 
     <Button Size="Size.Small" Color="Color.Primary" Clicked="@ExportGanttMarkdown">
@@ -440,6 +458,7 @@
 
 <LocalEdit.Modals.FileManagementModal @ref="fileManagementModalRef" Closed="@OnFileManagementModalClosed"></LocalEdit.Modals.FileManagementModal>
 <LocalEdit.Modals.MessageBox @ref="messageBoxRef" Closed="@OnMessageBoxClosed"></LocalEdit.Modals.MessageBox>
+<LocalEdit.Modals.PlanExportModal @ref="planExportModalRef" Closed="@OnPlanExportClosed"></LocalEdit.Modals.PlanExportModal>
 
 <PageTitle>Plan Editor - @fileManagementModalRef?.Name</PageTitle>
 

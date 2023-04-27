@@ -82,17 +82,24 @@ namespace LocalEdit.Modals
 
         private int GetDependencyIndex(string value)
         {
-            int numItems = Item.Dependencies.Count;
             int rtnVal = -1;
-
-            for (int itemNum = 0; itemNum < numItems; itemNum++)
+            try
             {
-                if (Item.Dependencies[itemNum].ID == value)
-                {
-                    rtnVal = itemNum;
-                }
-            }
+                int numItems = (Item != null) ? Item.Dependencies.Count : 0;
 
+                for (int itemNum = 0; itemNum < numItems; itemNum++)
+                {
+                    if (Item.Dependencies[itemNum].ID == value)
+                    {
+                        rtnVal = itemNum;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
             return rtnVal;
         }
 
