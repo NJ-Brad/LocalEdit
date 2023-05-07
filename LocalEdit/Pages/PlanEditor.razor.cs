@@ -107,7 +107,8 @@ namespace LocalEdit.Pages
             base.OnAfterRender(firstRender);
         }
 
-        PlanItem? selectedItemRow = new();
+        //PlanItem? selectedItemRow = new();
+        PlanItem? selectedItemRow = null;
         PlanItem? SelectedItemRow
         {
             get => selectedItemRow;
